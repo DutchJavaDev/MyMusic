@@ -12,7 +12,8 @@ namespace MyMusic.BlazorWasm.Services
         public async Task Search2(string query)
         {
             var client = new HttpClient();
-
+            // Parse exact 
+            // Send to backend
             Response = await (await client.GetAsync(string.Concat("https://www.googleapis.com/youtube/v3/search?key=", "AIzaSyBt91nyVg3hdwEFT4iUWOk8kb1oIFhbCYs", "&","q=",query))).Content.ReadAsStringAsync();
             Root = JsonConvert.DeserializeObject<SearchResult>(Response);
         }
