@@ -1,8 +1,9 @@
 ﻿using Npgsql;
 using Dapper;
 using System.Reflection;
+using MyMusic.Common;
 
-var connectionString = "Host=localhost;Username=postgres;Password=Kwende1995!;Database=postgres";
+var connectionString = EnviromentProvider.GetDatabaseConnectionString();
 
 try
 {

@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using MyMusic.Api.Middleware;
+using MyMusic.Common;
 using Npgsql;
 using System.Data;
 
 // enviroment variables
-var connectionString = "Host=localhost;Username=postgres;Password=Kwende1995!;Database=postgres";
+var connectionString = EnviromentProvider.GetDatabaseConnectionString();
 
 var builder = WebApplication.CreateBuilder(args);
 
