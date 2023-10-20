@@ -4,7 +4,6 @@ using System.Reflection;
 using MyMusic.Common;
 
 var connectionString = EnviromentProvider.GetDatabaseConnectionString();
-
 try
 {
     using var connection = new NpgsqlConnection(connectionString);
