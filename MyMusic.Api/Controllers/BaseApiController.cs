@@ -5,7 +5,7 @@ namespace MyMusic.Api.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public abstract class BaseApiController : ControllerBase
     {
