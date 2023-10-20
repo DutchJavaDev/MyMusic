@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\init.sql" />
+    <None Remove="Scripts\0 functions.sql" />
+    <None Remove="Scripts\1 init.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\init.sql" />
+    <EmbeddedResource Include="Scripts\0 functions.sql" />
+    <EmbeddedResource Include="Scripts\1 init.sql" />
   </ItemGroup>
 
   <ItemGroup>

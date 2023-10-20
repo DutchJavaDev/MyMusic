@@ -13,7 +13,7 @@ try
     var assembly = Assembly.GetExecutingAssembly();
     var scripts = assembly.GetManifestResourceNames().Where(i => i.EndsWith(".sql"));
 
-    foreach (var script in scripts)
+    foreach (var script in scripts.OrderBy(i => i[0]))
     {
         using var stream = assembly.GetManifestResourceStream(script);
         using var reader = new StreamReader(stream);
