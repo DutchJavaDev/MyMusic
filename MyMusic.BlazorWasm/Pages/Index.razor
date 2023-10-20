@@ -1,0 +1,27 @@
+﻿@page "/"
+@using MyMusic.Common
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, MyMusic</h1>
+
+Welcome to MyMusic
+@EnviromentProvider.GetDataApiKey()
+<EditForm Model="@Model" OnSubmit="@ApplyChanges">
+    <div>
+        <span>Url</span>
+        <InputText @bind-Value="Model!.BaseUrl" />
+    </div>
+    <div>
+        <span>Password</span>
+        <InputText @bind-Value="Model!.Password" />
+    </div>
+    <div>
+        <span>DataApiKey</span>
+        <InputText @bind-Value="Model!.DataApiKey" />
+    </div>
+    <button type="submit">Submit</button>
+</EditForm>
+<br />
+
+<MyMusic.BlazorWasm.Components.Search></MyMusic.BlazorWasm.Components.Search>

@@ -1,0 +1,30 @@
+﻿<div>
+    <h3>MyMusic Search</h3>
+
+
+    <EditForm Model="@Model" OnSubmit="@SearchAsync">
+        <div>
+            <span>Url</span>
+            <InputText @bind-Value="Model!.Query" />
+        </div>
+        <button type="submit">Search</button>
+    </EditForm>
+
+    <div>
+        @Res
+        @if(rppto is not null)
+        {
+            if (rppto.items is not null)
+            {
+                @rppto.items.Count
+
+                @foreach (var item in rppto.items)
+                {
+                    <div>
+                        @item.id.videoId
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
