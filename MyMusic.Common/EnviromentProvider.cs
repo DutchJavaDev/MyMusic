@@ -8,12 +8,18 @@ namespace MyMusic.Common
         private readonly static Dictionary<string, string> _cache = new();
 
         private static readonly string databaseStringKey = "MM_databaseConnection";
+        private static readonly string dataApiKey = "MM_dataApiKey";
 
         private static IConfigurationRoot? configurationRoot;
 
         public static string? GetDatabaseConnectionString()
         {
             return GetValue(databaseStringKey);
+        }
+
+        public static string? GetDataApiKey()
+        {
+            return GetValue(dataApiKey);
         }
 
         private static string GetValue(string key)
