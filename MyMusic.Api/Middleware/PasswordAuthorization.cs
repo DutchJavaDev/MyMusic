@@ -17,7 +17,7 @@ namespace MyMusic.Api.Middleware
             {
                 connection.Open();
                 ServerPasswordHash = connection
-                    .Query<string>("select server_password_hash from mymusic.server_configuration")
+                    .Query<string>("select server_password from mymusic.server_configuration")
                     .FirstOrDefault();
             }
         }
@@ -41,7 +41,8 @@ namespace MyMusic.Api.Middleware
             }
 
             // Continue
-            await defaultHandler.HandleAsync(next, context, policy, authorizeResult);
+            await next(context);
+            //await defaultHandler.HandleAsync(next, context, policy, authorizeResult);
         }
 
 
@@ -53,10 +54,10 @@ namespace MyMusic.Api.Middleware
 
         private static bool VerifyPassword(HttpContext context,string serverPasswordHash)
         {
-            return BCrypt.Net.BCrypt.Verify(GetRequestPassword(context), serverPasswordHash);
+            return GetRequestPassword(context) == serverPasswordHash;
         }
 
-        private static string GetRequestPassword(HttpContext context)
+        private static string? GetRequestPassword(HttpContext context)
         {
             // check headers
             var headerPassword = context.Request.Headers[ServerKey];
@@ -67,7 +68,7 @@ namespace MyMusic.Api.Middleware
                 headerPassword = context.Request.Query[ServerKey];
             }
 
-            return BCrypt.Net.BCrypt.HashPassword(headerPassword);
+            return headerPassword;
         }
 
     }
