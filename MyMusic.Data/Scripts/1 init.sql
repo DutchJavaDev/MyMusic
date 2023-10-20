@@ -4,14 +4,15 @@ set search_path to mymusic;
 
 create table if not exists server_configuration (
 	created_utc timestamp not null default now(),
-	server_password_hash varchar(255) not null
+	server_password varchar(255) not null
 );
 
+-- set server password
 DO $$ 
-DECLARE 
-server_configuration_count INT;
+declare 
+server_configuration_count int;
 
-BEGIN
+begin
 server_configuration_count := 0;
 
 select count(*) into server_configuration_count from 
@@ -19,10 +20,10 @@ select count(*) into server_configuration_count from
 
 	if server_configuration_count = 0 then
 		insert into mymusic.server_configuration(
-		created_utc, server_password_hash)
-		values(now(),'Enter hash');
+		created_utc, server_password)
+		values(now(),generate_random_password());
 	end if;
 
-END $$;
+end $$;
 
 
