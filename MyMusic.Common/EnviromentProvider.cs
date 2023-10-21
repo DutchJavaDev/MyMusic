@@ -11,6 +11,12 @@ namespace MyMusic.Common
         private static readonly string dataApiKey = "MM_dataApiKey";
 
         private static IConfigurationRoot? configurationRoot;
+        private static Assembly Assembly;
+
+        static EnviromentProvider() 
+        {
+            Assembly = typeof(EnviromentProvider).Assembly;
+        }
 
         public static string? GetDatabaseConnectionString()
         {
@@ -20,6 +26,17 @@ namespace MyMusic.Common
         public static string? GetDataApiKey()
         {
             return GetValue(dataApiKey);
+        }
+
+        public static void SetAssembly(Assembly assembly)
+        {
+            Assembly = assembly;
+
+            // Rebuild
+            var builder = new ConfigurationBuilder()
+               .AddUserSecrets(Assembly);
+
+            configurationRoot = builder.Build();
         }
 
         private static string GetValue(string key)
@@ -34,7 +51,7 @@ namespace MyMusic.Common
             if (configurationRoot is null)
             {
                 var builder = new ConfigurationBuilder()
-                .AddUserSecrets(typeof(EnviromentProvider).Assembly);
+                .AddUserSecrets(Assembly);
 
                 configurationRoot = builder.Build();
             }
