@@ -5,8 +5,6 @@ namespace MyMusic.BlazorWasm.Services
 {
     public sealed class SearchService
     {
-        public string? Response { get; set; } = string.Empty;
-
         private readonly string SearchV3Url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&";
 
         private readonly HttpClient _client;
@@ -47,7 +45,6 @@ namespace MyMusic.BlazorWasm.Services
 
         private string ApiKey()
         {
-            // Remove API KEY
             return string.Concat("key=", _storageService.GetYouTubeDataApiKey(), "&");
         }
     }
