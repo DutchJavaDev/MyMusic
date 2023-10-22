@@ -1,14 +1,42 @@
-﻿using MyMusic.BlazorWasm.Models;
+﻿using Microsoft.AspNetCore.Components;
+using MyMusic.BlazorWasm.Models;
+using MyMusic.BlazorWasm.Services;
 
 namespace MyMusic.BlazorWasm.Pages
 {
     public partial class Index
     {
-        public ServerConfiguration Model { get; set; } = new() { BaseUrl = "http://localhost:5248" };
+        [Inject]
+        private IStorageService? storageService { get; set; }
+
+        public ServerConfiguration Model { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            Model = new()
+            {
+                BaseUrl = storageService.GetMyMusicServerURl(),
+                Password = storageService.GetServerPassword(),
+                DataApiKey = storageService.GetYouTubeDataApiKey()
+            };
+        }
 
         public async Task ApplyChanges()
         {
-            
+            if (!string.IsNullOrEmpty(Model.Password))
+            {
+                storageService.SetServerPassword(Model.Password);
+            }
+            if(!string.IsNullOrEmpty(Model.DataApiKey))
+            {
+                storageService.SetYouTubeDataApiKey(Model.DataApiKey);
+            }
+
+            if (!string.IsNullOrEmpty(Model.BaseUrl))
+            {
+                storageService.SetMyMusicServerURl(Model.BaseUrl);
+            }
         }
     }
 }

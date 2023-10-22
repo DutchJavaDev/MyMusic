@@ -6,7 +6,6 @@
 <h1>Hello, MyMusic</h1>
 
 Welcome to MyMusic
-@EnviromentProvider.GetDataApiKey()
 <EditForm Model="@Model" OnSubmit="@ApplyChanges">
     <div>
         <span>Url</span>
@@ -24,4 +23,5 @@ Welcome to MyMusic
 </EditForm>
 <br />
 
-<MyMusic.BlazorWasm.Components.Search></MyMusic.BlazorWasm.Components.Search>
+<Search>
+</Search>
