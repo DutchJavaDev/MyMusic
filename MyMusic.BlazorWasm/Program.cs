@@ -1,21 +1,26 @@
-using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MyMusic.BlazorWasm;
 using MyMusic.BlazorWasm.Services;
 using MyMusic.Common;
 
+EnviromentProvider.SetAssembly(typeof(Program).Assembly);
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient {});
-builder.Services.AddTransient(sp => new YouTubeService(new BaseClientService.Initializer()
-{
-    // redo this
-    ApiKey = "AIzaSyBt91nyVg3hdwEFT4iUWOk8kb1oIFhbCYs",
-    ApplicationName = "DexerKeyMM"
-}));
-builder.Services.AddSingleton<SearchService>();
+builder.Services.AddBlazoredLocalStorageAsSingleton();
+builder.Services.AddScoped(sp => new HttpClient());
+
+builder.Services.AddScoped<IStorageService>(sp => {
+
+    var storageInterface = sp.GetRequiredService<ISyncLocalStorageService>();
+    return new DefaultStorage(storageInterface);
+});
+
+builder.Services.AddScoped<SearchService>();
+
+
 await builder.Build().RunAsync();
