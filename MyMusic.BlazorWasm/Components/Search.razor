@@ -1,5 +1,4 @@
-﻿<div>
-    <h3>MyMusic Search</h3>
+﻿<h3>MyMusic Search</h3>
 
 
     <EditForm Model="@Model" OnSubmit="@SearchAsync">
@@ -9,4 +8,47 @@
         </div>
         <button type="submit">Search</button>
     </EditForm>
+
+<div id="wrapper">
+    @if (Result is not null)
+    {
+        <div id="first">
+            @foreach (var result in Result)
+            {
+                <div>
+                    Title: @result.Title
+                    <br>
+                    @if(!string.IsNullOrEmpty(result.Description))
+                    {
+                        <label>
+                            @result.Description
+                        </label>
+                    }
+                    <br>
+                        ID: @result.VideoId
+                    <br>
+                    <img src="@result.CoverUrl" alt="404">
+                </div>
+            }
+        </div>
+        <div id="second">
+            Progresssss
+        </div>
+    }
 </div>
+    <style>
+    #wrapper {
+        width: 100%;
+        border: 1px solid black;
+        overflow: hidden; /* will contain if #first is longer than #second */
+    }
+
+    #first {
+        width: 50%;
+        float: left; /* add this */
+    }
+
+    #second {
+        overflow: hidden; /* if you don't want #second to wrap below #first */
+    }
+    </style>
