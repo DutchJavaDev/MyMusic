@@ -2,6 +2,6 @@
 {
     public sealed class SearchModel
     {
-        public string? Query { get; set; }
+        public string? Query { get; set; } = string.Empty;
     }
 }
