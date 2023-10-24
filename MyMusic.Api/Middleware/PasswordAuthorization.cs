@@ -28,13 +28,7 @@ namespace MyMusic.Api.Middleware
             AuthorizationPolicy policy, 
             PolicyAuthorizationResult authorizeResult)
         {
-            if (!HasPassword(context))
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
-            }
-
-            if (!VerifyPassword(context, ServerPasswordHash ?? string.Empty))
+            if (!HasPassword(context) || !VerifyPassword(context, ServerPasswordHash ?? string.Empty))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
@@ -42,14 +36,14 @@ namespace MyMusic.Api.Middleware
 
             // Continue
             await next(context);
-            //await defaultHandler.HandleAsync(next, context, policy, authorizeResult);
         }
 
 
         // Header check
         private static bool HasPassword(HttpContext context)
         {
-            return context.Request.Headers.ContainsKey(ServerKey);
+            return context.Request.Headers.ContainsKey(ServerKey) ||
+                   context.Request.Query.ContainsKey(ServerKey);
         }
 
         private static bool VerifyPassword(HttpContext context,string serverPasswordHash)
