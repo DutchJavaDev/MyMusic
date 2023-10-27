@@ -1,0 +1,26 @@
+﻿<h3>SearchResult</h3>
+
+<h3>@Model.Title</h3>
+<img src="@Model.CoverUrl" />
+<label>@Model.Description</label>
+<button @onclick="Download">Download @Model.Title</button>
+@if(ProgressId != Guid.Empty)
+{
+    @ProgressId
+}
+@code {
+
+    [Inject]
+    public ApiService ApiService { get; set; }
+
+    [Parameter]
+    public SearcViewModel Model { get; set; }
+
+    private Guid? ProgressId;
+
+    async Task Download()
+    {
+        // api call
+        ProgressId = await ApiService.DownloadAsync(new() { Id = Model.VideoId, Name = Model.Title });
+    }
+}
