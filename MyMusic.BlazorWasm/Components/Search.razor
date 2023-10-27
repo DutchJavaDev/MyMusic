@@ -15,20 +15,7 @@
         <div id="first">
             @foreach (var result in Result)
             {
-                <div>
-                    Title: @result.Title
-                    <br>
-                    @if(!string.IsNullOrEmpty(result.Description))
-                    {
-                        <label>
-                            @result.Description
-                        </label>
-                    }
-                    <br>
-                        ID: @result.VideoId
-                    <br>
-                    <img src="@result.CoverUrl" alt="404">
-                </div>
+                <SearchResult Model="result"></SearchResult>
             }
         </div>
         <div id="second">
