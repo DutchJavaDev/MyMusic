@@ -16,7 +16,7 @@ namespace MyMusic.BlazorWasm.Pages
             base.OnParametersSet();
             Model = new()
             {
-                BaseUrl = storageService.GetMyMusicServerURl(),
+                BaseUrl = storageService.GetMyMusicServerURL(),
                 Password = storageService.GetServerPassword(),
                 DataApiKey = storageService.GetYouTubeDataApiKey()
             };
