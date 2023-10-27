@@ -6,5 +6,6 @@
         public string VideoId { get; set; }
         public string Description { get; set; }
         public string CoverUrl { get; set; }
+        public DateTime Published { get; set; }
     }
 }
