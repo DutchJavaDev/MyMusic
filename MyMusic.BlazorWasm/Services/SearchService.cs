@@ -7,11 +7,11 @@ namespace MyMusic.BlazorWasm.Services
     {
         private readonly string SearchV3Url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&";
 
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IStorageService _storageService;
-        public SearchService(HttpClient client, IStorageService storageService)
+        public SearchService(IHttpClientFactory httpClientFactory, IStorageService storageService)
         {
-            _client = client;
+            _httpClientFactory = httpClientFactory;
             _storageService = storageService;
         }
 
@@ -19,7 +19,9 @@ namespace MyMusic.BlazorWasm.Services
         {
             var url = CreateUrl(query);
 
-            var result = await _client.GetAsync(url);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(url);
+            var result = await client.GetAsync(url);
 
             return CreateViewModels(await result.Content.ReadAsStringAsync());
         }
