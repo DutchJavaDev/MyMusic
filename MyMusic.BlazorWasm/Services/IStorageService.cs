@@ -7,7 +7,7 @@
         string GetYouTubeDataApiKey();
         void SetYouTubeDataApiKey(string value);
 
-        string GetMyMusicServerURl();
+        string GetMyMusicServerURL();
         void SetMyMusicServerURl(string value);
     }
 }
