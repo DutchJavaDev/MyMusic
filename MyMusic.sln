@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMusic.Api", "MyMusic.Api\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMusic.Data", "MyMusic.Data\MyMusic.Data.csproj", "{BF79EA20-7602-4AD8-A68D-CB1696082FDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMusic.Common", "MyMusic.Common\MyMusic.Common.csproj", "{431303C8-3E60-4C24-9403-97649C5425C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMusic.Common", "MyMusic.Common\MyMusic.Common.csproj", "{431303C8-3E60-4C24-9403-97649C5425C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMusic.BlazorWasm", "MyMusic.BlazorWasm\MyMusic.BlazorWasm.csproj", "{18E7649A-0856-4C22-84E2-58CABCC4FDF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMusic.BlazorWasm", "MyMusic.BlazorWasm\MyMusic.BlazorWasm.csproj", "{18E7649A-0856-4C22-84E2-58CABCC4FDF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
