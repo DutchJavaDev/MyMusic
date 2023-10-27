@@ -15,7 +15,7 @@ namespace MyMusic.BlazorWasm.Services
             _syncLocalStorageService = syncLocalStorageService;
         }
 
-        public string GetMyMusicServerURl()
+        public string GetMyMusicServerURL()
         {
             return _syncLocalStorageService.GetItemAsString(msulrKey);
         }
@@ -32,6 +32,12 @@ namespace MyMusic.BlazorWasm.Services
 
         public void SetMyMusicServerURl(string value)
         {
+            // Don't ask why
+            if(!value.EndsWith("/"))
+            {
+                value += '/';
+            }
+
             Set(msulrKey, value);
         }
 
