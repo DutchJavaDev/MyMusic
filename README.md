@@ -1,38 +1,47 @@
-# About
-A personal clone of Spotify to see if it can be created cheaper using my own server to handle downloading YouTube videos and converting those to mp3 files, those mp3 files can be streamed or downloaded to a mp3 player running in a web browser or on a phone.
+A personal clone of Spotify to see if it can be created cheaper using your own server to handle converting videos to mp3 files, mp3 files can be streamed or downloaded to a mp3 player running in a web browser or on a phone.
 
-Redo architecture to micro-service: Note to self this is for the future version of this project.
 [Architecture](https://drive.google.com/file/d/1piXXR4OJywxrwHlFv3x89VZuT_wm_QbU/view?usp=sharing)
 
-# Docker Compose
-Combine web frontend with backend, database and object storage.
-For mobile only deploy backend, database and object storage
+LRC File :)
 
-# MyMusic Frontend (Latest Flutter version)
-Main use is to play music by streaming or locally by downloading, create playlist to group a collection of songs also manage the playlist by able to update and delete the playlist.
+# MyMusic Frontend (.NET MAUI)
+Search, download and play music from here.
+[UI (Figma)](https://www.figma.com/file/VkXHrNW3PIS2ou2nRswQA4/DarkUI%2FMusicPlayer-(Community)?type=design&mode=design&t=1GwHGTyWHWvkbKNF-1)
 
-### Pages
+### Nav
+Option to create a playlist
+Show all playlist
+### Pages/Popups
 
 #### Configuration
 Page to setup the server URL and input the password for the server, YouTube Data API
 API key. Stores the password after success full login to local storage.
 
-#### Main
-List of all my current songs, search component
+#### Home
+Search for songs here, download a song after searching for it
 
-#### Playlist
-Page to manage playlists
+#### Songs
+Show all songs
 
-#### MyMusic
-Listen to music :)
+#### Cloud download
+Show progress of all songs being downloading
+
+### Local download
+Show a list of all songs locally on the device
+
 ### Components
 #### Search
 Search videos to convert by using the YouTube Data API->backend
 Input field that will show a modal with the results.
 
 ### Services
-#### Download
-Downloads server files to local only for mobile, stream only for web!
+#### Search
+Search videos to be converted to mp3
+#### Server API
+Wrapper to make request to the server
+### Playlist service
+Manage user created playlists
+
 
 # MyMusic Backend (.NET 6 Web API)
 The server will have a API that can be called by the frontends, the API will handle downloading videos from YouTube and converting those to mp3 files that will be stored in Object Storage.
@@ -49,16 +58,10 @@ Checks if the password is present in the header if not then cancel the request. 
 
 ### Endpoints
 
-#### Mp3Pipeline
-Used to download a video, then convert and store it in storage
-#### Playlist
-Used to manage playlist
-#### Music
-Used for streaming music
 #### Download
-Used for downloading music to device
-#### Stream
-Used for streaming music to device
+Used to download a video, then convert and store it in storage
+A three step process
+
 ### Streaming & Downloading
 https://stackoverflow.com/questions/76523932/downloading-a-file-from-minio-s3-storage-in-asp-net
 
