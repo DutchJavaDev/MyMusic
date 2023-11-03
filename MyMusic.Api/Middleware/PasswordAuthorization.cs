@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using MyMusic.Api.Services;
 using System.Data;
 
 namespace MyMusic.Api.Middleware
@@ -10,8 +11,11 @@ namespace MyMusic.Api.Middleware
         private static readonly string ServerKey = "SERVER_AUTHENTICATION";
         private readonly AuthorizationMiddlewareResultHandler defaultHandler = new();
         private readonly string? ServerPasswordHash;
+        private readonly DbLogger _dbLogger;
 
-        public PasswordAuthorization(IDbConnection connection)
+        public PasswordAuthorization(
+            IDbConnection connection,
+            DbLogger dbLogger)
         {
             using (connection)
             {
@@ -20,6 +24,7 @@ namespace MyMusic.Api.Middleware
                     .Query<string>("select server_password from mymusic.server_configuration")
                     .FirstOrDefault();
             }
+            _dbLogger = dbLogger;
         }
 
         public async Task HandleAsync(
@@ -31,6 +36,7 @@ namespace MyMusic.Api.Middleware
             if (!HasPassword(context) || !VerifyPassword(context, ServerPasswordHash ?? string.Empty))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await _dbLogger.LogAsync(new Exception("UnAuthorized request"));
                 return;
             }
 
