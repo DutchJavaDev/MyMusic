@@ -80,7 +80,7 @@ namespace MyMusic.Api.BackgroundServices
         {
             var query = @"select m.download_serial as DownloadId, m.file_path as FilePath
                           from mymusic.mp3media m
-                          inner join mymusic.download as d on d.serial = m.download_serial
+                          inner join mymusic.download as d on m.download_serial = d.serial
                           and d.state = @state
                           order by m.created_utc desc
                           limit 1;";
