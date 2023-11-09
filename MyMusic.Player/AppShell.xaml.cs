@@ -6,5 +6,10 @@
         {
             InitializeComponent();
         }
+
+        private async void OpenConfiguration(object sender, EventArgs args)
+        {
+            //await Navigation.push(new MainPage());
+        }
     }
 }

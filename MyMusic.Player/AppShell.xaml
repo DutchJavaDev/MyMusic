@@ -4,11 +4,26 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MyMusic.Player"
-    Shell.FlyoutBehavior="Disabled">
+    xmlns:pages="clr-namespace:MyMusic.Player.Pages"
+    Shell.FlyoutBehavior="Locked"
+    Shell.FlyoutWidth="150">
+    
+    <!-- Bug with .net 7 and .net maui, flyout is buggy -->
+    <ShellContent FlyoutIcon="house.png" Title="HOME" ContentTemplate="{DataTemplate local:MainPage}"/>
+    <ShellContent FlyoutIcon="songs.png" Title="SONGS" ContentTemplate="{DataTemplate pages:SongsPage}"/>
+    <ShellContent FlyoutIcon="cloud.png" Title="CLOUD" ContentTemplate="{DataTemplate pages:CloudDownloads}"/>
+    <ShellContent FlyoutIcon="local.png" Title="LOCAL" ContentTemplate="{DataTemplate pages:LocalDownloads}"/>
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <Shell.FlyoutFooter>
+        <Image Source="config.png" />
+        <!--<ContentView>
+            <VerticalStackLayout>
+                <Label Text="SERVER"/>
+                <HorizontalStackLayout>
+                    <Image Source="config.png" WidthRequest="32" HeightRequest="32"/>
+                    <Button Clicked="OpenConfiguration" Text="CONFIGURATION" TextColor="White" BackgroundColor="Transparent" FontSize="10" WidthRequest="120" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ContentView>-->
+    </Shell.FlyoutFooter>
 </Shell>
