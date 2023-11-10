@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyMusic.Api.Models.PipelineService;
 using MyMusic.Api.Services;
+using MyMusic.Common.Models;
 
 namespace MyMusic.Api.Controllers
 {
@@ -12,8 +12,14 @@ namespace MyMusic.Api.Controllers
             [FromServices] DownloadService pipeline
             )
         {
-            await pipeline.CreateDownloadRequest(request);
-            return Ok();
+            var id = await pipeline.CreateDownloadRequestAsync(request);
+
+            if (id != -1)
+            {
+                return Ok(id);
+            }
+
+            return BadRequest();
         }
     }
 }
