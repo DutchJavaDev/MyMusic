@@ -1,6 +1,4 @@
-﻿using Dapper;
-using System.Data;
-using VideoLibrary;
+﻿using VideoLibrary;
 
 namespace MyMusic.Api
 {
