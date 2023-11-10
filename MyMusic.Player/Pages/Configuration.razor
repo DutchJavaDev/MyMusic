@@ -1,30 +1,41 @@
 ﻿@page "/config"
-@attribute [NavigationInfo("oi-cog", "/config", "CONFIGURATION")]
+@attribute [NavigationInfo("oi-cog", "CONFIGURATION")]
+
+@inject ConfigurationService configuration
 
 <div class="container-fluid">
     <div class="w-75 m-auto">
+        <h3>Credentials</h3>
         <form>
             <div class="form-group mb-1">
                 <label for="serverUrl">Server address</label>
-                <input type="text" class="form-control" id="serverUrl" aria-describedby="serverHelp" placeholder="Enter url">
+                <input @bind-value="Model.ServerUrl" type="text" class="form-control" id="serverUrl" aria-describedby="serverHelp" placeholder="Enter url">
             </div>
             <div class="form-group mb-1">
                 <label for="serverPassword">Server Password</label>
-                <input type="password" class="form-control" id="serverPassword" placeholder="Password">
+                <input @bind-value="Model.ServerPassword" type="password" class="form-control" id="serverPassword" placeholder="Password">
             </div>
             <div class="form-group mb-1">
                 <label for="apiKey">API Key</label>
-                <input type="text" class="form-control" id="apiKey" aria-describedby="apikeyHelp" placeholder="Enter key">
+                <input @bind-value="Model.ApiKey" type="text" class="form-control" id="apiKey" aria-describedby="apikeyHelp" placeholder="Enter key">
             </div>
-            <button @onclick="CheckBeforeSave" type="button" class="btn btn-primary mt-2">Save Changes</button>
+            <button @onclick="SaveConfiguration" type="button" class="btn btn-primary mt-2">Save Changes</button>
         </form>
     </div>
 </div>
 
 
 @code {
-    void CheckBeforeSave()
+    private ServerConfiguration Model { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        
+        Model = await configuration.GetServerConfigurationAsync();
+    }
+
+    async Task SaveConfiguration()
+    {
+        var result = await configuration.SaveServverconfiguration(Model);
+        // Update some services, settings etc
     }
 }
