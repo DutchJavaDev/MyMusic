@@ -34,6 +34,7 @@ namespace MyMusic.Common
 
             // Rebuild
             var builder = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
                .AddUserSecrets(Assembly);
 
             configurationRoot = builder.Build();
@@ -51,11 +52,11 @@ namespace MyMusic.Common
             if (configurationRoot is null)
             {
                 var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddUserSecrets(Assembly);
 
                 configurationRoot = builder.Build();
             }
-
 
             if (configurationRoot[key] is not null)
             {
@@ -65,7 +66,10 @@ namespace MyMusic.Common
             }
 
             // Check enviroment
-            var environment = Environment.GetEnvironmentVariables();
+            var environment = Environment.GetEnvironmentVariables(
+                EnvironmentVariableTarget.Process | 
+                EnvironmentVariableTarget.User | 
+                EnvironmentVariableTarget.Machine);
 
             if (environment[key] is not null)
             {
