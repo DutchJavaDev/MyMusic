@@ -9,6 +9,7 @@ NpgsqlTransaction? transaction = null;
 try
 {
     await connection.OpenAsync();
+    
     transaction = await connection.BeginTransactionAsync();
 
     // run scripts
