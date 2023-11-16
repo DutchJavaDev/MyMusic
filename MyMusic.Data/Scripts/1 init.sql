@@ -29,7 +29,7 @@ create table if not exists download (
 create table if not exists mp3media (
 	serial serial primary key,
 	download_serial int references download (serial),
-	file_path text not null,
+	file_path text not null unique, -- make unique
 	created_utc timestamp not null default now()
 );
 
@@ -54,10 +54,8 @@ create table if not exists exception (
 DO $$ 
 declare 
 server_configuration_count int;
-
 begin
 server_configuration_count := 0;
-
 select count(*) into server_configuration_count from 
 (select 1 from mymusic.server_configuration limit 1);
 
