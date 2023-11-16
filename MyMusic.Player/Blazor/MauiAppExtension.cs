@@ -33,6 +33,7 @@ namespace MyMusic.Player.Blazor
             builder.Services.AddTransient<VideoDurationService>();
             builder.Services.AddTransient<SearchService>();
             builder.Services.AddTransient<ApiService>();
+            builder.Services.AddTransient<UpdaterService>();
         }
 
         private static IEnumerable<Type> GetBlazorPages()

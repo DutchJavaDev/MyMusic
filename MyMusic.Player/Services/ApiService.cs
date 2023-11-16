@@ -1,7 +1,7 @@
-﻿using ABI.System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text;
 using MyMusic.Common.Models;
+using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Services
 {
@@ -16,6 +16,28 @@ namespace MyMusic.Player.Services
             _httpClientFactory = httpClientFactory;
         }
 
+        public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync()
+        {
+            try
+            {
+                /// "SERVER_AUTHENTICATION"
+                /// 
+                var configuration = await _configurationService.GetServerConfigurationAsync();
+
+                var client = ConfigureApiClient(configuration);
+
+                var request = await client.GetAsync("download/status");
+
+                var stringContent = await request.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<IEnumerable<StatusModel>>(stringContent);
+            }
+            catch (Exception e)
+            {
+                return new StatusModel[] { new (){Name=e.Message } };
+            }
+        }
+
         public async Task<int> DownloadAsync(DownloadRequest downloadRequest)
         {
             try
@@ -23,23 +45,31 @@ namespace MyMusic.Player.Services
                 /// "SERVER_AUTHENTICATION"
                 /// 
                 var configuration = await _configurationService.GetServerConfigurationAsync();
-                var client = _httpClientFactory.CreateClient();
-                client.BaseAddress = new System.Uri(configuration.ServerUrl);
-                client.DefaultRequestHeaders.Add("SERVER_AUTHENTICATION", configuration.ServerPassword);
+
+                var client = ConfigureApiClient(configuration);
 
                 var content = JsonConvert.SerializeObject(downloadRequest);
 
                 // Encoding is import lol.........
-                var result = await client.PostAsync($"pipeline/downloadrequest", new StringContent(content, Encoding.UTF8, "application/json"));
+                var result = await client.PostAsync("download/start", new StringContent(content, Encoding.UTF8, "application/json"));
 
                 var stringContent = await result.Content.ReadAsStringAsync();
 
                 return int.Parse(stringContent);
             }
-            catch
+            catch(Exception ex)
             {
                 return -1;
             }
+        }
+
+        private HttpClient ConfigureApiClient(ServerConfiguration configuration)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(string.Concat(configuration.ServerUrl, "/api/"));
+            client.DefaultRequestHeaders.Add("SERVER_AUTHENTICATION", configuration.ServerPassword);
+
+            return client;
         }
     }
 }

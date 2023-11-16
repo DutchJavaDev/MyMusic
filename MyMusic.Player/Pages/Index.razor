@@ -6,6 +6,7 @@
         <SearchBar SearchCallBack="Search" />
     </div>
     <div class="search-container">
+        @LastDownloadRequest Last id 
         @if (Models.Count > 0)
         {
             <div class="row">
@@ -62,6 +63,8 @@
 
     public List<SearchViewModel> Models { get; set; }
 
+    public int LastDownloadRequest { get; set; }
+
     protected override void OnInitialized()
     {
         Models = SearchService.SearchResults;
@@ -83,12 +86,14 @@
 
     public async Task DownLoadAsync(SearchViewModel model)
     {
-        var id = await ApiService.DownloadAsync(new DownloadRequest
+        LastDownloadRequest = await ApiService.DownloadAsync(new DownloadRequest
         {
             DownloadId = model.VideoId,
             Name = model.Title,
             Release = model.Published
         });
+
+        //StateHasChanged();
 
         // Store in local db to keep track in cloud page
     }

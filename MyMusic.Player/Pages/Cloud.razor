@@ -1,6 +1,19 @@
 ﻿@page "/cloud"
 @attribute [NavigationInfo("oi-cloud-download","CLOUD",2)]
 
-@code {
-
-}
+ <div class="container">
+     <br />
+    @if (Models is not null && Models.Any())
+    {
+        <div class="row">
+            @foreach(var model in Models.OrderBy(i => i.State))
+            {
+                <div class="col-6 border">
+                    <span>Name: @model.Name</span> <br>
+                    <span>State: @((Mp3State)model.State)</span> <br>
+                    <span>FilePatH: @(model.Path ?? "Not set")</span>
+                </div>
+            }
+        </div>
+    }
+ </div>
