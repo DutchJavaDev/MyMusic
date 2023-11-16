@@ -17,6 +17,7 @@ builder.Services.AddTransient<DbLogger>();
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, PasswordAuthorization>();
 builder.Services.AddScoped<MusicService>();
 builder.Services.AddScoped<DownloadService>();
+builder.Services.AddScoped<StatusService>();
 
 builder.Services.AddCors(conf => {
     conf.AddPolicy("dev_cors", policy => {
@@ -31,8 +32,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.AddHostedService<DownloadRequestService>();
-builder.Services.AddHostedService<Mp3ConvertService>();
+//builder.Services.AddHostedService<DownloadRequestService>();
 
 
 var app = builder.Build();

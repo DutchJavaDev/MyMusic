@@ -36,7 +36,7 @@ namespace MyMusic.Api.Middleware
             if (!HasPassword(context) || !VerifyPassword(context, ServerPasswordHash ?? string.Empty))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await _dbLogger.LogAsync(new Exception("UnAuthorized request"));
+                await _dbLogger.LogAsync(new Exception("UnAuthorized request"), messagePrefix: "PasswordAuthorization");
                 return;
             }
 

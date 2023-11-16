@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using MyMusic.Common.Models;
 using System.Data;
-using static MyMusic.Api.Utils;
+using static MyMusic.Common.CommonData;
 
 namespace MyMusic.Api.Services
 {

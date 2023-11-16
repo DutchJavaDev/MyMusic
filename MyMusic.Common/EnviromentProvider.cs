@@ -10,7 +10,7 @@ namespace MyMusic.Common
         private static readonly string databaseStringKey = "MM_databaseConnection";
         private static readonly string dataApiKey = "MM_dataApiKey";
 
-        private static IConfigurationRoot? configurationRoot;
+        private static IConfigurationRoot configurationRoot;
         private static Assembly Assembly;
 
         static EnviromentProvider() 
@@ -60,7 +60,7 @@ namespace MyMusic.Common
 
             if (configurationRoot[key] is not null)
             {
-                _cache[key] = configurationRoot[key];
+                _cache[key] = configurationRoot[key] ?? string.Empty;
 
                 return _cache[key];
             }
