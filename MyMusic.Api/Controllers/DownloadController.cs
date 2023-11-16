@@ -8,18 +8,25 @@ namespace MyMusic.Api.Controllers
     {
         [HttpPost("start")]
         public async Task<IActionResult> Start(
-            [FromBody] DownloadRequest request,
-            [FromServices] DownloadService pipeline
+            [FromBody] DownloadRequest downloadRequest,
+            [FromServices] DownloadService downloadService
             )
         {
-            var id = await pipeline.CreateDownloadRequestAsync(request);
+            var id = await downloadService.CreateDownloadRequestAsync(downloadRequest);
 
-            if (id != -1)
+            if (id > -1)
             {
                 return Ok(id);
             }
 
             return BadRequest();
+        }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> Status(
+            [FromServices] StatusService statusService)
+        {
+            return Ok(await statusService.GetStatusModelsAsync());
         }
     }
 }
