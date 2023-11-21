@@ -2,6 +2,7 @@
 using System.Text;
 using MyMusic.Common.Models;
 using MyMusic.Player.Storage.Models;
+using MyMusic.Player.Blazor.Models.Logging;
 
 namespace MyMusic.Player.Services
 {
@@ -9,11 +10,15 @@ namespace MyMusic.Player.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ConfigurationService _configurationService;
+        private readonly LogService _logService;
 
-        public ApiService(IHttpClientFactory httpClientFactory, ConfigurationService configurationService)
+        public ApiService(IHttpClientFactory httpClientFactory, 
+            ConfigurationService configurationService,
+            LogService logService)
         {
             _configurationService = configurationService;
             _httpClientFactory = httpClientFactory;
+            _logService = logService;
         }
 
         public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync()
@@ -34,7 +39,9 @@ namespace MyMusic.Player.Services
             }
             catch (Exception e)
             {
-                return new StatusModel[] { new (){Name=e.Message } };
+                await _logService.WriteLogAsync(LogEntry.FromException(e));
+
+                return new StatusModel[] { new (){Name="Error Check logs" } };
             }
         }
 
@@ -42,8 +49,8 @@ namespace MyMusic.Player.Services
         {
             try
             {
-                /// "SERVER_AUTHENTICATION"
-                /// 
+                // "SERVER_AUTHENTICATION"
+                // 
                 var configuration = await _configurationService.GetServerConfigurationAsync();
 
                 var client = ConfigureApiClient(configuration);
@@ -57,8 +64,10 @@ namespace MyMusic.Player.Services
 
                 return int.Parse(stringContent);
             }
-            catch(Exception ex)
+            catch(Exception e)
             {
+                await _logService.WriteLogAsync(LogEntry.FromException(e));
+
                 return -1;
             }
         }

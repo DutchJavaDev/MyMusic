@@ -1,4 +1,5 @@
 ﻿using MyMusic.Player.Blazor;
+using MyMusic.Player.Blazor.Models.Logging;
 using MyMusic.Player.Blazor.Models.Search;
 using Newtonsoft.Json;
 using System.Text;
@@ -12,16 +13,19 @@ namespace MyMusic.Player.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ConfigurationService _configurationService;
         private readonly VideoDurationService _videoDurationService;
+        private readonly LogService _logService;
         public static readonly List<SearchViewModel> SearchResults = Array.Empty<SearchViewModel>()
             .ToList();
 
         public SearchService(IHttpClientFactory httpClientFactory,
             ConfigurationService configurationService,
-            VideoDurationService videoDurationService)
+            VideoDurationService videoDurationService,
+            LogService log)
         {
             _httpClientFactory = httpClientFactory;
             _configurationService = configurationService;
             _videoDurationService = videoDurationService;
+            _logService = log;
         }
 
         public async Task SearchAsync(string query)
@@ -41,9 +45,11 @@ namespace MyMusic.Player.Services
 
                 CreateViewModels(await result.Content.ReadAsStringAsync());
             }
-            catch
+            catch (Exception e)
             {
-                // Error model?
+                await _logService.WriteLogAsync(LogEntry.FromException(e));
+
+                // js notification service popup?
             }
         }
 

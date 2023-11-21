@@ -2,18 +2,10 @@
 
 namespace MyMusic.Player.Services
 {
-    public sealed class VideoDurationService
+    public sealed class VideoDurationService(IHttpClientFactory _httpClientFactory,
+        ConfigurationService _configurationService)
     {
         private readonly string VideoIdV3Url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&";
-
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ConfigurationService _configurationService;
-        public VideoDurationService(IHttpClientFactory httpClientFactory,
-            ConfigurationService configurationService)
-        {
-            _httpClientFactory = httpClientFactory;
-            _configurationService = configurationService;
-        }
 
         public async Task<Dictionary<string, TimeSpan>> GetVideoDurrations(string ids)
         {

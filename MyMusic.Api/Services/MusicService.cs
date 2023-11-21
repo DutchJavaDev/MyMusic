@@ -21,9 +21,9 @@ namespace MyMusic.Api.Services
                 date = DateTime.Now 
             };
             
-            var result = await connection.ExecuteScalarAsync(query, param);
+            var result = await connection.ExecuteScalarAsync<string?>(query, param);
 
-            return int.Parse(result?.ToString());
+            return int.Parse(result?.ToString() ?? string.Empty);
         }
 
     }

@@ -13,11 +13,11 @@ namespace MyMusic.Player
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-                
-            builder.ConfigureMyMusicNavigation();
+
+            builder.EnsureDatebaseCreation();
 
             builder.ConfigureMyMusicServices();
-            
+
             builder.Services.AddHttpClient();
 
             builder.Services.AddMauiBlazorWebView();

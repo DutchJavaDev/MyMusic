@@ -3,39 +3,22 @@ using SQLite;
 
 namespace MyMusic.Player.Services
 {
-    public sealed class ConfigurationService
+    public sealed class ConfigurationService(SQLiteAsyncConnection connection)
     {
-        private readonly SQLiteAsyncConnection _connection;
-        public ConfigurationService(SQLiteAsyncConnection connection)
+        private readonly SQLiteAsyncConnection _connection = connection;
+
+        private static ServerConfiguration _cachedConfig = null;
+
+        public async Task<ServerConfiguration> GetServerConfigurationAsync()
         {
-            _connection = connection;
-            CreateTable();
-        }
+            _cachedConfig ??= await _connection.Table<ServerConfiguration>().FirstOrDefaultAsync();
 
-        async void CreateTable()
-        {
-            await _connection.CreateTableAsync(typeof(ServerConfiguration));
-
-            var count = await _connection.Table<ServerConfiguration>().CountAsync();
-
-            if (count == 0)
-            {
-                await _connection.InsertOrReplaceAsync(new ServerConfiguration
-                {
-                    ApiKey = string.Empty,
-                    ServerPassword = string.Empty,
-                    ServerUrl = string.Empty,
-                });
-            }
-        }
-
-        public Task<ServerConfiguration> GetServerConfigurationAsync()
-        {
-            return _connection.Table<ServerConfiguration>().FirstOrDefaultAsync();
+            return _cachedConfig;
         }
 
         public Task<int> SaveServverconfiguration(ServerConfiguration configuration)
         {
+            _cachedConfig = configuration;
             return _connection.UpdateAsync(configuration);
         }
     }

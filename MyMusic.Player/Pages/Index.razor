@@ -7,6 +7,10 @@
     </div>
     <div class="search-container">
         @LastDownloadRequest Last id 
+        @if(LastDownloadRequest == -1)
+        {
+            <div class="text-center text-white">Check logs</div>
+        }
         @if (Models.Count > 0)
         {
             <div class="row">
@@ -28,7 +32,7 @@
                                     @model.Durration
                                 </div>
                                 <div>
-                                    <button @onclick="@(async (e) => await DownLoadAsync(model))" class="btn btn-primary">Download</button>
+                                    <button @onclick="@(async (e) => await SendDownLoadAsync(model))" class="btn btn-primary">Download</button>
                                 </div>
                             </div>
                         </div>
@@ -84,8 +88,9 @@
         StateHasChanged();
     }
 
-    public async Task DownLoadAsync(SearchViewModel model)
+    public async Task SendDownLoadAsync(SearchViewModel model)
     {
+
         LastDownloadRequest = await ApiService.DownloadAsync(new DownloadRequest
         {
             DownloadId = model.VideoId,

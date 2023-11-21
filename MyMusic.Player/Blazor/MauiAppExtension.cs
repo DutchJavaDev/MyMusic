@@ -7,33 +7,61 @@ using SQLite;
 using MyMusic.Player.Storage;
 using MyMusic.Player.Blazor.Models.Search;
 using MyMusic.Player.Services;
+using MyMusic.Player.Storage.Models;
+using MyMusic.Player.Blazor.Models.Logging;
 
 namespace MyMusic.Player.Blazor
 {
     public static class MauiAppExtension
     {
-        public static void ConfigureMyMusicNavigation(this MauiAppBuilder builder) 
+        private static readonly Type[] DatabaseSchemaTypes = new[] 
         {
-            var pages = GetBlazorPages();
+            typeof(ServerConfiguration),
+            typeof(LogEntry)
+        };
 
-            var service = new NavigationElementService(pages);
+        public static async void EnsureDatebaseCreation(this MauiAppBuilder builder)
+        {
+            var connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
-            builder.Services.AddSingleton(service);
+            // should check if some fail?
+            var schemasCreationResults = await connection.CreateTablesAsync(CreateFlags.ImplicitPK, DatabaseSchemaTypes);
+
+            var count = await connection.Table<ServerConfiguration>().CountAsync();
+
+            if (count! > 0)
+            {
+                await connection.InsertOrReplaceAsync(new ServerConfiguration
+                {
+                    ApiKey = string.Empty,
+                    ServerPassword = string.Empty,
+                    ServerUrl = string.Empty,
+                });
+            }
         }
 
         public static void ConfigureMyMusicServices(this MauiAppBuilder builder)
         {
             // Local database
-            builder.Services.TryAddTransient(sp =>
+            builder.Services.AddTransient(sp =>
             {
-                return new SQLiteAsyncConnection(Constants.DatabasePath,Constants.Flags);
+                return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
             });
 
+            builder.Services.AddTransient<LogService>();
             builder.Services.AddTransient<ConfigurationService>();
             builder.Services.AddTransient<VideoDurationService>();
             builder.Services.AddTransient<SearchService>();
             builder.Services.AddTransient<ApiService>();
             builder.Services.AddTransient<UpdaterService>();
+
+
+            // Navigation cause im lazy 
+            var pages = GetBlazorPages();
+
+            var service = new NavigationElementService(pages);
+
+            builder.Services.AddSingleton(service);
         }
 
         private static IEnumerable<Type> GetBlazorPages()
