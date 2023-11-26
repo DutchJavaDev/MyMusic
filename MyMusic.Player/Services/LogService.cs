@@ -1,5 +1,4 @@
 ﻿using MyMusic.Player.Blazor.Models.Logging;
-using MyMusic.Player.Storage.Models;
 using SQLite;
 
 namespace MyMusic.Player.Services
@@ -14,6 +13,25 @@ namespace MyMusic.Player.Services
             _ = _connection.InsertAsync(logEntry)
                 .ConfigureAwait(false);
 
+            return Task.CompletedTask;
+        }
+
+        public Task Log<T>(Exception exception, T t) where T : class
+        {
+            // Get type name
+            var type = t.GetType();
+            var name = type.Name;
+
+            // Format message as type name : exception message
+            var message = string.Concat(name, " ", exception.Message);
+
+            _ = _connection.InsertAsync(new LogEntry 
+            {
+                Message = message,
+                StackTrace = exception.StackTrace,
+                Created = DateTime.Now,
+            });
+            
             return Task.CompletedTask;
         }
 
