@@ -3,24 +3,32 @@
         <input disabled="@(!_ready)" class="form-control" @bind-value="Query" placeholder="Search song...."/>
     </div>
     <div class="col-2 text-center">
-        <button disabled="@(!_ready)" @onclick="@(() => SearchCallBack.Invoke(Query))">
-            <span class="oi oi-magnifying-glass"></span>@_ready
+        <button disabled="@(!_ready)" @onclick="(() => SearchEventCallBack.InvokeAsync(Query))">
+            <span class="oi oi-magnifying-glass"></span>
         </button>
     </div>
 </div>
 
 @code {
     [Parameter]
-    public Action<string> SearchCallBack { get; set; }
+    public EventCallback<string> SearchEventCallBack { get; set; }
 
-    private string? Query { get; set; } = string.Empty;
+    private string Query { get; set; } = string.Empty;
 
-    // No point? or does not work how i would like it to
-    // Bug, have to click 2x to enable search reason for this variable
     private bool _ready = false;
 
     protected override void OnParametersSet()
     {
         _ready = true;
+    }
+
+    private async void InvokeCallBack()
+    {
+        if (string.IsNullOrEmpty(Query))
+        {
+            // No need to search an empty string
+            return;
+        }
+        await SearchEventCallBack.InvokeAsync(Query);
     }
 }
