@@ -3,19 +3,27 @@
 namespace MyMusic.Player.Services
 {
     public sealed class VideoDurationService(IHttpClientFactory _httpClientFactory,
-        ConfigurationService _configurationService)
+        ConfigurationService _configurationService, LogService logService)
     {
         private readonly string VideoIdV3Url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&";
 
         public async Task<Dictionary<string, TimeSpan>> GetVideoDurrations(string ids)
         {
-            var stringContent = await GetIdsAsync(ids);
+            try
+            {
+                var stringContent = await GetIdsAsync(ids);
 
-            var dynamicResult = ParseDynamic(stringContent);
+                var dynamicResult = ParseDynamic(stringContent);
 
-            var items = ParseDynamic(dynamicResult["items"].ToString());
+                var items = ParseDynamic(dynamicResult["items"].ToString());
 
-            return CreateDurationDictionary(items);
+                return CreateDurationDictionary(items);
+            }
+            catch (Exception e)
+            {
+                await logService.Log(e,this);
+                return [];
+            }
         }
 
         private async Task<string> GetIdsAsync(string ids)
@@ -56,10 +64,10 @@ namespace MyMusic.Player.Services
         private async Task<string> CreateUrlAsync(string ids)
         {
             var apiKey = await GetApiKeyAsync();
-            return string.Concat(VideoIdV3Url, apiKey, Ids(ids));
+            return string.Concat(VideoIdV3Url, apiKey, VideoDurationService.Ids(ids));
         }
 
-        private string Ids(string query)
+        private static string Ids(string query)
         {
             return string.Concat("id=", query);
         }
@@ -67,6 +75,12 @@ namespace MyMusic.Player.Services
         private async Task<string> GetApiKeyAsync()
         {
             var apiKey = (await _configurationService.GetServerConfigurationAsync()).ApiKey;
+
+            if(string.IsNullOrEmpty(apiKey))
+            {
+                throw new Exception("Empty search key");
+            }
+
             return string.Concat("key=", apiKey, "&");
         }
     }
