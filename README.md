@@ -3,8 +3,16 @@ To see if it can be created cheaper using a vps/pi/local-pc to handle downloadin
 
 - [ ] MVP
   - [ ]   Working api
+    - [ ] Download search request
+    - [ ] Convert request to mp3
+    - [ ] Upload mp3 to s3 (minio)
+    - [ ] Update status   
   - [ ]   Working s3 storage (minio)
+    - [ ] Write-only account
+    - [ ] Read-only account   
   - [ ]   Working player
+    - [ ] Search music sources etc youtube etc
+    - [ ] Stream song from s3 storage (minio)   
 - [ ] Dockerize
   - [ ] Compose
   - [ ] Extra step Kubernetes?  
