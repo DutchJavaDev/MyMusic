@@ -49,9 +49,6 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Blazor\Components\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MyMusic.Common\MyMusic.Common.csproj" />
   </ItemGroup>
 </Project>
