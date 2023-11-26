@@ -7,18 +7,14 @@ namespace MyMusic.Player.Services
     {
         private readonly SQLiteAsyncConnection _connection = connection;
 
-        private static ServerConfiguration _cachedConfig = null;
-
         public async Task<ServerConfiguration> GetServerConfigurationAsync()
         {
-            _cachedConfig ??= await _connection.Table<ServerConfiguration>().FirstOrDefaultAsync();
-
-            return _cachedConfig;
+            return await _connection.Table<ServerConfiguration>()
+                    .FirstOrDefaultAsync(); ;
         }
 
         public Task<int> SaveServverconfiguration(ServerConfiguration configuration)
         {
-            _cachedConfig = configuration;
             return _connection.UpdateAsync(configuration);
         }
     }
