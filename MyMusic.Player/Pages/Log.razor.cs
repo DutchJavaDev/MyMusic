@@ -11,7 +11,7 @@ namespace MyMusic.Player.Pages
         [Inject]
         public UpdaterService UpdaterService { get; set; }
 
-        private readonly Guid _updaterId = new Guid("4a79b5ec-0b42-4c47-994e-282cf63c8adf");
+        private readonly Guid _updaterId = new("4a79b5ec-0b42-4c47-994e-282cf63c8adf");
 
         public List<LogEntry> Logs { get; set; }
 
@@ -30,7 +30,7 @@ namespace MyMusic.Player.Pages
 
         public void Dispose()
         {
-            UpdaterService.RemoveUpdateCallBack(_updaterId);
+           UpdaterService.RemoveUpdateCallBack(_updaterId);
         }
     }
 }

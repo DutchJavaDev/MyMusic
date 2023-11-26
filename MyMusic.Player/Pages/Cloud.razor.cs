@@ -8,8 +8,8 @@ namespace MyMusic.Player.Pages
     {
         [Inject]
         private ApiService ApiService { get; set; }
-        [Inject]
 
+        [Inject]
         private UpdaterService UpdaterService { get; set; }
 
         private readonly Guid _updaterId = new("4c0cfd19-d204-40d2-8ad1-39f576439790");

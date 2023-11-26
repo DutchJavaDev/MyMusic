@@ -1,9 +1,9 @@
 ﻿@page "/logs"
 
-@* Icon not working lollololoolo *@
-@attribute [NavigationInfo("io-home","LOGS")]
+@attribute [NavigationInfo("oi-home","LOGS")]
 
 <div>
+    Updates: @UpdateCount
     @if (Logs is not null)
     {
         <div class="row"> 
@@ -13,7 +13,7 @@
                 <div class="col-12">
                     <div><b>@log.Message</b></div>
                     <div>@log.StackTrace</div>
-                    <div>@log.Created.ToLongDateString()</div>
+                    <div>@log.Created</div>
                 </div>
             }
 
