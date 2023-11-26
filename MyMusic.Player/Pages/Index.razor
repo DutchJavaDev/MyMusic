@@ -3,16 +3,20 @@
 
 <div class="container-fluid">
     <div class="w-50 m-auto">
-        <SearchBar SearchCallBack="Search" />
+        <SearchBar SearchEventCallBack="Search" />
     </div>
     <div class="search-container">
-        @LastDownloadRequest Last id 
-        @if(LastDownloadRequest == -1)
+        @LastDownloadId Last id 
+        @if (_searching)
+        {
+            <div>
+                Searching......
+            </div>
+        }
+        @if(LastDownloadId == -1)
         {
             <div class="text-center text-white">Check logs</div>
         }
-        @if (Models.Count > 0)
-        {
             <div class="row">
                 @foreach (var model in Models)
                 {
@@ -39,11 +43,6 @@
                     </div>
                 }
             </div>
-        }
-        else
-        {
-            <span class="m-auto">Search a song ........</span>
-        }
     </div>
 </div>
 
@@ -57,49 +56,3 @@
         padding: 20px;
     }
 </style>
-@code{
-
-    [Inject]
-    public SearchService SearchService { get; set; }
-
-    [Inject]
-    public ApiService ApiService { get; set; }
-
-    public List<SearchViewModel> Models { get; set; }
-
-    public int LastDownloadRequest { get; set; }
-
-    protected override void OnInitialized()
-    {
-        Models = SearchService.SearchResults;
-    }
-
-    public async void Search(string query)
-    {
-        await SearchService.SearchAsync(query);
-
-        // Scroll back to the top
-        // Im lazy
-        Models = Enumerable.Empty<SearchViewModel>().ToList();
-        StateHasChanged();
-
-        Models = SearchService.SearchResults;
-
-        StateHasChanged();
-    }
-
-    public async Task SendDownLoadAsync(SearchViewModel model)
-    {
-
-        LastDownloadRequest = await ApiService.DownloadAsync(new DownloadRequest
-        {
-            DownloadId = model.VideoId,
-            Name = model.Title,
-            Release = model.Published
-        });
-
-        //StateHasChanged();
-
-        // Store in local db to keep track in cloud page
-    }
-}

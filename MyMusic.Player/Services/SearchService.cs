@@ -1,5 +1,4 @@
 ﻿using MyMusic.Player.Blazor;
-using MyMusic.Player.Blazor.Models.Logging;
 using MyMusic.Player.Blazor.Models.Search;
 using Newtonsoft.Json;
 using System.Text;
@@ -28,32 +27,35 @@ namespace MyMusic.Player.Services
             _logService = log;
         }
 
-        public async Task SearchAsync(string query)
+        public async Task<List<SearchViewModel>> SearchAsync(string query)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(query))
                 {
-                    return;
+                    return Enumerable.Empty<SearchViewModel>().ToList();
                 }
 
-                var url = await CreateUrlAsync(query);
+                var url = await CreateUrlAsync(query).ConfigureAwait(false);
 
                 var client = _httpClientFactory.CreateClient();
                 client.BaseAddress = new Uri(url);
-                var result = await client.GetAsync(url);
+                var result = await client.GetAsync(url).ConfigureAwait(false);
 
-                CreateViewModels(await result.Content.ReadAsStringAsync());
+                var response = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                return await CreateViewModels(response);
             }
             catch (Exception e)
             {
-                await _logService.WriteLogAsync(LogEntry.FromException(e));
+                await _logService.Log(e, this).ConfigureAwait(false);
 
                 // js notification service popup?
+                return Enumerable.Empty<SearchViewModel>().ToList();
             }
         }
 
-        private async void CreateViewModels(string response)
+        private async Task<List<SearchViewModel>> CreateViewModels(string response)
         {
             var results = JsonConvert.DeserializeObject<SearchResult>(response);
 
@@ -63,8 +65,8 @@ namespace MyMusic.Player.Services
             var ids = CreateIdString(models);
 
             // Get durations
-            // WHY WHY WHY youtube whyyy do i have to make a second request just ot get the durations.......
-            var videoIds = await _videoDurationService.GetVideoDurrations(ids);
+            // WHY WHY WHY youtube whyyy do i have to make a second request just to get the durations.......
+            var videoIds = await _videoDurationService.GetVideoDurrations(ids).ConfigureAwait(false);
 
             // Update
             foreach (var model in models)
@@ -72,8 +74,7 @@ namespace MyMusic.Player.Services
                 model.Durration = videoIds[model.VideoId];
             }
 
-            SearchResults.Clear();
-            SearchResults.AddRange(models);
+            return models;
         }
 
         private static string CreateIdString(IEnumerable<SearchViewModel> models)
@@ -97,7 +98,7 @@ namespace MyMusic.Player.Services
 
         private async Task<string> CreateUrlAsync(string query)
         {
-            var apiKey = await GetApiKeyAsync();
+            var apiKey = await GetApiKeyAsync().ConfigureAwait(false);
             return string.Concat(SearchV3Url, apiKey, Query(query));
         }
 
@@ -108,8 +109,9 @@ namespace MyMusic.Player.Services
 
         private async Task<string> GetApiKeyAsync()
         {
-            var apiKey = (await _configurationService.GetServerConfigurationAsync()).ApiKey;
-            return string.Concat("key=", apiKey, "&");
+            var configuration = await _configurationService.GetServerConfigurationAsync().ConfigureAwait(false);
+
+            return string.Concat("key=", configuration.ApiKey, "&");
         }
     }
 }
