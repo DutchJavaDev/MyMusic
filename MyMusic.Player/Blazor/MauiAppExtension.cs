@@ -2,7 +2,6 @@
 using System.Reflection;
 using MyMusic.Player.Blazor.Attributes;
 using MyMusic.Player.Blazor.Models;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using SQLite;
 using MyMusic.Player.Storage;
 using MyMusic.Player.Blazor.Models.Search;
@@ -29,7 +28,7 @@ namespace MyMusic.Player.Blazor
 
             var count = await connection.Table<ServerConfiguration>().CountAsync();
 
-            if (count! > 0)
+            if (count == 0)
             {
                 await connection.InsertOrReplaceAsync(new ServerConfiguration
                 {
@@ -55,7 +54,6 @@ namespace MyMusic.Player.Blazor
             builder.Services.AddTransient<ApiService>();
             builder.Services.AddTransient<UpdaterService>();
 
-
             // Navigation cause im lazy 
             var pages = GetBlazorPages();
 
@@ -68,7 +66,7 @@ namespace MyMusic.Player.Blazor
         {
             var types = Assembly.GetExecutingAssembly().GetTypes();
             return types.Where(i => Attribute.IsDefined(i, typeof(RouteAttribute))
-            && Attribute.IsDefined(i, typeof(NavigationInfoAttribute))).ToList();
+            && Attribute.IsDefined(i, typeof(NavigationInfoAttribute)));
         }
 
         public static NavLinkElement CreateNavigationLink(this NavigationInfoAttribute navigation, RouteAttribute route)
@@ -85,6 +83,12 @@ namespace MyMusic.Player.Blazor
 
         public static List<SearchViewModel> ToViewModels(this List<Item> result)
         {
+            if(result == null)
+            {
+                return Enumerable.Empty<SearchViewModel>()
+                    .ToList();
+            }
+
             return result.Select(i => new SearchViewModel
             {
                 Title = i.snippet.title,
