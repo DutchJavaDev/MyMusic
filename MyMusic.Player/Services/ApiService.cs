@@ -39,7 +39,7 @@ namespace MyMusic.Player.Services
             }
             catch (Exception e)
             {
-                await _logService.WriteLogAsync(LogEntry.FromException(e));
+                await _logService.Log(e,this);
 
                 return new StatusModel[] { new (){Name="Error Check logs" } };
             }
@@ -66,7 +66,7 @@ namespace MyMusic.Player.Services
             }
             catch(Exception e)
             {
-                await _logService.WriteLogAsync(LogEntry.FromException(e));
+                await _logService.Log(e,this);
 
                 return -1;
             }
@@ -74,6 +74,11 @@ namespace MyMusic.Player.Services
 
         private HttpClient ConfigureApiClient(ServerConfiguration configuration)
         {
+            if(string.IsNullOrEmpty(configuration.ServerUrl) || string.IsNullOrEmpty(configuration.ServerPassword))
+            {
+                throw new Exception("Invalid configuration");
+            }
+
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(string.Concat(configuration.ServerUrl, "/api/"));
             client.DefaultRequestHeaders.Add("SERVER_AUTHENTICATION", configuration.ServerPassword);
