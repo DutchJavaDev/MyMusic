@@ -26,6 +26,7 @@ require (
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/safchain/ethtool v0.3.0 // indirect
 	github.com/secure-io/sio-go v0.3.1 // indirect
+	github.com/sethvargo/go-password v0.2.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
