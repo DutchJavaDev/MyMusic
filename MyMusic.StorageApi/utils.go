@@ -2,28 +2,22 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sethvargo/go-password/password"
 )
 
 const PASSWORD_LENGHT = 12
 const MAX_DIGITS = 4
-const MAX_SYMBOLS = 2
+const MAX_SYMBOLS = 0
 const NO_UPPERCASE = false
 const REPEAT = false
 
-func GetRequestModelFromReader(r io.ReadCloser) CreateStorageUserModel {
+func GetRequestModelFromReader(c *gin.Context) CreateStorageUserModel {
 	var model CreateStorageUserModel
-	err := json.Unmarshal([]byte(r.Close().Error()), &model)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
+	c.BindJSON(&model)
 	return model
 }
 
@@ -49,8 +43,8 @@ func InsertMinioUser(name string, password string, policy string) {
 	// Insert user
 
 	// Did this without learning go, this can be done beter i know
-	query := fmt.Sprintf("insert into mymusic.minio_users (name,password,policy) values(%s,%s,%s", name, password, policy)
-
+	query := fmt.Sprintf("insert into mymusic.minio_users (name,password,policy) values('%s','%s','%s')", name, password, policy)
+	fmt.Println(query)
 	rows, err := db.Query(context.Background(), query)
 
 	if err != nil {
@@ -60,6 +54,7 @@ func InsertMinioUser(name string, password string, policy string) {
 	fmt.Println(rows)
 }
 
+// / Does not set permisson to list objects in webview
 func CreateMinioUserWithPolicy(model CreateStorageUserModel, password string) {
 	mdmClnt, err := CreateMinioClient()
 
