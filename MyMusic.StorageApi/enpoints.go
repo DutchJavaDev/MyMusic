@@ -6,7 +6,7 @@ import (
 
 func CreateStorageUser(c *gin.Context) {
 
-	model := GetRequestModelFromReader(c.Request.Body)
+	model := GetRequestModelFromReader(c)
 
 	password := GeneratePassword()
 
