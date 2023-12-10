@@ -13,11 +13,11 @@ namespace MyMusic.Player.Blazor
 {
     public static class MauiAppExtension
     {
-        private static readonly Type[] DatabaseSchemaTypes = new[] 
-        {
+        private static readonly Type[] DatabaseSchemaTypes =
+        [
             typeof(ServerConfiguration),
             typeof(LogEntry)
-        };
+        ];
 
         public static async void EnsureDatebaseCreation(this MauiAppBuilder builder)
         {

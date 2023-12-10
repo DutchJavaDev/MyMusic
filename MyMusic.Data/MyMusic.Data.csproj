@@ -11,12 +11,14 @@
     <None Remove="Scripts\0 base functions.sql" />
     <None Remove="Scripts\1 init.sql" />
     <None Remove="Scripts\2 concurrent_downloads.sql" />
+    <None Remove="Scripts\3 minio_configuration.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\0 base functions.sql" />
     <EmbeddedResource Include="Scripts\1 init.sql" />
     <EmbeddedResource Include="Scripts\2 concurrent_downloads.sql" />
+    <EmbeddedResource Include="Scripts\3 minio_configuration.sql" />
   </ItemGroup>
 
   <ItemGroup>
