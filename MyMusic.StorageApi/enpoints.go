@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,8 +13,14 @@ func CreateStorageUser(c *gin.Context) {
 	password := GeneratePassword()
 
 	// Create user in minio
-	CreateMinioUserWithPolicy(model, password)
+	created, error := CreateMinioUserWithPolicy(model, password)
 
-	// Update database
-	InsertMinioUser(model.User, password, model.Policy)
+	if error != nil {
+		fmt.Println(error)
+	}
+
+	if created {
+		// Update database
+		InsertMinioUser(model.User, password, model.Policy)
+	}
 }

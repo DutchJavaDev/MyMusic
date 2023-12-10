@@ -55,24 +55,27 @@ func InsertMinioUser(name string, password string, policy string) {
 }
 
 // / Does not set permisson to list objects in webview
-func CreateMinioUserWithPolicy(model CreateStorageUserModel, password string) {
+func CreateMinioUserWithPolicy(model CreateStorageUserModel, password string) (bool, error) {
 	mdmClnt, err := CreateMinioClient()
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return false, err
 	}
 
 	// Add user
 	if err = mdmClnt.AddUser(context.Background(), model.User, password); err != nil {
 		// Failed
 		fmt.Println(err)
-		return
+		return false, err
 	}
 
 	// Set policy
 	if err = mdmClnt.SetPolicy(context.Background(), model.Policy, model.User, false); err != nil {
 		// Failed
 		fmt.Println(err)
+		return false, err
 	}
+
+	return true, err
 }

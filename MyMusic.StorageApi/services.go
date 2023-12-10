@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/jackc/pgx/v5"
@@ -13,7 +12,6 @@ func CreateMinioClient() (*madmin.AdminClient, error) {
 	endpoint := os.Getenv("storageapi_endpoint")
 	accessKeyID := os.Getenv("storageapi_user")
 	secretAccessKey := os.Getenv("storageapi_password")
-	fmt.Println(endpoint, accessKeyID, secretAccessKey)
 	useSSL := false
 	return madmin.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 }
