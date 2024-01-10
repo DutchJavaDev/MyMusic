@@ -7,9 +7,9 @@ To see if it can be created cheaper using a vps/pi/local-pc to handle downloadin
     - [x] Convert request to mp3
     - [ ] Upload mp3 to s3 (minio)
     - [ ] Update status   
-  - [ ]   Working s3 storage (minio)
-    - [ ] Write-only account
-    - [ ] Read-only account   
+  - [x]   Working s3 storage (minio)
+    - [x] Write-only account
+    - [x] Read-only account   
   - [ ]   Working player
     - [x] Search music sources etc youtube etc
     - [ ] Stream song from s3 storage (minio)   
