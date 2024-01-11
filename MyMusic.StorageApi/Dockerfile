@@ -24,7 +24,7 @@ COPY go.mod go.sum /builder/
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -v -o /builder/api /builder/api.go
+RUN go build -o /builder/api /builder/api.go
 
 # runner image
 FROM gcr.io/distroless/static:latest
