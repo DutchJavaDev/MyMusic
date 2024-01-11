@@ -24,8 +24,8 @@ RUN go mod download && go mod verify
 
 # runner image
 FROM gcr.io/distroless/static:latest
-WORKDIR /app
-COPY --from=base /builder/main main
+WORKDIR /usr/src/app
+COPY --from=base /builder/ /usr/src/app
 
 EXPOSE 8080
 CMD ["app"]
