@@ -6,6 +6,7 @@ namespace MyMusic.Api.Services
     public sealed class DbLogger : IDisposable
     {
         private readonly IDbConnection _dbConnection;
+        private readonly string AppName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
         public DbLogger(IDbConnection dbConnection) 
         {
             _dbConnection = dbConnection;
@@ -13,11 +14,12 @@ namespace MyMusic.Api.Services
 
         public async Task LogAsync(Exception e, string messagePrefix = "")
         {
-            var sql = @"INSERT INTO mymusic.exception(message, stacktrace)
-	                        VALUES (@Message, @StackTrace);";
+            var sql = @"INSERT INTO mymusic.exception(message, app, stacktrace)
+	                        VALUES (@Message, @AppName @StackTrace);";
             var param = new 
             {
                 Message = $"{messagePrefix} {e.Message}",
+                AppName,
                 e.StackTrace
             };
 
@@ -29,11 +31,12 @@ namespace MyMusic.Api.Services
 
         public async Task LogAsync(string message, string stacktrace = "")
         {
-            var sql = @"INSERT INTO mymusic.exception(message, stacktrace)
-	                        VALUES (@Message, @StackTrace);";
+            var sql = @"INSERT INTO mymusic.exception(message, app, stacktrace)
+	                        VALUES (@Message, @AppName @StackTrace);";
             var param = new
             {
                 Message = message,
+                AppName,
                 StackTrace = stacktrace
             };
 
