@@ -21,11 +21,13 @@ WORKDIR /builder
 ENV GO111MODULE=on CGO_ENABLED=0
 COPY go.mod go.sum /builder/
 RUN go mod download && go mod verify
+COPY . .
+RUN go build -v -o /usr/local/bin/app ./...
 
 # runner image
 FROM gcr.io/distroless/static:latest
 WORKDIR /usr/src/app
-COPY --from=base /builder/ /usr/src/app
+COPY --from=base /builder/ ./
 
 EXPOSE 8080
 CMD ["app"]
