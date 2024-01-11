@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +14,7 @@ func CreateStorageUser(c *gin.Context) {
 	created, error := CreateMinioUserWithPolicy(model, password)
 
 	if error != nil {
-		fmt.Println(error)
+		Error(error)
 	}
 
 	if created {

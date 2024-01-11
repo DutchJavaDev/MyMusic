@@ -25,10 +25,33 @@ func GeneratePassword() string {
 	res, err := password.Generate(PASSWORD_LENGHT, MAX_DIGITS, MAX_SYMBOLS, NO_UPPERCASE, REPEAT)
 
 	if err != nil {
-		fmt.Println(err)
+		Error(err)
 	}
 
 	return res
+}
+
+func Error(e error) {
+	db, err := CreateDatabaseClient()
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		fmt.Println("System exit.")
+		os.Exit(1)
+	}
+	defer db.Close(context.Background())
+
+	query := fmt.Sprintf("insert into mymusic.exception (message,app,stacktrace) values('%s','%s','%s')", "Oooops", "minio-auth", e.Error())
+	fmt.Println(query)
+	rows, err := db.Query(context.Background(), query)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	rows.Close()
+
+	fmt.Println(e)
 }
 
 func InsertMinioUser(name string, password string, policy string) {
@@ -48,7 +71,7 @@ func InsertMinioUser(name string, password string, policy string) {
 	rows, err := db.Query(context.Background(), query)
 
 	if err != nil {
-		fmt.Println(err)
+		Error(err)
 	}
 
 	fmt.Println(rows)
@@ -59,21 +82,18 @@ func CreateMinioUserWithPolicy(model CreateStorageUserModel, password string) (b
 	mdmClnt, err := CreateMinioClient()
 
 	if err != nil {
-		fmt.Println(err)
 		return false, err
 	}
 
 	// Add user
 	if err = mdmClnt.AddUser(context.Background(), model.User, password); err != nil {
 		// Failed
-		fmt.Println(err)
 		return false, err
 	}
 
 	// Set policy
 	if err = mdmClnt.SetPolicy(context.Background(), model.Policy, model.User, false); err != nil {
 		// Failed
-		fmt.Println(err)
 		return false, err
 	}
 
