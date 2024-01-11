@@ -19,15 +19,18 @@ FROM golang:latest as base
 WORKDIR /builder
 
 ENV GO111MODULE=on CGO_ENABLED=0
+
 COPY go.mod go.sum /builder/
 RUN go mod download && go mod verify
+
 COPY . .
-RUN go build -v -o /builder ./...
+RUN go build -v -o /builder/api /builder/api.go
 
 # runner image
 FROM gcr.io/distroless/static:latest
-WORKDIR /usr/src/app
-COPY --from=base /builder/ ./
+
+WORKDIR /usr/src/
+COPY --from=base /builder/api api
 
 EXPOSE 8080
-CMD ["api"]
+CMD ["/usr/src/api"]
