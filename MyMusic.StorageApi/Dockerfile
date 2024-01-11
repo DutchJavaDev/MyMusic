@@ -30,4 +30,4 @@ WORKDIR /usr/src/app
 COPY --from=base /builder/ ./
 
 EXPOSE 8080
-CMD ["app"]
+CMD ["api"]
