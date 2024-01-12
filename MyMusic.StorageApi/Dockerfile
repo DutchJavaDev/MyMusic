@@ -15,22 +15,20 @@
 
 #############
 
-FROM golang:latest as base
-WORKDIR /builder
+FROM golang:latest as builder
+WORKDIR /app
 
-ENV GO111MODULE=on CGO_ENABLED=0
-
-COPY go.mod go.sum /builder/
-RUN go mod download && go mod verify
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY . .
-RUN go build -o .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/api .
 
 # runner image
-FROM gcr.io/distroless/static:latest
+FROM scratch
 
 WORKDIR /usr/src/
-COPY --from=base /builder/ .
+COPY --from=builder /app .
 
 EXPOSE 8080
-ENTRYPOINT ./storageapi
+ENTRYPOINT ./api
