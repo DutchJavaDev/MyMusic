@@ -9,6 +9,7 @@ namespace MyMusic.Common
 
         private static readonly string databaseStringKey = "MM_databaseConnection";
         private static readonly string dataApiKey = "MM_dataApiKey";
+        private static readonly string storageApiEnpointKey = "storageapi_endpoint";
 
         private static IConfigurationRoot configurationRoot;
         private static Assembly Assembly;
@@ -16,6 +17,11 @@ namespace MyMusic.Common
         static EnviromentProvider() 
         {
             Assembly = typeof(EnviromentProvider).Assembly;
+        }
+
+        public static string? GetStorageApiEndpoint()
+        {
+            return GetValue(storageApiEnpointKey);
         }
 
         public static string? GetDatabaseConnectionString()

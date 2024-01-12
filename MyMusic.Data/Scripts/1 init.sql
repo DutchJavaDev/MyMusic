@@ -37,6 +37,7 @@ create table if not exists mp3media (
 create table if not exists exception (
 	serial serial primary key,
 	message text not null,
+	app text not null,
 	stacktrace text null,
 	created_utc timestamp not null default now()
 );

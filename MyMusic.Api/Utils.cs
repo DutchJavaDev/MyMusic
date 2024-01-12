@@ -4,6 +4,9 @@ namespace MyMusic.Api
 {
     public static class Utils
     {
+        public readonly static string MinioReadonlyPolicy = "readonly";
+        public readonly static string MinioWriteOnlyPolicy = "writeonly";
+
         private readonly static string DownloadFolderName = "mymusic_downloads";
         private readonly static string AudioSourceFolder = "mymusic_source";
         private static readonly string DownloadFolderPath = string.Empty;

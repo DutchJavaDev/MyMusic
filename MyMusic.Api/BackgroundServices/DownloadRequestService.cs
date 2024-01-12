@@ -54,6 +54,7 @@ namespace MyMusic.Api.BackgroundServices
 
                 var streamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
 
+                // TODO: Pre create file path instead of here
                 var filePath = Utils.GenerateDownloadPath();
 
                 // Download the stream to a file

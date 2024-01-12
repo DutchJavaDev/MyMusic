@@ -12,12 +12,14 @@ var connectionString = EnviromentProvider.GetDatabaseConnectionString();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpClient();
 builder.Services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(connectionString));
 builder.Services.AddTransient<DbLogger>();
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, PasswordAuthorization>();
 builder.Services.AddScoped<MusicService>();
 builder.Services.AddScoped<DownloadService>();
 builder.Services.AddScoped<StatusService>();
+builder.Services.AddScoped<StorageApiAccountService>();
 
 builder.Services.AddCors(conf => {
     conf.AddPolicy("dev_cors", policy => {
@@ -32,10 +34,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
-//builder.Services.AddHostedService<DownloadRequestService>();
-
+builder.Services.AddHostedService<DownloadRequestService>();
 
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.
