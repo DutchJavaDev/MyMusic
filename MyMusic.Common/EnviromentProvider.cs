@@ -72,10 +72,7 @@ namespace MyMusic.Common
             }
 
             // Check enviroment
-            var environment = Environment.GetEnvironmentVariables(
-                EnvironmentVariableTarget.Process | 
-                EnvironmentVariableTarget.User | 
-                EnvironmentVariableTarget.Machine);
+            var environment = Environment.GetEnvironmentVariables();
 
             if (environment[key] is not null)
             {
