@@ -30,7 +30,7 @@ RUN go build -o .
 FROM gcr.io/distroless/static:latest
 
 WORKDIR /usr/src/
-COPY --from=base /builder/api/storageapi /usr/src/api
+COPY --from=base /builder/storageapi.exe /usr/src/api
 
 EXPOSE 8080
 ENTRYPOINT ./api
