@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY MyMusic.Api.csproj, MyMusic.Api/
-COPY ./MyMusic.Common/MyMusic.Common.csproj MyMusic.Common/
+COPY ././MyMusic.Common/MyMusic.Common.csproj MyMusic.Common/
 RUN dotnet restore "./MyMusic.Api/./MyMusic.Api.csproj"
 COPY . .
 WORKDIR "/src/MyMusic.Api"
