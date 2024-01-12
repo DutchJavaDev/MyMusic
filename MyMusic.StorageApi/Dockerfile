@@ -32,5 +32,4 @@ FROM scratch
 WORKDIR /usr/src/
 COPY --from=builder /app .
 
-EXPOSE 8080
 CMD ["./api"]
