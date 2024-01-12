@@ -10,17 +10,17 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY MyMusic.Api.csproj, MyMusic.Api/
-COPY /../MyMusic.Common/MyMusic.Common.csproj MyMusic.Common/
-#RUN dotnet restore "./MyMusic.Api/./MyMusic.Api.csproj"
-#COPY . .
-#WORKDIR "/src/MyMusic.Api"
-#RUN dotnet build "./MyMusic.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
-#
-#FROM build AS publish
-#ARG BUILD_CONFIGURATION=Release
-#RUN dotnet publish "./MyMusic.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-#
-#FROM base AS final
-#WORKDIR /app
-#COPY --from=publish /app/publish .
-#ENTRYPOINT ["dotnet", "MyMusic.Api.dll"]
+COPY ./MyMusic.Common/MyMusic.Common.csproj MyMusic.Common/
+RUN dotnet restore "./MyMusic.Api/./MyMusic.Api.csproj"
+COPY . .
+WORKDIR "/src/MyMusic.Api"
+RUN dotnet build "./MyMusic.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./MyMusic.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "MyMusic.Api.dll"]
