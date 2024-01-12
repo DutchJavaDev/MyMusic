@@ -24,13 +24,13 @@ COPY go.mod go.sum /builder/
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -o /builder/api /builder/api.go
+RUN go build -o /builder/api /api.go
 
 # runner image
 FROM gcr.io/distroless/static:latest
 
 WORKDIR /usr/src/
-COPY --from=base /builder/api api
+COPY --from=base /builder/api /usr/src/api
 
 EXPOSE 8080
-CMD ["/usr/src/api"]
+CMD ["api"]
