@@ -9,8 +9,6 @@ using System.Data;
 // enviroment variables
 var connectionString = EnviromentProvider.GetDatabaseConnectionString();
 
-Console.WriteLine(connectionString);
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
