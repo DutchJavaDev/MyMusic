@@ -31,4 +31,4 @@ WORKDIR /usr/src/
 COPY --from=builder /app .
 
 EXPOSE 8080
-ENTRYPOINT ./api
+CMD ["./api"]
