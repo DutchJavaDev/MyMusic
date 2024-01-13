@@ -14,7 +14,7 @@ namespace MyMusic.Api.Services
 
         public async Task LogAsync(Exception e, string messagePrefix = "")
         {
-            var sql = @"INSERT INTO mymusic.exception(message, app, stacktrace)
+            var sql = @"INSERT INTO exception(message, app, stacktrace)
 	                        VALUES (@Message, @AppName, @StackTrace);";
             var param = new 
             {
@@ -31,7 +31,7 @@ namespace MyMusic.Api.Services
 
         public async Task LogAsync(string message, string stacktrace = "")
         {
-            var sql = @"INSERT INTO mymusic.exception(message, app, stacktrace)
+            var sql = @"INSERT INTO exception(message, app, stacktrace)
 	                        VALUES (@Message, @AppName, @StackTrace);";
             var param = new
             {

@@ -48,7 +48,7 @@ namespace MyMusic.Api.Services
             var state = (int)Mp3State.Created;
             var download_id = request.DownloadId;
 
-            var query = @"INSERT INTO mymusic.download(music_serial, state, download_id)
+            var query = @"INSERT INTO download(music_serial, state, download_id)
 	                    VALUES (@music_id, @state, @download_id);";
 
             var param = new

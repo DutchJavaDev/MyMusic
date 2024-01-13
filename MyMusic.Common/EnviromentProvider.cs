@@ -5,7 +5,7 @@ namespace MyMusic.Common
 {
     public static class EnviromentProvider
     {
-        private readonly static Dictionary<string, string> _cache = new();
+        private readonly static Dictionary<string, string> _cache = [];
 
         private static readonly string databaseStringKey = "MM_databaseConnection";
         private static readonly string dataApiKey = "MM_dataApiKey";

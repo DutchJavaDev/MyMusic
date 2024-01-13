@@ -1,6 +1,4 @@
-create schema if not exists mymusic;
-
-set search_path to mymusic;
+set search_path to public;
 --generates a secure password
 create or replace function generate_random_password() returns text
     as $$

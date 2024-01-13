@@ -11,6 +11,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MyMusic.Api/MyMusic.Api.csproj", "MyMusic.Api/"]
 COPY ["MyMusic.Common/MyMusic.Common.csproj", "MyMusic.Common/"]
+COPY ["MyMusic.Data/MyMusic.Data.csproj", "MyMusic.Data/"]
 RUN dotnet restore "./MyMusic.Api/./MyMusic.Api.csproj"
 COPY . .
 WORKDIR "/src/MyMusic.Api"

@@ -21,7 +21,7 @@ namespace MyMusic.Api.Middleware
             {
                 connection.Open();
                 ServerPasswordHash = connection
-                    .Query<string>("select server_password from mymusic.server_configuration")
+                    .Query<string>("select server_password from server_configuration")
                     .FirstOrDefault();
             }
             _dbLogger = dbLogger;
