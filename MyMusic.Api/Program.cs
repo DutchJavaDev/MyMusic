@@ -3,11 +3,14 @@ using MyMusic.Api.BackgroundServices;
 using MyMusic.Api.Middleware;
 using MyMusic.Api.Services;
 using MyMusic.Common;
+using MyMusic.Data;
 using Npgsql;
 using System.Data;
 
 // enviroment variables
 var connectionString = EnviromentProvider.GetDatabaseConnectionString();
+
+DatabaseMigration.EnsureDatabaseCreation(connectionString);
 
 var builder = WebApplication.CreateBuilder(args);
 
