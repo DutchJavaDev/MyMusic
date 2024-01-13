@@ -15,18 +15,23 @@ namespace MyMusic.Data
             .LogToConsole()
             .Build();
 
-            var result = upgrader.PerformUpgrade();
-
-            if (!result.Successful)
+            if(upgrader.IsUpgradeRequired())
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.Error);
-                Console.ResetColor();
-            }
+                var result = upgrader.PerformUpgrade();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success!");
-            Console.ResetColor();
+                if (!result.Successful)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(result.Error);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Success!");
+                    Console.ResetColor();
+                }
+            }
         }
 
     }
