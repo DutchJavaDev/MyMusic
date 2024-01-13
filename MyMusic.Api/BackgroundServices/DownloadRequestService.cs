@@ -88,8 +88,8 @@ namespace MyMusic.Api.BackgroundServices
         {
             var query = @"select d.serial as MusicId, m.name as Name, d.state as State, 
                                     d.download_id as Id
-                                    from mymusic.download as d
-                                    inner join mymusic.music as m ON m.serial = d.music_serial
+                                    from download as d
+                                    inner join music as m ON m.serial = d.music_serial
                                     where d.state = @state
                                     order by m.created_utc asc
                                     limit @limit;".Trim();
@@ -101,7 +101,7 @@ namespace MyMusic.Api.BackgroundServices
 
         private static Task UpdateStatusAsync(int? id, Mp3State nstate, IDbConnection connection)
         {
-            var query = @"update mymusic.download set state = @nstate where serial = @serial;";
+            var query = @"update download set state = @nstate where serial = @serial;";
             var param = new
             {
                 nstate = (int)nstate,
@@ -113,7 +113,7 @@ namespace MyMusic.Api.BackgroundServices
 
         private static Task InsertMp3EntryAsync(int? id, string path, IDbConnection connection)
         {
-            var query = @"insert into mymusic.mp3media(download_serial, file_path, created_utc)
+            var query = @"insert into mp3media(download_serial, file_path, created_utc)
                           values(@id, @path, now())";
 
             var param = new

@@ -12,7 +12,7 @@ namespace MyMusic.Api.Services
         /// <returns></returns>
         public async Task<int> TryInsertMusicPreDownloadAsync(string name, IDbConnection connection)
         {
-            var query = @"INSERT INTO mymusic.music(name, release_date)
+            var query = @"INSERT INTO music(name, release_date)
 	                    VALUES (@name, @date) returning serial;";
 
             var param = new 

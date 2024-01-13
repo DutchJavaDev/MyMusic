@@ -24,9 +24,9 @@ namespace MyMusic.Api.Services
             try
             {
                 var query = @"select m.name as Name,d.state as State,mp.file_path as Path from
-                              mymusic.music as m
-                              left join mymusic.download as d ON d.music_serial = m.serial
-                              left join mymusic.mp3media as mp ON mp.download_serial = d.serial
+                              music as m
+                              left join download as d ON d.music_serial = m.serial
+                              left join mp3media as mp ON mp.download_serial = d.serial
                               where d.state < @state".Trim();
 
                 using (_connection)
