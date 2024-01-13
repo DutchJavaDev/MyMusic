@@ -13,8 +13,8 @@ To see if it can be created cheaper using a vps/pi/local-pc to handle downloadin
   - [ ]   Working player
     - [x] Search music sources etc youtube etc
     - [ ] Stream song from s3 storage (minio)   
-- [ ] Dockerize
-  - [ ] Compose
+- [x] Dockerize
+  - [x] Compose
   - [ ] Extra step Kubernetes?  
 - [ ] VPS Run
 - [ ] Rasberry PI Run
