@@ -1,4 +1,4 @@
-set search_path to mymusic;
+set search_path to public;
 
 create table if not exists minio_users(
 	serial serial primary key,

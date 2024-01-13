@@ -1,6 +1,4 @@
-create schema if not exists mymusic;
-
-set search_path to mymusic;
+set search_path to public;
 
 -- config
 create table if not exists server_configuration (
@@ -58,10 +56,10 @@ server_configuration_count int;
 begin
 server_configuration_count := 0;
 select count(*) into server_configuration_count from 
-(select 1 from mymusic.server_configuration limit 1);
+(select 1 from public.server_configuration limit 1);
 
 	if server_configuration_count = 0 then
-		insert into mymusic.server_configuration(
+		insert into public.server_configuration(
 		created_utc, server_password)
 		values(now(),generate_random_password());
 	end if;
