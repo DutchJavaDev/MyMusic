@@ -6,12 +6,15 @@ namespace MyMusic.Common
     public static class EnviromentProvider
     {
         private readonly static Dictionary<string, string> _cache = [];
+        
+        private const string databaseStringKey = "database_url";
+        private const string minioEndpointKey = "minio_endpoint";
+        private const string minioUserKey = "minio_user";
+        private const string minioPasswordKey = "minio_password";
+        private const string minioAuthenticationApiEnpointKey = "minio_auth_api_endpoint";
+       
 
-        private static readonly string databaseStringKey = "MM_databaseConnection";
-        private static readonly string dataApiKey = "MM_dataApiKey";
-        private static readonly string storageApiEnpointKey = "storageapi_endpoint";
-
-        private static IConfigurationRoot configurationRoot;
+        private static IConfigurationRoot? configurationRoot;
         private static Assembly Assembly;
 
         static EnviromentProvider() 
@@ -19,19 +22,21 @@ namespace MyMusic.Common
             Assembly = typeof(EnviromentProvider).Assembly;
         }
 
-        public static string? GetStorageApiEndpoint()
+        public static (string endpoint, string accessKey, string secretKey) GetMinioConfig()
         {
-            return GetValue(storageApiEnpointKey);
+            return (GetValue(minioEndpointKey),
+                    GetValue(minioUserKey),
+                    GetValue(minioPasswordKey));
         }
 
-        public static string? GetDatabaseConnectionString()
+        public static string GetStorageApiEndpoint()
+        {
+            return GetValue(minioAuthenticationApiEnpointKey);
+        }
+
+        public static string GetDatabaseConnectionString()
         {
             return GetValue(databaseStringKey);
-        }
-
-        public static string? GetDataApiKey()
-        {
-            return GetValue(dataApiKey);
         }
 
         public static void SetAssembly(Assembly assembly)
@@ -48,38 +53,46 @@ namespace MyMusic.Common
 
         private static string GetValue(string key)
         {
-            // Check cache
-            if (_cache.ContainsKey(key))
+            try
             {
-                return _cache[key];
-            }
+                // Check cache
+                if (_cache.TryGetValue(key, out string? value))
+                {
+                    return value;
+                }
 
-            // Check secrets
-            if (configurationRoot is null)
+                // Check secrets
+                if (configurationRoot is null)
+                {
+                    var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddEnvironmentVariables()
+                    .AddUserSecrets(Assembly);
+
+                    configurationRoot = builder.Build();
+                }
+
+                if (configurationRoot[key] is not null)
+                {
+                    _cache[key] = configurationRoot[key] ?? string.Empty;
+
+                    return _cache[key];
+                }
+
+            }
+            catch (Exception)
             {
-                var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddUserSecrets(Assembly);
-
-                configurationRoot = builder.Build();
+                throw;
             }
-
-            if (configurationRoot[key] is not null)
-            {
-                _cache[key] = configurationRoot[key] ?? string.Empty;
-
-                return _cache[key];
-            }
-
             // Check enviroment
-            var environment = Environment.GetEnvironmentVariables();
+            //var environment = Environment.GetEnvironmentVariables();
 
-            if (environment[key] is not null)
-            {
-                _cache[key] = (string?)environment[key] ?? string.Empty;
+            //if (environment[key] is not null)
+            //{
+            //    _cache[key] = (string?)environment[key] ?? string.Empty;
 
-                return _cache[key];
-            }
+            //    return _cache[key];
+            //}
 
             return string.Empty;
         }
