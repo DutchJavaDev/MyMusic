@@ -3,14 +3,10 @@ using System.Data;
 
 namespace MyMusic.Api.Services
 {
-    public sealed class DbLogger : IDisposable
+    public sealed class DbLogger(IDbConnection dbConnection) : IDisposable
     {
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnection _dbConnection = dbConnection;
         private readonly string AppName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
-        public DbLogger(IDbConnection dbConnection) 
-        {
-            _dbConnection = dbConnection;
-        }
 
         public async Task LogAsync(Exception e, string messagePrefix = "")
         {
