@@ -1,9 +1,31 @@
 set search_path to public;
 
+--generates a secure password
+create or replace function generate_random_password() returns text
+    as $$
+declare
+   j int4;
+   result text;
+   allowed text;
+   allowed_len int4;
+begin
+   allowed := '0123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#$%^&*()_+';
+   allowed_len := length(allowed);
+   result := '';
+   while length(result) < 24 loop
+      j := int4(random() * allowed_len);
+      result := result || substr(allowed, j+1, 1);
+   end loop;
+   return result;
+end;
+$$
+    language plpgsql;
+
 -- config
 create table if not exists server_configuration (
 	created_utc timestamp not null default now(),
-	server_password text not null
+	server_password text not null,
+	concurrent_downloads int not null default 2 -- how many downloads are allowed to be run each cycle
 );
 
 -- music
@@ -31,6 +53,14 @@ create table if not exists mp3media (
 	created_utc timestamp not null default now()
 );
 
+-- minio
+create table if not exists minio_users(
+	serial serial primary key,
+	name text not null,
+	password text not null,
+	policy text not null
+);
+
 -- logging
 create table if not exists exception (
 	serial serial primary key,
@@ -39,15 +69,6 @@ create table if not exists exception (
 	stacktrace text null,
 	created_utc timestamp not null default now()
 );
-
---thumbnails
--- might not even use this
---create table if not exists thumbnail (
---	serial serial primary key,
---	music_serial int references music (serial),
---	name text not null,
---	value text not null unique,
---);
 
 -- set server password
 DO $$ 
