@@ -9,15 +9,9 @@ using static MyMusic.Common.CommonData;
 
 namespace MyMusic.Api.BackgroundServices
 {
-    public sealed class DownloadRequestService : BackgroundService
+    public sealed class DownloadRequestService(IServiceProvider _serviceProvider) : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
         public readonly int MaxConcurrentDownloads = 2; // read from db
-
-        public DownloadRequestService(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -99,7 +93,7 @@ namespace MyMusic.Api.BackgroundServices
             return connection.QueryAsync<MusicDownload>(query, param);
         }
 
-        private static Task UpdateStatusAsync(int? id, Mp3State nstate, IDbConnection connection)
+        private static Task<int> UpdateStatusAsync(int? id, Mp3State nstate, IDbConnection connection)
         {
             var query = @"update download set state = @nstate where serial = @serial;";
             var param = new
@@ -108,10 +102,10 @@ namespace MyMusic.Api.BackgroundServices
                 serial = id
             };
 
-            return connection.QueryAsync(query, param);
+            return connection.ExecuteAsync(query, param);
         }
 
-        private static Task InsertMp3EntryAsync(int? id, string path, IDbConnection connection)
+        private static Task<int> InsertMp3EntryAsync(int? id, string path, IDbConnection connection)
         {
             var query = @"insert into mp3media(download_serial, file_path, created_utc)
                           values(@id, @path, now())";
