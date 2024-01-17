@@ -41,7 +41,7 @@ create table if not exists download (
 	serial serial primary key,
 	music_serial int references music (serial),
 	state int not null,
-	download_id text not null unique, -- constraint to prevent duplicates
+	video_id text not null unique, -- constraint to prevent duplicates
 	created_utc timestamp not null default now()
 );
 

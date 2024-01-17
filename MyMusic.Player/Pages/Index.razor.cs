@@ -40,7 +40,7 @@ namespace MyMusic.Player.Pages
         {
             LastDownloadId = await ApiService.DownloadAsync(new DownloadRequest
             {
-                DownloadId = model.VideoId,
+                VideoId = model.VideoId,
                 Name = model.Title,
                 Release = model.Published
             });

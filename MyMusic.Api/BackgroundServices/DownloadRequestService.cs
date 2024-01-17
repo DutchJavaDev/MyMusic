@@ -41,7 +41,7 @@ namespace MyMusic.Api.BackgroundServices
 
             try
             {
-                var videoUrl = string.Concat("https://youtube.com/watch?v=", download.Id);
+                var videoUrl = string.Concat("https://youtube.com/watch?v=", download.VideoId);
 
                 // Get stream manifest and get the moest important stream..... audio
                 var streamManifest = await client.Videos.Streams.GetManifestAsync(videoUrl);
@@ -55,17 +55,17 @@ namespace MyMusic.Api.BackgroundServices
                 await client.Videos.Streams.DownloadAsync(streamInfo, filePath);
 
                 // Update state
-                await UpdateStatusAsync(download.MusicId, Mp3State.Downloaded, connection);
+                await UpdateStatusAsync(download.DownloadId, Mp3State.Downloaded, connection);
 
                 // Convert to mp3
                 // Changes extension to mp3..
                 filePath = ConvertToMp3(filePath);
 
                 // Create mp3 entry
-                await InsertMp3EntryAsync(download.MusicId, filePath, connection);
+                await InsertMp3EntryAsync(download.DownloadId, filePath, connection);
 
                 // Update state
-                await UpdateStatusAsync(download.MusicId, Mp3State.Converted, connection);
+                await UpdateStatusAsync(download.DownloadId, Mp3State.Converted, connection);
 
             }
             catch (Exception e)
@@ -80,8 +80,8 @@ namespace MyMusic.Api.BackgroundServices
 
         private Task<IEnumerable<MusicDownload>> GetNextDownloadsAsync(IDbConnection connection)
         {
-            var query = @"select d.serial as MusicId, m.name as Name, d.state as State, 
-                                    d.download_id as Id
+            var query = @"select d.serial as DownloadId, m.name as Name, d.state as State, 
+                                    d.video_id as VideoId
                                     from download as d
                                     inner join music as m ON m.serial = d.music_serial
                                     where d.state = @state

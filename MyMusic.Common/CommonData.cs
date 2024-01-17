@@ -15,10 +15,10 @@
 
         public class MusicDownload
         {
-            public int? MusicId { get; set; }
+            public int? DownloadId { get; set; }
             public string? Name { get; set; }
             public Mp3State? State { get; set; }
-            public string? Id { get; set; }
+            public string? VideoId { get; set; }
         }
     }
 }
