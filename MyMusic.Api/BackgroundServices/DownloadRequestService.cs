@@ -72,7 +72,7 @@ namespace MyMusic.Api.BackgroundServices
             {
                 // Update state
                 // add retry-service for this to work without breaking stuf
-                //await UpdateStatusAsync(download.MusicId, Mp3State.Failed, connection);
+                await UpdateStatusAsync(download.MusicId, Mp3State.Failed, connection);
 
                 await logger.LogAsync(e, messagePrefix: $"Download failed: {download.Name}");
             }
