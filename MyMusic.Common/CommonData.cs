@@ -19,6 +19,7 @@
             public string? Name { get; set; }
             public Mp3State? State { get; set; }
             public string? VideoId { get; set; }
+            public string? FilePath {get; set; }
         }
     }
 }
