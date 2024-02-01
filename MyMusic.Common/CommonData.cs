@@ -8,7 +8,7 @@
             Created,
             Downloaded,
             Converted,
-            Uploading,
+            Uploaded,
             Done,
             Failed
         }
