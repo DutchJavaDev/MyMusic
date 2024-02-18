@@ -1,12 +1,12 @@
 ﻿namespace MyMusic.Player
 {
-    public partial class App : Application
+  public partial class App : Application
+  {
+    public App()
     {
-        public App()
-        {
-            InitializeComponent();
+      InitializeComponent();
 
-            MainPage = new MainPage();
-        }
+      MainPage = new MainPage();
     }
+  }
 }
