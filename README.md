@@ -2,12 +2,12 @@
 To see if it can be created cheaper using a vps/pi/local-pc to handle downloading YouTube videos and converting those to mp3 files, those mp3 files can be streamed or downloaded to a mp3 player running in a web browser or on a phone. Using minio as s3 type storage for the files.
 
 - [ ] MVP
-  - [ ]   Working api
+  - [x]   Working api
     - [x] Download search request
     - [x] Convert request to mp3
-    - [ ] Upload mp3 to s3 (minio)
-    - [ ] Update status   
-  - [x]   Working s3 storage (minio)
+    - [x] Upload mp3 to s3 (minio) -> mongodb
+    - [x] Update status   
+  - [x]   Working s3 storage (minio) -> mongodb
     - [x] Write-only account
     - [x] Read-only account   
   - [ ]   Working player
