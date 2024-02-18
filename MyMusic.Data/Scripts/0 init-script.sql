@@ -33,7 +33,8 @@ create table if not exists music (
 	serial serial primary key,
 	name text not null unique, -- constraint to prevent duplicates
 	release_date date not null,
-	created_utc timestamp not null default now()
+	created_utc timestamp not null default now(),
+	tracking_id uuid not null default gen_random_uuid()
 );
 
 -- download
@@ -41,7 +42,7 @@ create table if not exists download (
 	serial serial primary key,
 	music_serial int references music (serial),
 	state int not null,
-	download_id text not null unique, -- constraint to prevent duplicates
+	video_id text not null unique, -- constraint to prevent duplicates
 	created_utc timestamp not null default now()
 );
 
@@ -51,14 +52,6 @@ create table if not exists mp3media (
 	download_serial int references download (serial),
 	file_path text not null unique, -- make unique
 	created_utc timestamp not null default now()
-);
-
--- minio
-create table if not exists minio_users(
-	serial serial primary key,
-	name text not null,
-	password text not null,
-	policy text not null
 );
 
 -- logging

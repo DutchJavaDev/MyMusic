@@ -4,6 +4,6 @@
     {
         public string? Name { get; set; }
         public DateTime Release { get; set; }
-        public string? DownloadId { get; set; }
+        public string? VideoId { get; set; }
     }
 }

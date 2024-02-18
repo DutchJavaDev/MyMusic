@@ -5,11 +5,9 @@ var connectionString = EnviromentProvider.GetDatabaseConnectionString();
 
 try
 {
-    DatabaseMigration.EnsureDatabaseCreation(connectionString);
-
+  DatabaseMigration.EnsureDatabaseCreation(connectionString);
 }
 catch (Exception e)
 {
-
-    Console.WriteLine(e);
+  Console.WriteLine(e);
 }
