@@ -32,13 +32,13 @@ namespace MyMusic.Api.Services
                 using (_connection)
                 {
                     _connection.Open();
-                    return await _connection.QueryAsync<StatusModel>(query, new { state = (int)Mp3State.Uploading });
+                    return await _connection.QueryAsync<StatusModel>(query, new { state = (int)Mp3State.Uploaded });
                 }
             }
             catch (Exception e)
             {
                 await _logger.LogAsync(e, messagePrefix:"Failed to get statuses");
-                return new StatusModel[] { new() { Name="Server Error" } };
+                return [new() { Name="Server Error" }];
             }
         }
     }
