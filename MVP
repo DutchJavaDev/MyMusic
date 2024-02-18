@@ -1,0 +1,14 @@
+Things that need to be done for this project to be in minimal working condition
+
+- Get artiest's and title by searching the info up
+	- Find artiest name's
+	- Find track name
+
+- Clear result in what happens if a download fails
+	- Do a manual retry from the ui
+
+- Show Uploaded songs in the UI
+	- Cache thumbnail
+
+- Play media
+
