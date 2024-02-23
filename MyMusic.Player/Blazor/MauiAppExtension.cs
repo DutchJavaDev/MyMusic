@@ -16,17 +16,18 @@ namespace MyMusic.Player.Blazor
     private static readonly Type[] DatabaseSchemaTypes =
     [
         typeof(ServerConfiguration),
-            typeof(LogEntry)
+        typeof(LogEntry),
+        typeof(MusicReference)
     ];
 
-    public static async void EnsureDatebaseCreation(this MauiAppBuilder builder)
+    public static async Task EnsureDatebaseCreation(this MauiAppBuilder builder)
     {
       var connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
       // should check if some fail?
-      var schemasCreationResults = await connection.CreateTablesAsync(CreateFlags.ImplicitPK, DatabaseSchemaTypes);
+      var schemasCreationResults = await connection.CreateTablesAsync(CreateFlags.ImplicitPK, DatabaseSchemaTypes).ConfigureAwait(false);
 
-      var count = await connection.Table<ServerConfiguration>().CountAsync();
+      var count = await connection.Table<ServerConfiguration>().CountAsync().ConfigureAwait(false);
 
       if (count == 0)
       {
@@ -35,14 +36,14 @@ namespace MyMusic.Player.Blazor
           ApiKey = string.Empty,
           ServerPassword = string.Empty,
           ServerUrl = string.Empty,
-        });
+        }).ConfigureAwait(false);
       }
     }
 
     public static void ConfigureMyMusicServices(this MauiAppBuilder builder)
     {
       // Local database
-      builder.Services.AddTransient(sp => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
+      builder.Services.AddTransient(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
 
       builder.Services.AddTransient<LogService>();
       builder.Services.AddTransient<ConfigurationService>();
@@ -50,6 +51,7 @@ namespace MyMusic.Player.Blazor
       builder.Services.AddTransient<SearchService>();
       builder.Services.AddTransient<ApiService>();
       builder.Services.AddTransient<UpdaterService>();
+      builder.Services.AddTransient<MusicReferenceService>();
 
       // Navigation cause im lazy
       var pages = GetBlazorPages();
