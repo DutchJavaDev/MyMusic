@@ -1,8 +1,69 @@
 ﻿@page "/songs"
-@attribute [NavigationInfo("oi-musical-note","SONGS",1)]
+@attribute [NavigationInfo("oi-musical-note", "SONGS", 1)]
+@inject ApiService api
+@inject MusicReferenceService reference
+@inject ConfigurationService configuration
+@inject IJSRuntime js
 
-<h1>Songs</h1>
+<div class="container">
+    <br />
+    @if (Models is not null && Models.Any())
+    {
+        <div class="row">
+            @foreach (var model in Models)
+            {
+                <div class="col-6 border" @onclick="@(async () => { await ChangeTrackAsync(model);})">
+                    <img class="img-fluid" src="@model.CoverUrl" />
+                    <span>Name: @model.Name</span> <br>
+                </div>
+            }
+        </div>
+        <br />
+        <br />
+    }
+</div>
 
 @code {
 
+    private IEnumerable<MusicReference> Models { get; set; }
+    private MusicReference Selected {get; set; }
+    private string BaseUrl { get; set; }
+    private string TrackUrl {get; set;}
+
+    async Task ChangeTrackAsync(MusicReference track)
+    {
+        TrackUrl = $"{BaseUrl}stream/apg7/{track.TrackingId}";
+
+        await js.InvokeVoidAsync("window.play", TrackUrl);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        BaseUrl = await configuration.GetBaseApiUrl();
+        var _models = await reference.GetAllMusicsAsync();
+
+        var downloaded = await api.GetDownloadedValuesAsync();
+
+        var ids = downloaded.Select(i => i.TrackingId).ToList();
+
+        // sync hack
+        foreach (var model in _models)
+        {
+            var d = downloaded.Where(i => i.Name == model.Name).FirstOrDefault();
+            if (model.TrackingId != d.TrackingId.ToString())
+            {
+                model.TrackingId = d.TrackingId.ToString();
+                await reference.UpdateAsync(model);
+            }
+        }
+
+        Models = _models.Where(i => ids.Contains(Guid.Parse(i.TrackingId)));
+
+        StateHasChanged();
+    }
+
+    private string CreateUrl()
+    {
+        return $"{BaseUrl}stream/apg7/{Selected.TrackingId}";
+    }
 }
