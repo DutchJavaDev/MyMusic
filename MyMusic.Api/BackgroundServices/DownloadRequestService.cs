@@ -72,7 +72,7 @@ namespace MyMusic.Api.BackgroundServices
             {
                 // Update state
                 // add retry-service for this to work without breaking stuf
-                //await UpdateStatusAsync(download.MusicId, Mp3State.Failed, connection);
+                await UpdateStatusAsync(download.DownloadId, Mp3State.Failed, connection);
 
                 await logger.LogAsync(e, messagePrefix: $"Download failed: {download.Name}");
             }
@@ -80,8 +80,8 @@ namespace MyMusic.Api.BackgroundServices
 
         private Task<IEnumerable<DownloadObject>> GetNextDownloadsAsync(IDbConnection connection)
         {
-            var query = @"select d.serial as MusicId, m.name as Name, d.state as State, 
-                                    d.download_id as Id
+            var query = @"select d.serial as DownloadId, m.name as Name, d.state as State, 
+                                    d.serial as Id, d.video_id as VideoId
                                     from download as d
                                     inner join music as m ON m.serial = d.music_serial
                                     where d.state = @state
