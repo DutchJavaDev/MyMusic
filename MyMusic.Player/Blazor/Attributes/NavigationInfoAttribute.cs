@@ -1,17 +1,10 @@
 ﻿namespace MyMusic.Player.Blazor.Attributes
 {
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-  public class NavigationInfoAttribute : Attribute
+  public class NavigationInfoAttribute(string icon, string displayName, int index = 100) : Attribute
   {
-    public string Icon { get; init; }
-    public string DisplayName { get; init; }
-    public int Index { get; init; }
-
-    public NavigationInfoAttribute(string icon, string displayName, int index = int.MaxValue)
-    {
-      Icon = icon;
-      DisplayName = displayName;
-      Index = index;
-    }
+    public string Icon { get; init; } = icon;
+    public string DisplayName { get; init; } = displayName;
+    public int Index { get; init; } = index;
   }
 }
