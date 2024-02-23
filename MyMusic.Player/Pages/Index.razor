@@ -6,16 +6,11 @@
         <SearchBar SearchEventCallBack="Search" />
     </div>
     <div class="search-container">
-        @LastDownloadId Last id 
         @if (_searching)
         {
             <div>
                 Searching......
             </div>
-        }
-        @if(LastDownloadId == -1)
-        {
-            <div class="text-center text-white">Check logs</div>
         }
             <div class="row">
                 @foreach (var model in Models)
