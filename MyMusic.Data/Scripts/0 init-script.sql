@@ -1,4 +1,5 @@
 set search_path to public;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 --generates a secure password
 create or replace function generate_random_password() returns text
@@ -34,7 +35,7 @@ create table if not exists music (
 	name text not null unique, -- constraint to prevent duplicates
 	release_date date not null,
 	created_utc timestamp not null default now(),
-	tracking_id uuid not null default gen_random_uuid()
+	tracking_id uuid not null default uuid_generate_v4()
 );
 
 -- download
