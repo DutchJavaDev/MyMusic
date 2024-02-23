@@ -20,6 +20,28 @@ namespace MyMusic.Player.Services
       _logService = logService;
     }
 
+    public async Task<IEnumerable<MusicDto>> GetDownloadedValuesAsync()
+    {
+      try
+      {
+        var configuration = await _configurationService.GetServerConfigurationAsync();
+
+        var client = await ConfigureApiClient(configuration);
+
+        var request = await client.GetAsync("music");
+
+        var stringContent = await request.Content.ReadAsStringAsync();
+
+        return JsonConvert.DeserializeObject<IEnumerable<MusicDto>>(stringContent);
+      }
+      catch (Exception e)
+      {
+        await _logService.Log(e, this);
+
+        return null;
+      }
+    }
+
     public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync()
     {
       try
@@ -28,7 +50,7 @@ namespace MyMusic.Player.Services
         ///
         var configuration = await _configurationService.GetServerConfigurationAsync();
 
-        var client = ConfigureApiClient(configuration);
+        var client = await ConfigureApiClient(configuration);
 
         var request = await client.GetAsync("download/status");
 
@@ -40,11 +62,11 @@ namespace MyMusic.Player.Services
       {
         await _logService.Log(e, this);
 
-        return new StatusModel[] { new() { Name = "Error Check logs" } };
+        return [new() { Name = "Error Check logs" }];
       }
     }
 
-    public async Task<int> DownloadAsync(DownloadRequest downloadRequest)
+    public async Task<string> DownloadAsync(DownloadRequest downloadRequest)
     {
       try
       {
@@ -52,34 +74,32 @@ namespace MyMusic.Player.Services
         //
         var configuration = await _configurationService.GetServerConfigurationAsync();
 
-        var client = ConfigureApiClient(configuration);
+        var client = await ConfigureApiClient(configuration);
 
         var content = JsonConvert.SerializeObject(downloadRequest);
 
         // Encoding is import lol.........
         var result = await client.PostAsync("download/start", new StringContent(content, Encoding.UTF8, "application/json"));
 
-        var stringContent = await result.Content.ReadAsStringAsync();
-
-        return int.Parse(stringContent);
+        return await result.Content.ReadAsStringAsync();
       }
       catch (Exception e)
       {
         await _logService.Log(e, this);
 
-        return -1;
+        return string.Empty;
       }
     }
 
-    private HttpClient ConfigureApiClient(ServerConfiguration configuration)
+    private async Task<HttpClient> ConfigureApiClient(ServerConfiguration configuration)
     {
       if (string.IsNullOrEmpty(configuration.ServerUrl) || string.IsNullOrEmpty(configuration.ServerPassword))
       {
-        throw new Exception("Invalid configuration");
+        throw new ArgumentException("Invalid configuration");
       }
 
       var client = _httpClientFactory.CreateClient();
-      client.BaseAddress = new Uri(string.Concat(configuration.ServerUrl, "/api/"));
+      client.BaseAddress = new Uri(await _configurationService.GetBaseApiUrl());
       client.DefaultRequestHeaders.Add("SERVER_AUTHENTICATION", configuration.ServerPassword);
 
       return client;
