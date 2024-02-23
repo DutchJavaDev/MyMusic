@@ -1,6 +1,24 @@
 ﻿@page "/local"
 @attribute [NavigationInfo("oi-folder","LOCAL",3)]
+@using static MyMusic.Player.Storage.Constants
+@inject MusicReferenceService musicRef
+
+@T;
+@if(LocalModels is not null)
+{
+    foreach (var model in LocalModels)
+    {
+     
+        <div>@model.Name || @model.TrackingId</div>
+    }
+}
 
 @code {
-
+    private IEnumerable<MusicReference> LocalModels { get; set; }
+    private string T { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        LocalModels = await musicRef.GetAllMusicsAsync();
+        T = MyMusic.Player.Storage.Constants.DatabasePath;
+    }
 }
