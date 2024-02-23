@@ -23,21 +23,21 @@ namespace MyMusic.Player.Services
       var name = type.Name;
 
       // Format message as type name : exception message
-      var message = string.Concat(name, " ", exception.Message);
+      var message = $"${name} : ${exception.Message}";
 
       _ = _connection.InsertAsync(new LogEntry
       {
         Message = message,
         StackTrace = exception.StackTrace,
         Created = DateTime.Now,
-      });
+      }).ConfigureAwait(false);
 
       return Task.CompletedTask;
     }
 
     public async Task<List<LogEntry>> GetLogsAsync()
     {
-      return await _connection.QueryAsync<LogEntry>("select * from logs order by created desc");
+      return await _connection.QueryAsync<LogEntry>("select * from logs order by created desc").ConfigureAwait(false);
     }
   }
 }
