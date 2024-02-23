@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MyMusic.Player.Blazor;
+using MyMusic.Player.Storage;
 
 namespace MyMusic.Player
 {
@@ -15,7 +16,7 @@ namespace MyMusic.Player
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
           });
 
-      builder.EnsureDatebaseCreation();
+      _ = builder.EnsureDatebaseCreation();
 
       builder.ConfigureMyMusicServices();
 
