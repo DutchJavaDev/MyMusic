@@ -4,29 +4,29 @@ using MyMusic.Common.Models;
 
 namespace MyMusic.Api.Controllers
 {
-    public class DownloadController : BaseApiController
+  public class DownloadController : BaseApiController
+  {
+    [HttpPost("start")]
+    public async Task<IActionResult> Start(
+        [FromBody] DownloadRequest downloadRequest,
+        [FromServices] DownloadService downloadService
+        )
     {
-        [HttpPost("start")]
-        public async Task<IActionResult> Start(
-            [FromBody] DownloadRequest downloadRequest,
-            [FromServices] DownloadService downloadService
-            )
-        {
-            var id = await downloadService.CreateDownloadRequestAsync(downloadRequest);
+      var trackingId = await downloadService.CreateDownloadRequestAsync(downloadRequest);
 
-            if (id > -1)
-            {
-                return Ok(id);
-            }
+      if (trackingId != Guid.Empty)
+      {
+        return Ok(trackingId.ToString());
+      }
 
-            return BadRequest();
-        }
-
-        [HttpGet("status")]
-        public async Task<IActionResult> Status(
-            [FromServices] StatusService statusService)
-        {
-            return Ok(await statusService.GetStatusModelsAsync());
-        }
+      return BadRequest();
     }
+
+    [HttpGet("status")]
+    public async Task<IActionResult> Status(
+        [FromServices] StatusService statusService)
+    {
+      return Ok(await statusService.GetStatusModelsAsync());
+    }
+  }
 }
