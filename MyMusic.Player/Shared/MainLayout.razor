@@ -10,4 +10,32 @@
             @Body
         </article>
     </main>
+    <audio id="audio_player" crossorigin="anonymous" autobuffer="autobuffer"/>
 </div>
+<script>
+    var audioElement;
+    let isPlaying = false;
+
+    audioElement = document.getElementById("audio_player");
+    
+    window.play = (url) => {
+        
+        if(isPlaying)
+        {
+            audioElement.pause();
+        }
+
+        audioElement.src = url
+        audioElement.load()
+        audioElement.play()
+        isPlaying = true;
+    }
+
+    window.pause = () => {
+        audioElement.pause()
+    }
+
+    window.stop = () => {
+        audioElement.pause();
+    }
+</script>
