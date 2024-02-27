@@ -1,0 +1,85 @@
+﻿<div class="container">
+  <div class="layout">
+    <div class="left">
+        <div class="w-100">
+        <img src="" alt="404" />
+        </div>
+    </div>
+    <div class="center">
+        <div class="w-75 m-auto">
+        <div class="row">
+            <div class="col-1 text-center">
+                @CurrentTimeString
+            </div>
+            <div class="col-10">
+            <input class="w-100" type="range" min="0" max="@DurationInSeconds" value="@CurrentTimeInSeconds">
+            </div>
+          <div class="col-1 text-center">
+              @DurationString
+          </div>
+        </div>
+        </div>
+    </div>
+    <div class="right border">
+      <div class="w-75 m-auto border">
+        <input class="w-100" type="range" min="0" max="100" value="0">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var audioElement;
+  var playerComponentReference;
+
+  audioElement = document.getElementById("audio_player");
+
+  window.setPlayerComponentReference = async (reference) => { 
+    playerComponentReference = reference;
+  }
+
+  window.play = (url) => {
+
+    if (!audioElement.paused) {
+      audioElement.pause();
+    }
+
+    audioElement.src = url
+    audioElement.load()
+    audioElement.play()
+  }
+
+  window.pause = () => {
+    audioElement.pause()
+  }
+
+  window.stop = () => {
+    audioElement.pause();
+  }
+
+  audioElement.addEventListener('play', function () {
+    console.log('Audio started playing');
+  });
+
+  audioElement.addEventListener('pause', function () {
+    console.log('Audio paused');
+  });
+
+  audioElement.addEventListener('ended', function () {
+    console.log('Audio ended');
+  });
+
+  audioElement.addEventListener('timeupdate', function () {
+    console.log('Current time: ' + audioElement.currentTime);
+    playerComponentReference.invokeMethodAsync("SetCurrentTime", audioElement.currentTime)
+  });
+
+  audioElement.addEventListener('loadedmetadata', function () {
+    console.log('Duration: ' + audioElement.duration + ' seconds');
+    playerComponentReference.invokeMethodAsync("SetDurations", audioElement.duration)
+  });
+
+  audioElement.addEventListener('error', function (e) {
+    console.error('Error occurred: ' + e.message);
+  });
+</script>
