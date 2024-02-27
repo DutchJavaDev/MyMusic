@@ -5,16 +5,16 @@ namespace MyMusic.Common
 {
   public static class EnviromentProvider
   {
-    private readonly static Dictionary<string, string> _cache = [];
+    private static readonly Dictionary<string, string> _cache = [];
 
     private const string databaseStringKey = "database_url";
     private const string minioEndpointKey = "minio_endpoint";
     private const string minioUserKey = "minio_user";
     private const string minioPasswordKey = "minio_password";
     private const string storageDbKey = "storage_db";
+
     // Dep
     private const string minioAuthenticationApiEnpointKey = "minio_auth_api_endpoint";
-
 
     private static IConfigurationRoot? configurationRoot;
     private static Assembly Assembly;
@@ -85,7 +85,6 @@ namespace MyMusic.Common
 
           return _cache[key];
         }
-
       }
       catch (Exception)
       {

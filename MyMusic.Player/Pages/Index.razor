@@ -1,9 +1,12 @@
 ﻿@page "/"
 @attribute [NavigationInfo("oi-home","HOME",0)]
+@using MyMusic.Player.Blazor.Components
 
-<div class="container-fluid">
-    <div class="w-50 m-auto">
-        <SearchBar SearchEventCallBack="Search" />
+<div class="container">
+    <div class="w-25 position-fixed end-50 start-50">
+        <div class="mt-2">
+            <SearchBar SearchEventCallBack="Search" />
+        </div>
     </div>
     <div class="search-container">
         @if (_searching)
@@ -15,7 +18,11 @@
             <div class="row">
                 @foreach (var model in Models)
                 {
-                    <div class="col-6 mb-2">
+                    
+                   <div class="col-6 mb-2">
+                    <DownloadComponent Model="model.Dto()" />
+                   </div>
+                   @*  <div class="col-6 mb-2">
                         <div class="row">
                             <div class="col-5">
                                 <img class="img-fluid rounded" src="@model.CoverUrl" alt="404" />
@@ -35,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
                 }
             </div>
     </div>
@@ -43,10 +50,7 @@
 
 <style>
     .search-container{
-        width: 100%;
-        height: 900px;
         overflow-x: hidden;
-        overflow-y: auto;
         text-align: center;
         padding: 20px;
     }

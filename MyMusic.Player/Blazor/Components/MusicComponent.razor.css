@@ -1,0 +1,31 @@
+.layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(11, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  background-color: #343333;
+  border-color: #14FF00 !important;
+}
+
+.image {
+  grid-area: 3 / 1 / 10 / 6;
+}
+
+.content {
+  grid-area: 3 / 6 / 10 / 13;
+}
+
+.footer {
+  grid-area: 10 / 1 / 12 / 13;
+}
+
+.header {
+  grid-area: 1 / 1 / 3 / 13;
+}
+
+button {
+  margin-top: 10px;
+  background-color: #003D5C !important;
+  border: 2px solid white;
+}

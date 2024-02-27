@@ -4,7 +4,7 @@ using MyMusic.Player.Services;
 
 namespace MyMusic.Player.Pages
 {
-  public partial class Log : IDisposable
+  public partial class Log : ComponentBase, IDisposable
   {
     [Inject]
     public LogService LogService { get; set; }

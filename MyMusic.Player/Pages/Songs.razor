@@ -12,10 +12,9 @@
         <div class="row">
             @foreach (var model in Models)
             {
-                <div class="col-6 border" @onclick="@(async () => { await ChangeTrackAsync(model);})">
-                    <img class="img-fluid" src="@model.CoverUrl" />
-                    <span>Name: @model.Name</span> <br>
-                </div>
+               <div class="col-6 mb-2">
+                    <MusicComponent Model="model" />
+               </div>
             }
         </div>
         <br />
@@ -34,7 +33,7 @@
     {
         TrackUrl = $"{BaseUrl}stream/apg7/{track.TrackingId}";
 
-        await js.InvokeVoidAsync("window.play", TrackUrl);
+        await js.InvokeVoidAsync("window.play", $"{BaseUrl}stream/apg7/{track.TrackingId}");
     }
 
     protected override async Task OnInitializedAsync()
@@ -42,22 +41,22 @@
         BaseUrl = await configuration.GetBaseApiUrl();
         var _models = await reference.GetAllMusicsAsync();
 
-        var downloaded = await api.GetDownloadedValuesAsync();
+        // var downloaded = await api.GetDownloadedValuesAsync();
 
-        var ids = downloaded.Select(i => i.TrackingId).ToList();
+        // var ids = downloaded.Select(i => i.TrackingId).ToList();
 
-        // sync hack
-        foreach (var model in _models)
-        {
-            var d = downloaded.Where(i => i.Name == model.Name).FirstOrDefault();
-            if (model.TrackingId != d.TrackingId.ToString())
-            {
-                model.TrackingId = d.TrackingId.ToString();
-                await reference.UpdateAsync(model);
-            }
-        }
+        // // sync hack
+        // foreach (var model in _models)
+        // {
+        //     var d = downloaded.Where(i => i.Name == model.Name).FirstOrDefault();
+        //     if (model.TrackingId != d.TrackingId.ToString())
+        //     {
+        //         model.TrackingId = d.TrackingId.ToString();
+        //         await reference.UpdateAsync(model);
+        //     }
+        // }
 
-        Models = _models.Where(i => ids.Contains(Guid.Parse(i.TrackingId)));
+        Models = _models;/* .Where(i => ids.Contains(Guid.Parse(i.TrackingId))); */
 
         StateHasChanged();
     }

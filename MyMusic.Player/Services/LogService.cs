@@ -23,9 +23,9 @@ namespace MyMusic.Player.Services
       var name = type.Name;
 
       // Format message as type name : exception message
-      var message = $"${name} : ${exception.Message}";
+      var message = $"{name} : {exception.Message}";
 
-      _ = _connection.InsertAsync(new LogEntry
+      _ = WriteLogAsync(new LogEntry
       {
         Message = message,
         StackTrace = exception.StackTrace,

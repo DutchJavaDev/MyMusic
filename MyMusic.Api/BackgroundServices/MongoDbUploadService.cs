@@ -1,5 +1,4 @@
 using Dapper;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MyMusic.Api.Services;
 using MyMusic.Common.Models;
@@ -90,7 +89,7 @@ namespace MyMusic.Api.BackgroundServices
 
     private async Task<IEnumerable<DownloadObject>> GetNextUploadsAsync(IDbConnection connection)
     {
-      var query = @"select d.serial as DownloadId, m.name as Name, d.state as State, 
+      var query = @"select d.serial as DownloadId, m.name as Name, d.state as State,
                                     d.video_id as VideoId, mm.file_path as FilePath,
                                     m.tracking_id as TrackId
                                     from download as d

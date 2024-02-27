@@ -32,12 +32,14 @@ builder.Services.AddScoped<StatusService>();
 builder.Services.AddScoped<StorageApiAccountService>();
 builder.Services.AddScoped<MyMusicCollectionService>();
 
-builder.Services.AddCors(conf => {
-    conf.AddPolicy("dev_cors", policy => {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+builder.Services.AddCors(conf =>
+{
+  conf.AddPolicy("dev_cors", policy =>
+  {
+    policy.AllowAnyOrigin()
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+  });
 });
 
 builder.Services.AddControllers();
@@ -49,13 +51,12 @@ builder.Services.AddHostedService<DownloadRequestService>();
 builder.Services.AddHostedService<MongoDbUploadService>();
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors("dev_cors");
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseCors("dev_cors");
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

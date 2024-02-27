@@ -5,13 +5,14 @@ namespace MyMusic.Api
 {
   public static class Utils
   {
-    public readonly static string MinioReadonlyPolicy = "readonly";
-    public readonly static string MinioWriteOnlyPolicy = "writeonly";
+    public static readonly string MinioReadonlyPolicy = "readonly";
+    public static readonly string MinioWriteOnlyPolicy = "writeonly";
 
-    private readonly static string DownloadFolderName = "mymusic_downloads";
-    private readonly static string AudioSourceFolder = "mymusic_source";
+    private static readonly string DownloadFolderName = "mymusic_downloads";
+    private static readonly string AudioSourceFolder = "mymusic_source";
     private static readonly string DownloadFolderPath = string.Empty;
     private static readonly string AudioSourcePath = string.Empty;
+
     static Utils()
     {
       var localFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -29,7 +30,7 @@ namespace MyMusic.Api
         //var files = Directory.GetFiles(DownloadFolderPath);
         //foreach (var file in files)
         //{
-        //    File.Delete(file);  
+        //    File.Delete(file);
         //}
       }
 

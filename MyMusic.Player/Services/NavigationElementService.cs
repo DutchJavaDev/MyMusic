@@ -6,17 +6,12 @@ using System.Reflection;
 
 namespace MyMusic.Player.Services
 {
-  public sealed class NavigationElementService
+  public sealed class NavigationElementService(IEnumerable<Type> pages)
   {
-    public IEnumerable<NavLinkElement> NavigationLinks { get; init; }
+    public IEnumerable<NavLinkElement> NavigationLinks { get; init; } = pages.Select(CombineAttributes).
+                                                                              Select(CreateNavigationLinks);
 
     private NavLinkElement _previousLink;
-
-    public NavigationElementService(IEnumerable<Type> pages)
-    {
-      NavigationLinks = pages.Select(CombineAttributes).
-                              Select(CreateNavigationLinks);
-    }
 
     public void SetActive(NavLinkElement element)
     {

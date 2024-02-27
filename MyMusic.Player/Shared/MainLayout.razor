@@ -1,27 +1,30 @@
 ﻿@inherits LayoutComponentBase
-
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
+<div class="container-fluid layout">
+    <div class="sidebar border-3 border-end">
+        <NavMenu />
     </div>
 
-    <main>
-        <article class="content px-4">
+    <div class="content rounded">
+        <div class="content-prevent-overflow">
             @Body
-        </article>
-    </main>
-    <audio id="audio_player" crossorigin="anonymous" autobuffer="autobuffer"/>
+        </div>
+    </div>
+
+    <div class="player border-3 border-top">
+        player
+        <audio id="audio_player" crossorigin="anonymous" autobuffer="autobuffer" />
+    </div>
 </div>
+
 <script>
     var audioElement;
     let isPlaying = false;
 
     audioElement = document.getElementById("audio_player");
-    
+
     window.play = (url) => {
-        
-        if(isPlaying)
-        {
+
+        if (isPlaying) {
             audioElement.pause();
         }
 

@@ -1,2 +1,15 @@
-﻿
-
+﻿<div class="layout rounded-2 rounded-bottom border-5 border-bottom" style="border-color: red !important">
+    <div class="header">&nbsp;</div>
+    <div class="image"> <img class="img-fluid" src="@Model.CoverUrl" alt="404"/> </div>
+    <div class="content"> 
+    <div class="row">
+        <div class="col-12">
+            @Model.Name
+        </div>
+        <div class="col-12">
+                <button class="btn btn-primary">Download</button>
+        </div>
+    </div>
+    </div>
+    <div class="footer">@Model.Durration</div>
+</div>

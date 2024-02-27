@@ -2,10 +2,10 @@
 
 @attribute [NavigationInfo("oi-home","LOGS")]
 
-<div>
+<div class="container">
     @if (Logs is not null)
     {
-        <div class="row"> 
+        <div class="row">
 
             @foreach(var log in Logs)
             {
@@ -15,7 +15,6 @@
                     <div>@log.Created</div>
                 </div>
             }
-
         </div>
     }
 </div>

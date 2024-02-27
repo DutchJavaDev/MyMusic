@@ -7,7 +7,7 @@ using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Pages
 {
-  public partial class Index
+  public partial class Index : ComponentBase
   {
     [Inject]
     public SearchService SearchService { get; set; }

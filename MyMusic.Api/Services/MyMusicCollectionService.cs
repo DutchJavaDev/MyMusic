@@ -10,7 +10,7 @@ namespace MyMusic.Api.Services
 
     private readonly MongoClient _client;
 
-    public MyMusicCollectionService(MongoClient mongoClient) 
+    public MyMusicCollectionService(MongoClient mongoClient)
     {
       _client = mongoClient;
     }

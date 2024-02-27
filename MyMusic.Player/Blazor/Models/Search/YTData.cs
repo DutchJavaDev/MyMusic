@@ -1,4 +1,6 @@
-﻿namespace MyMusic.Player.Blazor.Models.Search
+﻿using MyMusic.Player.Storage.Models;
+
+namespace MyMusic.Player.Blazor.Models.Search
 {
   public sealed class Id
   {
@@ -31,6 +33,19 @@
 
     // Fecth
     public TimeSpan Durration { get; set; }
+
+    public MusicReference Dto()
+    {
+      return new()
+      {
+        CoverUrl = CoverUrl,
+        Id = 0,
+        Name = Title,
+        TrackingId = Guid.NewGuid().ToString(),
+        Durration = Durration,
+        VideoId = VideoId,
+      };
+    }
   }
 
   public sealed class SearchResult
