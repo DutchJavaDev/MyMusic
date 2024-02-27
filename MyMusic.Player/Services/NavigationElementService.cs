@@ -37,9 +37,9 @@ namespace MyMusic.Player.Services
       return (navigation, route);
     }
 
-    private static NavLinkElement CreateNavigationLinks((NavigationInfoAttribute, RouteAttribute) tuple)
+    private static NavLinkElement CreateNavigationLinks((NavigationInfoAttribute navigation, RouteAttribute route) tuple)
     {
-      return tuple.Item1.CreateNavigationLink(tuple.Item2);
+      return tuple.navigation.CreateNavigationLink(tuple.route);
     }
   }
 }
