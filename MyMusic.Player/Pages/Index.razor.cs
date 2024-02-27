@@ -17,8 +17,10 @@ namespace MyMusic.Player.Pages
 
     [Inject]
     public MusicReferenceService MusicReferenceService { get; set; }
-        [Inject]
+
+    [Inject]
     public LogService LogService { get; set; }
+
     public List<SearchViewModel> Models { get; set; }
 
     public bool _searching = false;
@@ -49,15 +51,15 @@ namespace MyMusic.Player.Pages
         Release = model.Published
       });
 
-            // Valid Guid
-            if (!Guid.TryParse(trackingId, out var _))
-            {
-                await LogService.WriteLogAsync(new LogEntry 
-                {
-                    Message = $"Failed to parse GUID for {model.VideoId} | {model.Title}"
-                });
-                return;
-            }
+      // Valid Guid
+      if (!Guid.TryParse(trackingId, out var _))
+      {
+        await LogService.WriteLogAsync(new LogEntry
+        {
+          Message = $"Failed to parse GUID for {model.VideoId} | {model.Title}"
+        });
+        return;
+      }
 
       // Keep track in local db
       await MusicReferenceService.InsertAsync(new MusicReference
