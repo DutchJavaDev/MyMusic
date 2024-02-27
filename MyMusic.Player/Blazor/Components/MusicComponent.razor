@@ -7,7 +7,7 @@
                 @Model.Name
             </div>
             <div class="col-12 text-center mt-4">
-                <button class="btn-lg w-75 m-auto btn btn-primary">Play</button>
+                <button @onclick="(async () => await PlayAsync())" class="btn-lg w-75 m-auto btn btn-primary">Play</button>
             </div>
         </div>
     </div>
