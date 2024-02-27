@@ -48,9 +48,7 @@ namespace MyMusic.Player.Services
 
         var contentDetails = ParseDynamic(item["contentDetails"].ToString());
 
-        var duration = System.Xml.XmlConvert.ToTimeSpan(contentDetails["duration"].ToString());
-
-        result[id] = duration;
+        result[id] = System.Xml.XmlConvert.ToTimeSpan(contentDetails["duration"].ToString());
       }
 
       return result;
@@ -64,7 +62,7 @@ namespace MyMusic.Player.Services
     private async Task<string> CreateUrlAsync(string ids)
     {
       var apiKey = await GetApiKeyAsync();
-      return string.Concat(VideoIdV3Url, apiKey, VideoDurationService.Ids(ids));
+      return string.Concat(VideoIdV3Url, apiKey, Ids(ids));
     }
 
     private static string Ids(string query)
