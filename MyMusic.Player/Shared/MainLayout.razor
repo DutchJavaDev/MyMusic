@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+
 <div class="container-fluid layout">
     <div class="sidebar border-3 border-end">
         <NavMenu />
@@ -11,34 +12,7 @@
     </div>
 
     <div class="player border-3 border-top">
-        player
         <audio id="audio_player" crossorigin="anonymous" autobuffer="autobuffer" />
+        <PlayerComponent />
     </div>
 </div>
-
-<script>
-    var audioElement;
-    let isPlaying = false;
-
-    audioElement = document.getElementById("audio_player");
-
-    window.play = (url) => {
-
-        if (isPlaying) {
-            audioElement.pause();
-        }
-
-        audioElement.src = url
-        audioElement.load()
-        audioElement.play()
-        isPlaying = true;
-    }
-
-    window.pause = () => {
-        audioElement.pause()
-    }
-
-    window.stop = () => {
-        audioElement.pause();
-    }
-</script>
