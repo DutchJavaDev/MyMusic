@@ -8,11 +8,9 @@
     {
         foreach (var model in LocalModels)
         {
-
             <div>@model.Name || @model.TrackingId</div>
         }
     }
-
 </div>
 @code {
     private IEnumerable<MusicReference> LocalModels { get; set; }
