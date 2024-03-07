@@ -41,7 +41,7 @@ namespace MyMusic.Api.Services
                               left join download as d ON d.music_serial = m.serial
                               where d.state = @state".Trim();
 
-        var param = new { state = (int)Mp3State.Uploaded };
+        var param = new { state = (int)Mp3State.Done };
 
         return await _connection.QueryAsync<MusicDto>(query, param);
       }
