@@ -10,9 +10,11 @@ To see if it can be created cheaper using a vps/pi/local-pc to handle downloadin
   - [x]   Working s3 storage (minio) -> mongodb
     - [x] Write-only account
     - [x] Read-only account   
-  - [ ]   Working player
+  - [ ]   Working minimal player
     - [x] Search music sources etc youtube etc
-    - [ ] Stream song from s3 storage (minio) -> api -> mongodb
+    - [x] Stream song from s3 storage (minio) -> api -> mongodb
+    - [ ] Implement player UI
+    - [ ] Working Playlist manager
 - [x] Dockerize
   - [x] Compose
   - [ ] Extra step Kubernetes?  
