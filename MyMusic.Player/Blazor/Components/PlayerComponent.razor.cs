@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MyMusic.Player.Services;
 
 namespace MyMusic.Player.Blazor.Components
 {
@@ -13,7 +12,6 @@ namespace MyMusic.Player.Blazor.Components
 
     public float DurationInSeconds { get; set; }
     public string DurationString { get; set; }
-
     public float CurrentTimeInSeconds { get; set; }
     public string CurrentTimeString { get; set; }
 
@@ -25,6 +23,7 @@ namespace MyMusic.Player.Blazor.Components
       DurationString = $"{(int)timeSpan.TotalMinutes}:{timeSpan.Seconds:D2}";
       StateHasChanged();
     }
+
     [JSInvokable]
     public void SetCurrentTime(float time)
     {
@@ -33,6 +32,7 @@ namespace MyMusic.Player.Blazor.Components
       CurrentTimeString = $"{(int)timeSpan.TotalMinutes}:{timeSpan.Seconds:D2}";
       StateHasChanged();
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
       await base.OnAfterRenderAsync(firstRender);
