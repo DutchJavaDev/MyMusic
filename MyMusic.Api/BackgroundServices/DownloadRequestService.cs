@@ -127,6 +127,7 @@ namespace MyMusic.Api.BackgroundServices
       // engine.ConvertProgressEvent track progress
       // create seperate table to update the download progress
       engine.GetMetadata(input);
+      engine.CustomCommand("-b:1200k");
       engine.Convert(input, output);
 
       // Cleanup
