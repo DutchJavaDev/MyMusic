@@ -10,7 +10,6 @@ using System.Data;
 
 // enviroment variables
 var connectionString = EnviromentProvider.GetDatabaseConnectionString();
-//var (endpoint, accessKey, secretKey) = EnviromentProvider.GetMinioConfig();
 var mongoDbConnectionString = EnviromentProvider.GetStorageDbConnectinString();
 DatabaseMigration.EnsureDatabaseCreation(connectionString);
 
@@ -29,7 +28,6 @@ builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, PasswordAuthor
 builder.Services.AddScoped<MusicService>();
 builder.Services.AddScoped<DownloadService>();
 builder.Services.AddScoped<StatusService>();
-builder.Services.AddScoped<StorageApiAccountService>();
 builder.Services.AddScoped<MyMusicCollectionService>();
 
 builder.Services.AddCors(conf =>
@@ -57,6 +55,7 @@ if (app.Environment.IsDevelopment())
   app.UseCors("dev_cors");
   app.UseSwagger();
   app.UseSwaggerUI();
+  app.UseMiddleware<RequestLoggingMiddleware>();
 }
 
 app.UseHttpsRedirection();
