@@ -24,6 +24,16 @@ namespace MyMusic.Api.Middleware
             .Query<string>("select server_password from server_configuration")
             .FirstOrDefault();
       }
+
+      if(string.IsNullOrEmpty(ServerPasswordHash))
+      {
+        dbLogger.LogAsync(new Exception("Failed to get server password"), messagePrefix: "server passpwrd").Wait();
+      }
+      else
+      {
+        Console.WriteLine(ServerPasswordHash);
+      }
+
       _dbLogger = dbLogger;
     }
 
