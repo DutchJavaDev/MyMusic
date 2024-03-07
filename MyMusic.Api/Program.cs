@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment())
   app.UseMiddleware<RequestLoggingMiddleware>();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
