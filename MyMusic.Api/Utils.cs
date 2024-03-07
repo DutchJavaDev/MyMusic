@@ -51,7 +51,7 @@ namespace MyMusic.Api
       return Path.Combine(DownloadFolderPath, string.Concat(fileName, ".mp4"));
     }
 
-    public static async Task DeleteDownloadAAsync(string path, DbLogger dbLogger)
+    public static async Task DeleteDownloadAsync(string path, DbLogger dbLogger)
     {
       try
       {
