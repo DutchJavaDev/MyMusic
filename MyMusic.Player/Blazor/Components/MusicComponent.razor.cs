@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MyMusic.Player.Services;
 using MyMusic.Player.Storage.Models;
 
 
@@ -10,26 +9,19 @@ namespace MyMusic.Player.Blazor.Components
   {
     [Parameter]
     public MusicReference Model { get; set; }
+    
     [Parameter]
     public string BaseUrl { get; set; } = string.Empty;
 
     [Inject]
-    public ApiService ApiService { get; set; }
-
-    [Inject]
-    public ConfigurationService ConfigurationService { get; set; }
-
-    [Inject]
-    public MusicReferenceService MusicReferenceService { get; set; }
-
-    [Inject]
-    public IJSRuntime jSRuntime { get; set; }
+    public IJSRuntime JSRuntime { get; set; }
 
     async Task PlayAsync()
     {
       var url = $"{BaseUrl}stream/apg7/{Model.TrackingId}";
 
-      await jSRuntime.InvokeVoidAsync("window.play", url);
+      await JSRuntime.InvokeVoidAsync("window.setCoverUrl",Model.CoverUrl);
+      await JSRuntime.InvokeVoidAsync("window.play", url);
     }
   }
 }
