@@ -7,8 +7,12 @@ html, body {
   overflow: hidden;
 }
 
+#app {
+  height: 100vh !important;
+}
+
 .content-prevent-overflow {
-  max-height: 630px !important;
+  max-height: 80vh !important;
   overflow-y: auto
 }
 
