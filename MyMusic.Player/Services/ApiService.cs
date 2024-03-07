@@ -38,7 +38,7 @@ namespace MyMusic.Player.Services
       {
         await _logService.Log(e, this);
 
-        return null;
+        throw;
       }
     }
 
@@ -62,7 +62,7 @@ namespace MyMusic.Player.Services
       {
         await _logService.Log(e, this);
 
-        return [new() { Name = "Error Check logs" }];
+        throw;
       }
     }
 
@@ -87,7 +87,7 @@ namespace MyMusic.Player.Services
       {
         await _logService.Log(e, this);
 
-        return string.Empty;
+        throw;
       }
     }
 
