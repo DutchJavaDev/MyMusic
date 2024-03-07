@@ -18,31 +18,9 @@
             <div class="row">
                 @foreach (var model in Models)
                 {
-                    
                    <div class="col-6 mb-2">
-                    <DownloadComponent Model="model.Dto()" />
+                    <DownloadComponent  Model="model.Dto()" />
                    </div>
-                   @*  <div class="col-6 mb-2">
-                        <div class="row">
-                            <div class="col-5">
-                                <img class="img-fluid rounded" src="@model.CoverUrl" alt="404" />
-                            </div>
-                            <div class="col-7">
-                                <div class="mb-2">
-                                    <b>@model.Title</b>
-                                </div>
-                                <div style="text-overflow:clip">
-                                    <p>@model.Description</p>
-                                </div>
-                                <div>
-                                    @model.Durration
-                                </div>
-                                <div>
-                                    <button @onclick="@(async (e) => await SendDownLoadAsync(model))" class="btn btn-primary">Download</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
                 }
             </div>
     </div>
