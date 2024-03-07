@@ -22,6 +22,7 @@
           </div>
         </div>
      </div>
+      <audio id="audio_player" type="audio/mpeg" />
     </div>
 
     <div class="col-2">
@@ -62,13 +63,12 @@
   var playerComponentReference;
 
   audioElement = document.getElementById("audio_player");
-  audioElement.src.type = "audio/wav"
+  audioElement.addEventListener("seeking", (event) => {
+    console.log("Video is seeking a new position.");
+  });
 
   window.setCurrentTime = (value) => {
-    audioElement.pause()
-    audioElement.currentTime = parseFloat(value);
-    audioElement.play()
-    console.log(audioElement.currentTime, parseInt(value))
+      audioElement.currentTime = parseFloat(value);
   }
 
   window.setVolumne = (value) => {
