@@ -6,7 +6,6 @@
 @inject IJSRuntime js
 
 <div class="container">
-    <br />
     @if (Models is not null && Models.Any())
     {
         <div class="row">
@@ -17,52 +16,27 @@
                </div>
             }
         </div>
-        <br />
-        <br />
     }
 </div>
 
 @code {
+  private IEnumerable<MusicReference> Models { get; set; }
+  private string BaseUrl { get; set; }
 
-    private IEnumerable<MusicReference> Models { get; set; }
-    private MusicReference Selected {get; set; }
-    private string BaseUrl { get; set; }
-    private string TrackUrl {get; set;}
+  protected override async Task OnInitializedAsync()
+  {
+    BaseUrl = await configuration.GetBaseApiUrl();
 
-    async Task ChangeTrackAsync(MusicReference track)
-    {
-        TrackUrl = $"{BaseUrl}stream/apg7/{track.TrackingId}";
+    var _models = await reference.GetAllMusicsAsync();
 
-        await js.InvokeVoidAsync("window.play", $"{BaseUrl}stream/apg7/{track.TrackingId}");
-    }
+    var downloaded = await api.GetDownloadedValuesAsync();
 
-    protected override async Task OnInitializedAsync()
-    {
-        BaseUrl = await configuration.GetBaseApiUrl();
-        var _models = await reference.GetAllMusicsAsync();
+    var ids = downloaded.Select(i => i.TrackingId).ToList();
 
-        // var downloaded = await api.GetDownloadedValuesAsync();
-
-        // var ids = downloaded.Select(i => i.TrackingId).ToList();
-
-        // // sync hack
-        // foreach (var model in _models)
-        // {
-        //     var d = downloaded.Where(i => i.Name == model.Name).FirstOrDefault();
-        //     if (model.TrackingId != d.TrackingId.ToString())
-        //     {
-        //         model.TrackingId = d.TrackingId.ToString();
-        //         await reference.UpdateAsync(model);
-        //     }
-        // }
-
-        Models = _models;/* .Where(i => ids.Contains(Guid.Parse(i.TrackingId))); */
+    Models = _models.Where(i => !string.IsNullOrEmpty(i.TrackingId))
+      .Where(i => ids.Contains(Guid.Parse(i.TrackingId)));
 
         StateHasChanged();
     }
 
-    private string CreateUrl()
-    {
-        return $"{BaseUrl}stream/apg7/{Selected.TrackingId}";
-    }
 }
