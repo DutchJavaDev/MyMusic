@@ -3,7 +3,7 @@
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(12, 1fr);
   grid-column-gap: 3px;
-  min-height: 100vh;
+  height: 100vh !important;
 }
 
 .sidebar {
@@ -16,4 +16,8 @@
 
 .player {
   grid-area: 11 / 1 / 13 / 13;
+}
+
+.max-height {
+  height: 100% !important;
 }
