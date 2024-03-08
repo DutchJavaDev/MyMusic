@@ -8,7 +8,7 @@ namespace MyMusic.Api.Middleware
 {
   public class PasswordAuthorization : IAuthorizationMiddlewareResultHandler
   {
-    private static readonly string ServerKey = "SERVER_AUTHENTICATION";
+    private static readonly string ServerKey = "Authorization";
     private readonly AuthorizationMiddlewareResultHandler defaultHandler = new();
     private readonly string? ServerPasswordHash;
     private readonly DbLogger _dbLogger;
@@ -57,17 +57,6 @@ namespace MyMusic.Api.Middleware
     // Header check
     private static bool HasPassword(HttpContext context)
     {
-      Console.WriteLine("#HEADERS");
-      foreach(var item in context.Request.Headers)
-      {
-        Console.WriteLine($"{item.Key} : {item.Value}");
-      }
-
-      foreach(var item in context.Request.Query)
-      {
-        Console.WriteLine($"{item.Key} : {item.Value}");
-      }
-
       return context.Request.Headers.ContainsKey(ServerKey) ||
              context.Request.Query.ContainsKey(ServerKey);
     }
