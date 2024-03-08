@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using MongoDB.Driver;
 using MyMusic.Api.BackgroundServices;
 using MyMusic.Api.Middleware;
@@ -7,6 +8,7 @@ using MyMusic.Common;
 using MyMusic.Data;
 using Npgsql;
 using System.Data;
+using System.Net;
 
 // enviroment variables
 var connectionString = EnviromentProvider.GetDatabaseConnectionString();
@@ -14,6 +16,15 @@ var mongoDbConnectionString = EnviromentProvider.GetStorageDbConnectinString();
 DatabaseMigration.EnsureDatabaseCreation(connectionString);
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (!builder.Environment.IsDevelopment())
+{
+  // Configure forwarded headers
+  builder.Services.Configure<ForwardedHeadersOptions>(options =>
+  {
+    options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+  });
+}
 
 // Add services to the container.
 builder.Services.AddHttpClient();
@@ -49,6 +60,7 @@ builder.Services.AddHostedService<DownloadRequestService>();
 builder.Services.AddHostedService<MongoDbUploadService>();
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -57,8 +69,15 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
   app.UseMiddleware<RequestLoggingMiddleware>();
 }
+else
+{
+  app.UseForwardedHeaders(new ForwardedHeadersOptions
+  {
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+  });
+  app.UseHttpsRedirection();
+}
 
-//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
