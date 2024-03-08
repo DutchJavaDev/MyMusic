@@ -57,6 +57,17 @@ namespace MyMusic.Api.Middleware
     // Header check
     private static bool HasPassword(HttpContext context)
     {
+      Console.WriteLine("#HEADERS");
+      foreach(var item in context.Request.Headers)
+      {
+        Console.WriteLine($"{item.Key} : {item.Value}");
+      }
+
+      foreach(var item in context.Request.Query)
+      {
+        Console.WriteLine($"{item.Key} : {item.Value}");
+      }
+
       return context.Request.Headers.ContainsKey(ServerKey) ||
              context.Request.Query.ContainsKey(ServerKey);
     }
