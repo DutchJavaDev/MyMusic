@@ -5,6 +5,11 @@ namespace MyMusic.Common
 {
   public static class EnviromentProvider
   {
+
+    // If time left redo this class
+    // move all keys to the right apps that need them
+    // then have a single function that takes the key as argument
+    // -to rectrieve the value :)
     private static readonly Dictionary<string, string> _cache = [];
 
     private const string databaseStringKey = "database_url";
@@ -12,6 +17,7 @@ namespace MyMusic.Common
     private const string minioUserKey = "minio_user";
     private const string minioPasswordKey = "minio_password";
     private const string storageDbKey = "storage_db";
+    private const string ffmpegPathKey = "ffmpeg_path";
 
     // Dep
     private const string minioAuthenticationApiEnpointKey = "minio_auth_api_endpoint";
@@ -27,6 +33,11 @@ namespace MyMusic.Common
     public static string GetStorageDbConnectinString()
     {
       return GetValue(storageDbKey);
+    }
+
+    public static string GetFfmpegPath()
+    {
+      return GetValue(ffmpegPathKey);
     }
 
     public static (string endpoint, string accessKey, string secretKey) GetMinioConfig()
