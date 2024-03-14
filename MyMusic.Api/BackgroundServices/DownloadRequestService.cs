@@ -2,6 +2,7 @@
 using MediaToolkit;
 using MediaToolkit.Model;
 using MyMusic.Api.Services;
+using MyMusic.Common;
 using System.Data;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
@@ -123,7 +124,11 @@ namespace MyMusic.Api.BackgroundServices
       var input = new MediaFile { Filename = mp4Path };
       var output = new MediaFile { Filename = Utils.GenerateSourePath() };
 
+#if DEBUG
       using var engine = new Engine();
+#else
+      using var engine = new Engine(EnviromentProvider.GetFfmpegPath());
+#endif
       // engine.ConvertProgressEvent track progress
       // create seperate table to update the download progress
       engine.GetMetadata(input);
