@@ -2,7 +2,7 @@
 using MyMusic.Player.Storage.Models;
 using Newtonsoft.Json;
 using System.Text;
-
+  
 namespace MyMusic.Player.Services
 {
   public sealed class ApiService
@@ -100,8 +100,7 @@ namespace MyMusic.Player.Services
 
       var client = _httpClientFactory.CreateClient();
       client.BaseAddress = new Uri(await _configurationService.GetBaseApiUrl());
-      client.DefaultRequestHeaders.Add("SERVER_AUTHENTICATION", configuration.ServerPassword);
-
+      client.DefaultRequestHeaders.Authorization = new(configuration.ServerPassword);
       return client;
     }
   }
