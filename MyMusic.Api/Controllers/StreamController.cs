@@ -27,8 +27,8 @@ namespace MyMusic.Api.Controllers
 
     private FileContentResult CreateFileEnabledRangeProcessing(byte[] data)
     {
-      var file = File(data, "audio/mpeg");
-      file.EnableRangeProcessing = true; // Allow for ajusting the playback time: https://stackoverflow.com/questions/48711209/partial-content-in-net-core-mvc-for-video-audio-streaming
+      var file = File(data, "audio/mpeg", true);
+      //file.EnableRangeProcessing = true; // Allow for ajusting the playback time: https://stackoverflow.com/questions/48711209/partial-content-in-net-core-mvc-for-video-audio-streaming
       return file;
     }
   }
