@@ -13,11 +13,16 @@ namespace MyMusic.Api.BackgroundServices
   public sealed class DownloadRequestService(IServiceProvider _serviceProvider) : BackgroundService
   {
     public readonly int MaxConcurrentDownloads = 2; // read from db
-
+#if RELEASE
+    private static string FilePath = string.Empty;
+#endif
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
       using IServiceScope scope = _serviceProvider.CreateScope();
-
+#if RELEASE
+      FilePath = Directory.GetFiles(Directory.GetCurrentDirectory())
+        .Where(i => i.Contains("ffmpeg.exe")).FirstOrDefault();
+#endif
       while (!stoppingToken.IsCancellationRequested)
       {
         using var connection = scope.ServiceProvider.GetRequiredService<IDbConnection>();
@@ -127,7 +132,7 @@ namespace MyMusic.Api.BackgroundServices
 #if DEBUG
       using var engine = new Engine();
 #else
-      using var engine = new Engine(EnviromentProvider.GetFfmpegPath());
+      using var engine = new Engine(FilePath);
 #endif
       // engine.ConvertProgressEvent track progress
       // create seperate table to update the download progress
