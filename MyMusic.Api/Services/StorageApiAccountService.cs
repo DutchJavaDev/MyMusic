@@ -8,16 +8,6 @@ namespace MyMusic.Api.Services
     private readonly string? _endPoint = EnviromentProvider.GetStorageApiEndpoint();
     private readonly IHttpClientFactory _httpClientFactory = http;
 
-    public Task<HttpResponseMessage> CreateReadOnlyUser(string name)
-    {
-      return CreateUser(name, Utils.MinioReadonlyPolicy);
-    }
-
-    public Task<HttpResponseMessage> CreateWriteOnlyUser(string name)
-    {
-      return CreateUser(name, Utils.MinioWriteOnlyPolicy);
-    }
-
     private Task<HttpResponseMessage> CreateUser(string user, string policy)
     {
       using var client = CreateClient();
