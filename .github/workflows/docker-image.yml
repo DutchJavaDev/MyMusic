@@ -14,5 +14,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    # Cache NuGet packages
+    - name: Cache NuGet packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Build the Docker image
-      run: docker build . --file ././MyMusic.Api/Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file ././MyMusic.Api/Dockerfile --tag my-image-name:$(date +%s)"
