@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using MyMusic.Player.Storage;
+using Newtonsoft.Json;
 
 namespace MyMusic.Player.Services
 {
   public sealed class VideoDurationService(IHttpClientFactory _httpClientFactory,
-      ConfigurationService _configurationService, LogService logService)
+      LocalDatabase database, LogService logService)
   {
     private readonly string VideoIdV3Url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&";
 
@@ -72,7 +73,7 @@ namespace MyMusic.Player.Services
 
     private async Task<string> GetApiKeyAsync()
     {
-      var apiKey = (await _configurationService.GetServerConfigurationAsync()).ApiKey;
+      var apiKey = (await database.GetServerConfigurationAsync()).ApiKey;
 
       if (string.IsNullOrEmpty(apiKey))
       {
