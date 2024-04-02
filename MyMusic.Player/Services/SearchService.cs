@@ -1,5 +1,6 @@
 ﻿using MyMusic.Player.Blazor;
 using MyMusic.Player.Blazor.Models.Search;
+using MyMusic.Player.Storage;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace MyMusic.Player.Services
     private readonly string SearchV3Url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&type=video&";
 
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ConfigurationService _configurationService;
+    private readonly LocalDatabase _database;
     private readonly VideoDurationService _videoDurationService;
     private readonly LogService _logService;
 
@@ -18,12 +19,12 @@ namespace MyMusic.Player.Services
         .ToList();
 
     public SearchService(IHttpClientFactory httpClientFactory,
-        ConfigurationService configurationService,
+        LocalDatabase database,
         VideoDurationService videoDurationService,
         LogService log)
     {
       _httpClientFactory = httpClientFactory;
-      _configurationService = configurationService;
+      _database = database;
       _videoDurationService = videoDurationService;
       _logService = log;
     }
@@ -110,7 +111,7 @@ namespace MyMusic.Player.Services
 
     private async Task<string> GetApiKeyAsync()
     {
-      var configuration = await _configurationService.GetServerConfigurationAsync().ConfigureAwait(false);
+      var configuration = await _database.GetServerConfigurationAsync().ConfigureAwait(false);
 
       return string.Concat("key=", configuration.ApiKey, "&");
     }
