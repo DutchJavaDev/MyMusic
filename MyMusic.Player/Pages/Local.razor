@@ -1,8 +1,7 @@
 ﻿@page "/local"
 @attribute [NavigationInfo("oi-folder","LOCAL",3)]
 @using static MyMusic.Player.Storage.Constants
-@inject MusicReferenceService musicRef
-
+@inject LocalDatabase localDb
 <div class="container">
     @if (LocalModels is not null)
     {
@@ -17,6 +16,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LocalModels = await musicRef.GetAllMusicsAsync();
+        LocalModels = await localDb.GetAllMusicsAsync();
     }
 }
