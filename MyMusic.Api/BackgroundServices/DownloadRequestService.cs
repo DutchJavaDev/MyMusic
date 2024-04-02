@@ -2,7 +2,6 @@
 using MediaToolkit;
 using MediaToolkit.Model;
 using MyMusic.Api.Services;
-using MyMusic.Common;
 using System.Data;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
@@ -19,6 +18,7 @@ namespace MyMusic.Api.BackgroundServices
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
       using IServiceScope scope = _serviceProvider.CreateScope();
+      // Running in docker ffmpeg is installed in the root folder
 #if RELEASE
       FilePath = Directory.GetFiles(Directory.GetCurrentDirectory())
         .Where(i => i.Contains("ffmpeg.exe")).FirstOrDefault();
