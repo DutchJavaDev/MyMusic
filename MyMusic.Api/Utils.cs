@@ -5,19 +5,15 @@ namespace MyMusic.Api
 {
   public static class Utils
   {
+    private static readonly string LocalFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     private const string DownloadFolderName = "mymusic_downloads";
     private const string AudioSourceFolder = "mymusic_source";
-    private static readonly string DownloadFolderPath;
-    private static readonly string AudioSourcePath;
+    private static readonly string DownloadFolderPath = Path.Combine(LocalFolderPath, DownloadFolderName);
+    private static readonly string AudioSourcePath = Path.Combine(LocalFolderPath, AudioSourceFolder);
 
     static Utils()
     {
-      var localFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-      DownloadFolderPath = Path.Combine(localFolderPath, DownloadFolderName);
       CreateFolderIfNotExists(DownloadFolderPath);
-
-      AudioSourcePath = Path.Combine(localFolderPath, AudioSourceFolder);
       CreateFolderIfNotExists(AudioSourcePath);
     }
 
