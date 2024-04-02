@@ -9,8 +9,7 @@ namespace MyMusic.Api.Controllers
     [HttpPost("start")]
     public async Task<IActionResult> Start(
         [FromBody] DownloadRequest downloadRequest,
-        [FromServices] DownloadService downloadService
-        )
+        [FromServices] DownloadService downloadService)
     {
       var trackingId = await downloadService.CreateDownloadRequestAsync(downloadRequest);
 
