@@ -36,7 +36,7 @@ namespace MyMusic.Api.BackgroundServices
       }
     }
 
-    private async Task UploadTask(DownloadObject upload, IServiceScope scope)
+    private static async Task UploadTask(DownloadObject upload, IServiceScope scope)
     {
       using var logger = scope.ServiceProvider.GetRequiredService<DbLogger>();
       using var connection = scope.ServiceProvider.GetRequiredService<IDbConnection>();
@@ -44,13 +44,15 @@ namespace MyMusic.Api.BackgroundServices
 
       try
       {
-        var bytes = File.ReadAllBytes(upload.FilePath);
+        await logger.LogAsync($"Start Upload: {upload.TrackId}");
+
+        var bytes = File.ReadAllBytes(upload.FilePath ?? "");
 
         var trackToUpload = new MyMusicObject
         {
           Name = upload.Name,
           BinaryData = new(bytes),
-          TrackId = upload.TrackId ?? throw new ArgumentException("Track id has not been set."), // satisfy idea
+          TrackId = upload.TrackId ?? throw new ArgumentNullException(nameof(upload.TrackId), "TrackId has not been set."), // satisfy idea
           Uploaded = DateTime.UtcNow
         };
 
@@ -59,10 +61,12 @@ namespace MyMusic.Api.BackgroundServices
         await UpdateStatusAsync(upload.DownloadId, Mp3State.Uploaded, connection);
 
         // Delete filestream from disk since its now in mongo
-        await Utils.DeleteFileAsync(upload.FilePath, logger);
+        await Utils.DeleteFileAsync(upload.FilePath ?? "", logger);
 
         // Then ---> its done
         await UpdateStatusAsync(upload.DownloadId, Mp3State.Done, connection);
+
+        // remove file path from mp3media table?
       }
       catch (Exception e)
       {
@@ -71,7 +75,7 @@ namespace MyMusic.Api.BackgroundServices
       }
     }
 
-    private async Task EnsureCollectionCreation(IServiceScope scope)
+    private static async Task EnsureCollectionCreation(IServiceScope scope)
     {
       var client = scope.ServiceProvider.GetRequiredService<MongoClient>();
       var databases = await client.ListDatabaseNamesAsync();
@@ -108,7 +112,7 @@ namespace MyMusic.Api.BackgroundServices
 
     private static Task<int> UpdateStatusAsync(int? id, Mp3State nstate, IDbConnection connection)
     {
-      var query = @"update download set state = @nstate where serial = @serial;";
+      const string query = "update download set state = @nstate where serial = @serial;";
       var param = new
       {
         nstate = (int)nstate,
