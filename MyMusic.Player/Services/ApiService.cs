@@ -1,21 +1,23 @@
 ﻿using MyMusic.Common.Models;
+using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 using Newtonsoft.Json;
 using System.Text;
-  
+using System.Web;
+
 namespace MyMusic.Player.Services
 {
   public sealed class ApiService
   {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ConfigurationService _configurationService;
+    private readonly LocalDatabase _database;
     private readonly LogService _logService;
 
     public ApiService(IHttpClientFactory httpClientFactory,
-        ConfigurationService configurationService,
+        LocalDatabase database,
         LogService logService)
     {
-      _configurationService = configurationService;
+      _database = database;
       _httpClientFactory = httpClientFactory;
       _logService = logService;
     }
@@ -24,7 +26,7 @@ namespace MyMusic.Player.Services
     {
       try
       {
-        var configuration = await _configurationService.GetServerConfigurationAsync();
+        var configuration = await _database.GetServerConfigurationAsync();
 
         var client = await ConfigureApiClient(configuration);
 
@@ -48,13 +50,18 @@ namespace MyMusic.Player.Services
       {
         /// "SERVER_AUTHENTICATION"
         ///
-        var configuration = await _configurationService.GetServerConfigurationAsync();
+        var configuration = await _database.GetServerConfigurationAsync();
 
         var client = await ConfigureApiClient(configuration);
 
         var request = await client.GetAsync("download/status");
 
         var stringContent = await request.Content.ReadAsStringAsync();
+
+        if(!request.IsSuccessStatusCode)
+        {
+          throw new Exception(stringContent);
+        }
 
         return JsonConvert.DeserializeObject<IEnumerable<StatusModel>>(stringContent);
       }
@@ -72,7 +79,7 @@ namespace MyMusic.Player.Services
       {
         // "SERVER_AUTHENTICATION"
         //
-        var configuration = await _configurationService.GetServerConfigurationAsync();
+        var configuration = await _database.GetServerConfigurationAsync();
 
         var client = await ConfigureApiClient(configuration);
 
@@ -99,8 +106,8 @@ namespace MyMusic.Player.Services
       }
 
       var client = _httpClientFactory.CreateClient();
-      client.BaseAddress = new Uri(await _configurationService.GetBaseApiUrl());
-      client.DefaultRequestHeaders.Authorization = new(configuration.ServerPassword);
+      client.BaseAddress = new Uri(await _database.GetBaseApiUrlAsync());
+      client.DefaultRequestHeaders.Authorization = new(HttpUtility.HtmlEncode(configuration.ServerPassword));
       return client;
     }
   }
