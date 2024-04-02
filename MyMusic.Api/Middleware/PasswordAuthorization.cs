@@ -8,8 +8,7 @@ namespace MyMusic.Api.Middleware
 {
   public class PasswordAuthorization : IAuthorizationMiddlewareResultHandler
   {
-    private static readonly string ServerKey = "Authorization";
-    private readonly AuthorizationMiddlewareResultHandler defaultHandler = new();
+    private const string ServerKey = "Authorization";
     private readonly string? ServerPasswordHash;
     private readonly DbLogger _dbLogger;
 
@@ -29,10 +28,6 @@ namespace MyMusic.Api.Middleware
       {
         dbLogger.LogAsync(new Exception("Failed to get server password"), messagePrefix: "server passpwrd").Wait();
       }
-      else
-      {
-        Console.WriteLine(ServerPasswordHash);
-      }
 
       _dbLogger = dbLogger;
     }
@@ -43,6 +38,8 @@ namespace MyMusic.Api.Middleware
         AuthorizationPolicy policy,
         PolicyAuthorizationResult authorizeResult)
     {
+      Console.WriteLine($"Incoming Request: {context.Request.Method} {context.Request.Path}");
+
       if (!HasPassword(context) || !VerifyPassword(context, ServerPasswordHash ?? string.Empty))
       {
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
