@@ -1,9 +1,7 @@
 ﻿@page "/songs"
 @attribute [NavigationInfo("oi-musical-note", "SONGS", 1)]
 @inject ApiService api
-@inject MusicReferenceService reference
-@inject ConfigurationService configuration
-@inject IJSRuntime js
+@inject LocalDatabase localDb
 
 <div class="container">
     @if (Models is not null && Models.Any())
@@ -20,23 +18,18 @@
 </div>
 
 @code {
-  private IEnumerable<MusicReference> Models { get; set; }
+  private List<MusicReference> Models { get; set; }
   private string BaseUrl { get; set; }
 
   protected override async Task OnInitializedAsync()
   {
-    BaseUrl = await configuration.GetBaseApiUrl();
+    BaseUrl = await localDb.GetBaseApiUrlAsync();
 
-    var _models = await reference.GetAllMusicsAsync();
+    var _models = await localDb.GetAllMusicsAsync();
 
-    var downloaded = await api.GetDownloadedValuesAsync();
+    Models = _models.ToList();
 
-    var ids = downloaded.Select(i => i.TrackingId).ToList();
-
-    Models = _models.Where(i => !string.IsNullOrEmpty(i.TrackingId))
-      .Where(i => ids.Contains(Guid.Parse(i.TrackingId)));
-
-        StateHasChanged();
-    }
+    StateHasChanged();
+   }
 
 }
