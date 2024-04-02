@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MyMusic.Common.Models;
 using MyMusic.Player.Services;
+using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Blazor.Components
@@ -9,13 +10,10 @@ namespace MyMusic.Player.Blazor.Components
   {
     [Parameter]
     public MusicReference Model { get; set; }
-
+    [Inject]
+    private LocalDatabase LocalDb { get; set; } 
     [Inject]
     private ApiService ApiService { get; set; }
-
-    [Inject]
-    private MusicReferenceService MusicReferenceService { get; set; }
-
     public async Task SendDownLoadAsync()
     {
       var request = new DownloadRequest
@@ -27,7 +25,7 @@ namespace MyMusic.Player.Blazor.Components
 
       var trackingId = await ApiService.DownloadAsync(request);
 
-      await MusicReferenceService.InsertAsync(new MusicReference
+      await LocalDb.InsertAsync(new MusicReference
       {
         TrackingId = trackingId,
         CoverUrl = Model.CoverUrl,
