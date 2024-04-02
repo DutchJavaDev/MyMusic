@@ -18,6 +18,8 @@ namespace MyMusic.Common
     private const string minioPasswordKey = "minio_password";
     private const string storageDbKey = "storage_db";
     private const string ffmpegPathKey = "ffmpeg_path";
+    private const string apiKey = "data_api_key";
+    private const string urlKey = "server_url";
 
     // Dep
     private const string minioAuthenticationApiEnpointKey = "minio_auth_api_endpoint";
@@ -28,6 +30,16 @@ namespace MyMusic.Common
     static EnviromentProvider()
     {
       Assembly = typeof(EnviromentProvider).Assembly;
+    }
+
+    public static string GetUrl()
+    {
+      return GetValue(urlKey);
+    }
+
+    public static string GetApiKey()
+    {
+      return GetValue(apiKey);
     }
 
     public static string GetStorageDbConnectinString()
@@ -56,7 +68,7 @@ namespace MyMusic.Common
     {
       return GetValue(databaseStringKey);
     }
-
+    
     public static void SetAssembly(Assembly assembly)
     {
       Assembly = assembly;
