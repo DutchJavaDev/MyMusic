@@ -2,7 +2,6 @@
 using Microsoft.JSInterop;
 using MyMusic.Player.Storage.Models;
 
-
 namespace MyMusic.Player.Blazor.Components
 {
   public partial class MusicComponent : ComponentBase
@@ -20,8 +19,8 @@ namespace MyMusic.Player.Blazor.Components
     {
       var url = $"{BaseUrl}stream/apg7/{Model.TrackingId}";
 
-      await JSRuntime.InvokeVoidAsync("window.setCoverUrl",Model.CoverUrl);
       await JSRuntime.InvokeVoidAsync("window.play", url);
+      await JSRuntime.InvokeVoidAsync("window.setCoverUrl",Model.CoverUrl);
     }
   }
 }
