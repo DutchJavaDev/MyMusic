@@ -3,6 +3,7 @@ using MyMusic.Common.Models;
 using MyMusic.Player.Blazor.Models.Logging;
 using MyMusic.Player.Blazor.Models.Search;
 using MyMusic.Player.Services;
+using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Pages
@@ -10,13 +11,12 @@ namespace MyMusic.Player.Pages
   public partial class Index : ComponentBase
   {
     [Inject]
+    public LocalDatabase LocalDb { get; set; }  
+    [Inject]
     public SearchService SearchService { get; set; }
 
     [Inject]
     public ApiService ApiService { get; set; }
-
-    [Inject]
-    public MusicReferenceService MusicReferenceService { get; set; }
 
     [Inject]
     public LogService LogService { get; set; }
@@ -62,7 +62,7 @@ namespace MyMusic.Player.Pages
       }
 
       // Keep track in local db
-      await MusicReferenceService.InsertAsync(new MusicReference
+      await LocalDb.InsertAsync(new MusicReference
       {
         TrackingId = trackingId,
         CoverUrl = model.CoverUrl,
