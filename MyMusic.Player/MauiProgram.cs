@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MyMusic.Player.Blazor;
+using MyMusic.Player.Storage;
 
 namespace MyMusic.Player
 {
@@ -8,6 +9,9 @@ namespace MyMusic.Player
     public static MauiApp CreateMauiApp()
     {
       var builder = MauiApp.CreateBuilder();
+
+      _ = LocalDatabase.EnsureDatebaseCreationAsync();
+      
       builder
           .UseMauiApp<App>()
           .ConfigureFonts(fonts =>
@@ -15,7 +19,6 @@ namespace MyMusic.Player
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
           });
 
-      _ = builder.EnsureDatebaseCreation();
 
       builder.ConfigureMyMusicServices();
 
