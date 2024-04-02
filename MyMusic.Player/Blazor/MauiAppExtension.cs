@@ -44,14 +44,12 @@ namespace MyMusic.Player.Blazor
     {
       // Local database
       builder.Services.AddTransient(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
-
+      builder.Services.AddTransient<LocalDatabase>();
       builder.Services.AddTransient<LogService>();
-      builder.Services.AddTransient<ConfigurationService>();
       builder.Services.AddTransient<VideoDurationService>();
       builder.Services.AddTransient<SearchService>();
       builder.Services.AddTransient<ApiService>();
       builder.Services.AddTransient<UpdaterService>();
-      builder.Services.AddTransient<MusicReferenceService>();
 
       // Navigation cause im lazy
       var pages = GetBlazorPages();
