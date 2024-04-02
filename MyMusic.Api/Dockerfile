@@ -17,16 +17,14 @@ RUN dotnet publish "./MyMusic.Api.csproj" -c Release -o /app/publish /p:UseAppHo
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Install ffmpeg under the mediatoolkit folder
-RUN mkdir -p /app/MediaToolkit
-
 # Install required dependencies including xz-utils
 RUN apt-get update
-RUN apt-get install -y wget xz-utils
+RUN apt-get install -y wget xz-utils # please no hackie
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
-# Download ffmpeg and extract it to the root folder
+# Download ffmpeg and extract it in the root folder
+# need to research permission becuase its unaccesable(permisiondenied) when created with app user
 RUN apt-get update
 RUN apt-get install -y wget
 RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
