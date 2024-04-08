@@ -11,9 +11,10 @@ using System.Data;
 using System.Net;
 
 // enviroment variables
-var connectionString = EnviromentProvider.GetDatabaseConnectionString();
+var postgresConnectionString = EnviromentProvider.GetDatabaseConnectionString();
 var mongoDbConnectionString = EnviromentProvider.GetStorageDbConnectinString();
-DatabaseMigration.EnsureDatabaseCreation(connectionString);
+
+DatabaseMigration.EnsureDatabaseCreation(postgresConnectionString);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,7 @@ builder.Services.AddHttpClient();
 // MongoDb
 builder.Services.AddTransient(_ => new MongoClient(mongoDbConnectionString));
 // Postgress
-builder.Services.AddTransient<IDbConnection>((_) => new NpgsqlConnection(connectionString));
+builder.Services.AddTransient<IDbConnection>((_) => new NpgsqlConnection(postgresConnectionString));
 // Services
 builder.Services.AddTransient<DbLogger>();
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, PasswordAuthorization>();
@@ -58,8 +59,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddHostedService<DownloadRequestService>();
 builder.Services.AddHostedService<MongoDbUploadService>();
-var app = builder.Build();
 
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
