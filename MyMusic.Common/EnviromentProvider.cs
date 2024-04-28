@@ -68,19 +68,7 @@ namespace MyMusic.Common
     {
       return GetValue(databaseStringKey);
     }
-    
-    public static void SetAssembly(Assembly assembly)
-    {
-      Assembly = assembly;
-
-      // Rebuild
-      var builder = new ConfigurationBuilder()
-         .SetBasePath(Directory.GetCurrentDirectory())
-         .AddUserSecrets(Assembly);
-
-      configurationRoot = builder.Build();
-    }
-
+   
     private static string GetValue(string key)
     {
       try

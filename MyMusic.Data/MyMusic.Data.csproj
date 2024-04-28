@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <None Remove="Scripts\0 init-script.sql" />
+    <None Remove="Scripts\1 lyrics-file.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\0 init-script.sql" />
+    <EmbeddedResource Include="Scripts\1 lyrics-file.sql" />
   </ItemGroup>
 
   <ItemGroup>
