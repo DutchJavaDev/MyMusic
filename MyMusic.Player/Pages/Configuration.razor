@@ -40,8 +40,12 @@
   {
     Model = await localDb.GetServerConfigurationAsync();
     #if DEBUG
-     // Try env 
-    if(string.IsNullOrEmpty(Model.ApiKey) || string.IsNullOrEmpty(Model.ServerUrl))
+   // Try env
+   if(Model == null)
+    {
+      Model = new();
+    }
+  if(string.IsNullOrEmpty(Model.ApiKey) || string.IsNullOrEmpty(Model.ServerUrl))
     {
      Model.ApiKey = EnviromentProvider.GetApiKey();
      Model.ServerUrl = EnviromentProvider.GetUrl();

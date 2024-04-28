@@ -64,7 +64,8 @@
 
   audioElement = document.getElementById("audio_player");
   audioElement.addEventListener("seeking", (event) => {
-    console.log("Video is seeking a new position.");
+    console.log("Audio is seeking a new position.");
+    // ?
   });
 
   window.setCurrentTime = (value) => {
@@ -124,10 +125,14 @@
   });
 
   audioElement.addEventListener('timeupdate', function () {
-    //console.log('Current time: ' + audioElement.currentTime);
+    console.log('Current time: ' + audioElement.currentTime);
     playerComponentReference.invokeMethodAsync("SetCurrentTime", audioElement.currentTime)
   });
-
+  // RECOGNIZING: Text = 1 / 2, Timestamp = 6640000
+  // RECOGNIZING: Text = 123, Timestamp = 6440000
+  // RECOGNIZING: Text = 1234, Timestamp = 6440000
+  // RECOGNIZING: Text = 123452, Timestamp = 6440000
+  // RECOGNIZED: Text = 1234., Timestamp = 6440000
   audioElement.addEventListener('loadedmetadata', function () {
     //console.log('Duration: ' + audioElement.duration + ' seconds');
     playerComponentReference.invokeMethodAsync("SetDurations", audioElement.duration)
