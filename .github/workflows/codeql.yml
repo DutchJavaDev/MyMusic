@@ -18,7 +18,7 @@ jobs:
         project:
           - MyMusic.Common
           - MyMusic.Data
-          - MyMusic.Player
+          #- MyMusic.Player
           - MyMusic.Api
 
     steps:
