@@ -16,10 +16,7 @@ jobs:
     strategy:
       matrix:
         project:
-          - MyMusic.Api
-          - MyMusic.Common
           - MyMusic.Data
-          - MyMusic.Player
 
     steps:
       - name: Checkout code
@@ -31,10 +28,10 @@ jobs:
           dotnet-version: '5.0.x' # Update with the version you are using
 
       - name: Restore dependencies
-        run: dotnet restore ${{ matrix.project }}/${{ matrix.project }}.csproj
+        run: dotnet restore ${{ matrix.project }}/ProjectName.csproj
 
       - name: Build project
-        run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release
+        run: dotnet build ${{ matrix.project }}/ProjectName.csproj --configuration Release
 
       - name: Create CodeQL database
         run: codeql database create ${{ matrix.project }}-db --language=csharp --source-root ${{ matrix.project }} --search-path ${{ matrix.project }}
