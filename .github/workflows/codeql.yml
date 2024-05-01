@@ -17,9 +17,6 @@ jobs:
       matrix:
         project:
           - MyMusic.Common
-          - MyMusic.Data
-          #- MyMusic.Player
-          - MyMusic.Api
 
     steps:
       - name: Checkout code
