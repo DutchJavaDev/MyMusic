@@ -14,6 +14,7 @@ namespace MyMusic.Player
       
       builder
           .UseMauiApp<App>()
+
           .ConfigureFonts(fonts =>
           {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
