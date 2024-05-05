@@ -11,7 +11,8 @@ namespace MyMusic.Player.Pages
   public partial class Index : ComponentBase
   {
     [Inject]
-    public LocalDatabase LocalDb { get; set; }  
+    public LocalDatabase LocalDb { get; set; }
+
     [Inject]
     public SearchService SearchService { get; set; }
 
@@ -24,11 +25,6 @@ namespace MyMusic.Player.Pages
     public List<SearchViewModel> Models { get; set; }
 
     public bool _searching = false;
-
-    protected override void OnInitialized()
-    {
-      Models = SearchService.SearchResults;
-    }
 
     public async Task Search(string query)
     {
