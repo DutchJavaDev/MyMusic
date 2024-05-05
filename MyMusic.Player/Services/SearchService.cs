@@ -15,9 +15,6 @@ namespace MyMusic.Player.Services
     private readonly VideoDurationService _videoDurationService;
     private readonly LogService _logService;
 
-    public static readonly List<SearchViewModel> SearchResults = Array.Empty<SearchViewModel>()
-        .ToList();
-
     public SearchService(IHttpClientFactory httpClientFactory,
         LocalDatabase database,
         VideoDurationService videoDurationService,
