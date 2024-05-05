@@ -2,7 +2,6 @@
 using Dapper;
 using MyMusic.Api.Services;
 using MyMusic.Common.Models;
-using SharpCompress.Common;
 using System.Data;
 using static MyMusic.Common.CommonData;
 
@@ -46,7 +45,7 @@ namespace MyMusic.Api.BackgroundServices
         //client.Timeout = TimeSpan.FromSeconds(120); // 2 minutes should be enough :)
 
         // hardcoded url
-        const string url = @"";
+        const string url = "";
 
         using var formData = new MultipartFormDataContent();
         await using var fileStream = new FileStream(model.FilePath, FileMode.Open);
@@ -54,11 +53,11 @@ namespace MyMusic.Api.BackgroundServices
         formData.Add(new StringContent("whisper-1"), "model");
 
         // Send
-        var response = await client.PostAsync(url, formData);
+        var response = await client.PostAsync(url, formData, stoppingToken);
 
         if (response.IsSuccessStatusCode)
         {
-          var content = await response.Content.ReadAsStringAsync();
+          var content = await response.Content.ReadAsStringAsync(stoppingToken);
 
           Console.WriteLine(content);
         }
