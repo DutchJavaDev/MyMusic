@@ -1,32 +1,52 @@
 ﻿@inherits LayoutComponentBase
-
+ 
 <RadzenLayout>
   <RadzenHeader>
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-      <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-      <RadzenLabel Text="MyMusic" />
+      <RadzenSidebarToggle Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+      <SearchComponent />
     </RadzenStack>
   </RadzenHeader>
   <RadzenSidebar Responsive="true" Style="width: max-content">
-    <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="true">
+    <RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="true">
+      <!--Home-->
       <RadzenPanelMenuItem Text="Home" Path="/" Icon="home" />
-      <RadzenPanelMenuItem Text="Dashboard" Path="/cloud" Icon="dashboard" />
-      <RadzenPanelMenuItem Text="UI Fundamentals" Icon="auto_awesome">
-        <RadzenPanelMenuItem Text="Themes" Icon="color_lens" />
-        <RadzenPanelMenuItem Text="Colors" Icon="invert_colors" />
+      <!--Home-->
+
+      <!--Search-->
+      <RadzenPanelMenuItem Text="Search" Path="/search" Icon="search" />
+      <!--Search-->
+
+      <!--Artist-->
+      <RadzenPanelMenuItem Text="Artists" Path="/artists" Icon="groups" />
+      <!--Artist-->
+
+      <!-- Playlist -->
+      <RadzenPanelMenuItem Text="Playlists" Path="/playlist" Icon="list">
+        <!--For loop-->
+        @foreach (var playlist in TemplPlaylist)
+        {
+           string path = $"/playlist/{playlist.Value}";
+           string name = playlist.Key;
+           <RadzenPanelMenuItem Text="@name" Path="@path" Icon="list"/>
+        }
       </RadzenPanelMenuItem>
+      <!-- Playlist -->
+
+      <!--Cloud data-->
+      <RadzenPanelMenuItem Text="CLoud/API" Path="/cloud" Icon="cloud"/>
+      <!--Cloud data-->
+
+      <!--Settings-->
+      <RadzenPanelMenuItem Text="Settings" Path="/settings" Icon="settings" />
+      <!--Settings-->
+
     </RadzenPanelMenu>
   </RadzenSidebar>
   <RadzenBody>
-    <div class="rz-p-4">
       @Body
-    </div>
   </RadzenBody>
-  <RadzenFooter>
-    Footer
+  <RadzenFooter >
+    <PlayerComponent />
   </RadzenFooter>
 </RadzenLayout>
-
-@code {
-  bool sidebarExpanded = true;
-}
