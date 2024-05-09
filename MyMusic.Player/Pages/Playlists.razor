@@ -1,0 +1,15 @@
+﻿@page "/playlist"
+@page "/playlist/{PlaylistSerial:int}"
+
+@if (HasPlaylistId)
+{
+    // Show selected playlist
+    // Show all songs
+  <h3>@PlaylistSerial</h3>
+}
+else
+{
+    // Show all playlist
+    // CRUD for playlist
+    <h3>No playlist id</h3>
+}
