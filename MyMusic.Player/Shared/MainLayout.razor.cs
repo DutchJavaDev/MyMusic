@@ -5,7 +5,7 @@ namespace MyMusic.Player.Shared
   public partial class MainLayout : LayoutComponentBase
   {
     // Load playlists id's
-    public Dictionary<string, int> TemplPlaylist = new(); 
+    private readonly Dictionary<string, int> TemplPlaylist = [];
 
     public bool SidebarExpanded { get; set; } = true;
 
