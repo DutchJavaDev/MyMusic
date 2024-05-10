@@ -1,5 +1,4 @@
-﻿
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace MyMusic.Player
 {
@@ -18,7 +17,9 @@ namespace MyMusic.Player
 
       if(DeviceInfo.Current.Platform == DevicePlatform.WinUI)
       {
-        window.Title = "MyMusic";
+        var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+        window.Title = $"MyMusic build: {version}";
       }
 
       return window;
