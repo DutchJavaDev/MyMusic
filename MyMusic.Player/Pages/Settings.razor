@@ -1,3 +1,33 @@
 ﻿@page "/settings"
 
-<h3>Settings</h3>
+<div class="border border-1 border-info">
+  <RadzenFormField Text="Selected Config" class="w-25">
+    <RadzenDropDown @bind-Value=@_selectedConfig Data="@_configurationsNames" Change="@(name => ChangeConfig($"{name}"))" />
+  </RadzenFormField>
+
+  <EditForm OnSubmit="Submit" Model="CurrentConfiguration">
+    <div>
+      <RadzenFormField Text="Name" class="w-25">
+        <RadzenTextBox @bind-Value="CurrentConfiguration.Name" />
+      </RadzenFormField>
+    </div>
+    <div>
+      <RadzenFormField Text="Cloud Password" class="w-25">
+        <RadzenPassword @bind-Value="CurrentConfiguration.CLoudPassword" />
+      </RadzenFormField>
+    </div>
+    <div>
+      <RadzenFormField Text="Cloud URL" class="w-25">
+        <RadzenTextBox @bind-Value="CurrentConfiguration.CloudUrl" />
+      </RadzenFormField>
+    </div>
+    <div>
+      <RadzenFormField Text="Data API KEY" class="w-25">
+        <RadzenTextBox @bind-Value="CurrentConfiguration.DataApiKey" />
+      </RadzenFormField>
+    </div>
+    <div>
+      <button type="submit">Update</button>
+    </div>
+  </EditForm>
+</div>
