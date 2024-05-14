@@ -48,21 +48,21 @@ namespace MyMusic.Player.Blazor
       builder.Services.AddTransient<UpdaterService>();
     }
 
-    public static List<SearchViewModel> ToViewModels(this List<Item> result)
-    {
-      if (result == null)
-      {
-        return Enumerable.Empty<SearchViewModel>()
-            .ToList();
-      }
-
-      return result.ConvertAll(i => new SearchViewModel
-      {
-        Title = i.snippet.title,
-        Description = i.snippet.description,
-        CoverUrl = i.snippet.thumbnails.medium.url,
-        VideoId = i.id.videoId
-      });
-    }
+    //public static List<SearchViewModel> ToViewModels(this List<Item> result)
+    //{
+    //  if (result == null)
+    //  {
+    //    return Enumerable.Empty<SearchViewModel>()
+    //        .ToList();
+    //  }
+      
+    //  return result.ConvertAll(i => new SearchViewModel
+    //  {
+    //    Title = i.snippet.title,
+    //    Description = i.snippet.description,
+    //    CoverUrl = i.snippet.thumbnails.@default.url,
+    //    VideoId = i.id.videoId
+    //  });
+    //}
   }
 }
