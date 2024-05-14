@@ -51,7 +51,7 @@ namespace MyMusic.Player.Storage
     {
       var configuration = await GetServerConfigurationAsync();
 
-      return $"{configuration.ServerUrl}{ApiPrefix}";
+      return configuration.ServerUrl + ApiPrefix;
     }
 
     public async Task ClearDataAsync()

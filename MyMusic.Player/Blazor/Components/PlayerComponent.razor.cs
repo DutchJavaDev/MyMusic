@@ -37,12 +37,12 @@ namespace MyMusic.Player.Blazor.Components
     {
       await base.OnAfterRenderAsync(firstRender);
 
-      if (firstRender)
-      {
-        // warning about memory
-        _componentReference = DotNetObjectReference.Create(this);
-        await JSRuntime.InvokeVoidAsync("window.setPlayerComponentReference", _componentReference);
-      }
+      //if (firstRender)
+      //{
+      //  // warning about memory
+      //  _componentReference = DotNetObjectReference.Create(this);
+      //  await JSRuntime.InvokeVoidAsync("window.setPlayerComponentReference", _componentReference);
+      //}
     }
 
     // This method will be called when the component is disposed
@@ -50,7 +50,7 @@ namespace MyMusic.Player.Blazor.Components
     {
       if (disposing)
       {
-        _componentReference.Dispose();
+        //_componentReference.Dispose();
       }
     }
     public void Dispose()

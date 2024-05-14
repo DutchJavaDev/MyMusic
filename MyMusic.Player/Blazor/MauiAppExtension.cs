@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-using MyMusic.Player.Blazor.Attributes;
-using MyMusic.Player.Blazor.Models;
-using MyMusic.Player.Blazor.Models.Logging;
+﻿using MyMusic.Player.Blazor.Models.Logging;
 using MyMusic.Player.Blazor.Models.Search;
 using MyMusic.Player.Services;
 using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 using SQLite;
-using System.Reflection;
 
 namespace MyMusic.Player.Blazor
 {
@@ -50,49 +46,23 @@ namespace MyMusic.Player.Blazor
       builder.Services.AddTransient<SearchService>();
       builder.Services.AddTransient<ApiService>();
       builder.Services.AddTransient<UpdaterService>();
-
-      // Navigation cause im lazy
-      var pages = GetBlazorPages();
-
-      var service = new NavigationElementService(pages);
-
-      builder.Services.AddSingleton(service);
     }
 
-    private static IEnumerable<Type> GetBlazorPages()
-    {
-      var types = Assembly.GetExecutingAssembly().GetTypes();
-      return types.Where(i => Attribute.IsDefined(i, typeof(RouteAttribute))
-      && Attribute.IsDefined(i, typeof(NavigationInfoAttribute)));
-    }
-
-    public static NavLinkElement CreateNavigationLink(this NavigationInfoAttribute navigation, RouteAttribute route)
-    {
-      NavLinkElement link = new(navigation.Icon, route.Template, navigation.DisplayName, navigation.Index);
-
-      if (navigation.Index == 0)
-      {
-        link.IsActive = true;
-      }
-
-      return link;
-    }
-
-    public static List<SearchViewModel> ToViewModels(this List<Item> result)
-    {
-      if (result == null)
-      {
-        return Enumerable.Empty<SearchViewModel>()
-            .ToList();
-      }
-
-      return result.Select(i => new SearchViewModel
-      {
-        Title = i.snippet.title,
-        Description = i.snippet.description,
-        CoverUrl = i.snippet.thumbnails.medium.url,
-        VideoId = i.id.videoId
-      }).ToList();
-    }
+    //public static List<SearchViewModel> ToViewModels(this List<Item> result)
+    //{
+    //  if (result == null)
+    //  {
+    //    return Enumerable.Empty<SearchViewModel>()
+    //        .ToList();
+    //  }
+      
+    //  return result.ConvertAll(i => new SearchViewModel
+    //  {
+    //    Title = i.snippet.title,
+    //    Description = i.snippet.description,
+    //    CoverUrl = i.snippet.thumbnails.@default.url,
+    //    VideoId = i.id.videoId
+    //  });
+    //}
   }
 }

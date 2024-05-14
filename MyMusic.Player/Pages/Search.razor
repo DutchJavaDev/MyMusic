@@ -1,0 +1,12 @@
+﻿@page "/search"
+@page "/search/{SearchQuery?}"
+
+@if(HasSearchQuery)
+{
+  <div>@SearchQuery</div>
+  <div>@SearchResponse</div>
+}
+else
+{
+  <div>Normal navigation</div>
+}

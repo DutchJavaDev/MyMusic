@@ -1,0 +1,14 @@
+﻿<!--Future me make this a side scroller-->
+ <h3>Playlists (@Playlists.Count)</h3>
+<div class="h-25" style="overflow-y: scroll">
+    <RadzenRow>
+        @foreach(var playlist in Playlists)
+        {
+            <RadzenColumn Size="2">
+                <div class="border border-1 border-info text-center rounded">
+                    <a href="/playlist/@playlist.Value">@playlist.Key</a>
+                </div>
+            </RadzenColumn>
+        }
+    </RadzenRow>
+</div>

@@ -17,7 +17,7 @@
     <ApplicationId>com.companyname.mymusic.player</ApplicationId>
     <ApplicationIdGuid>2901D913-7750-46DE-A8DF-F04139278FEC</ApplicationIdGuid>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -43,16 +43,17 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+    <PackageReference Include="Radzen.Blazor" Version="4.31.3" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
     <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.8" />
     <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.8" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyMusic.Common\MyMusic.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.21" />
   </ItemGroup>
 </Project>
