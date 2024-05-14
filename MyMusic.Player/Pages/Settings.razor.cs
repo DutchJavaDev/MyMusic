@@ -17,7 +17,7 @@ namespace MyMusic.Player.Pages
       { 
         Serial = i,
         Name = $"Config_{i}",
-        CLoudPassword = Guid.NewGuid().ToString(),
+        CloudPassword = Guid.NewGuid().ToString(),
         CloudUrl = $"localhost:{i*i}",
         DataApiKey = Guid.NewGuid().ToString(),
       });
@@ -29,9 +29,26 @@ namespace MyMusic.Player.Pages
       _selectedConfig = _configurationsNames.First();
     }
 
-    private void Submit()
+    private void Submit(ConfigurationDemo configuration)
     {
+      // TODO
+    }
 
+    private void NewConfig()
+    {
+      CurrentConfiguration = new();
+      _selectedConfig = "New Configuration";
+    }
+
+    private void DeleteConfig()
+    {
+      // Does not work, reason temp data lol
+      if(CurrentConfiguration != null)
+      {
+        _configurations = _configurations.Where(i => i != CurrentConfiguration);
+        CurrentConfiguration = _configurations.FirstOrDefault();
+        _selectedConfig = CurrentConfiguration.Name;
+      }
     }
 
     private void ChangeConfig(string name)

@@ -1,33 +1,44 @@
 ﻿@page "/settings"
+@using MyMusic.Player.Blazor.Models.Temp;
 
-<div class="border border-1 border-info">
-  <RadzenFormField Text="Selected Config" class="w-25">
-    <RadzenDropDown @bind-Value=@_selectedConfig Data="@_configurationsNames" Change="@(name => ChangeConfig($"{name}"))" />
-  </RadzenFormField>
+<RadzenRow>
+  <RadzenColumn Size="2">
+    <RadzenButton Text="Create new config" Click="NewConfig" ButtonStyle="ButtonStyle.Success" class="mt-2 w-100" />
+    <RadzenButton Text="Delete selected" Click="DeleteConfig" ButtonStyle="ButtonStyle.Danger" class="mt-2 w-100" />
+  </RadzenColumn>
+  <RadzenColumn Size="8">
+    <div>
+      <RadzenFormField Text="Selected Config" class="w-100">
+        <RadzenDropDown @bind-Value=@_selectedConfig Data="@_configurationsNames" Change="@(name => ChangeConfig($"{name}"))" />
+      </RadzenFormField>
 
-  <EditForm OnSubmit="Submit" Model="CurrentConfiguration">
-    <div>
-      <RadzenFormField Text="Name" class="w-25">
-        <RadzenTextBox @bind-Value="CurrentConfiguration.Name" />
-      </RadzenFormField>
+      <RadzenTemplateForm Submit="@Submit" TItem="ConfigurationDemo" Data="@CurrentConfiguration">
+        <div>
+          <RadzenFormField Text="Name" class="w-100">
+            <RadzenTextBox @bind-Value="CurrentConfiguration.Name" Name="Name" />
+            <RadzenRequiredValidator Component="Name" Text="this is required" Style="position:absolute"/>
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenFormField Text="Cloud URL" class="w-100">
+            <RadzenTextBox @bind-Value="CurrentConfiguration.CloudUrl" Name="CloudUrl" />
+            <RadzenRequiredValidator Component="CloudUrl" Text="this is required" Style="position:absolute" />
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenFormField Text="Cloud Password" class="w-100">
+            <RadzenPassword @bind-Value="CurrentConfiguration.CloudPassword" Name="CloudPassword" />
+            <RadzenRequiredValidator Component="CloudPassword" Text="this is required" Style="position:absolute" />
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25"/>
+        </div>
+      </RadzenTemplateForm>
     </div>
-    <div>
-      <RadzenFormField Text="Cloud Password" class="w-25">
-        <RadzenPassword @bind-Value="CurrentConfiguration.CLoudPassword" />
-      </RadzenFormField>
-    </div>
-    <div>
-      <RadzenFormField Text="Cloud URL" class="w-25">
-        <RadzenTextBox @bind-Value="CurrentConfiguration.CloudUrl" />
-      </RadzenFormField>
-    </div>
-    <div>
-      <RadzenFormField Text="Data API KEY" class="w-25">
-        <RadzenTextBox @bind-Value="CurrentConfiguration.DataApiKey" />
-      </RadzenFormField>
-    </div>
-    <div>
-      <button type="submit">Update</button>
-    </div>
-  </EditForm>
-</div>
+  </RadzenColumn>
+  <RadzenColumn Size="2">
+      &nbsp;
+  </RadzenColumn>
+</RadzenRow>
+
