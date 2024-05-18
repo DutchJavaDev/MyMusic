@@ -19,11 +19,10 @@ namespace MyMusic.Player
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
           });
 
-      builder.ConfigureMyMusicServices();
-
       builder.Services.AddHttpClient();
-
       builder.Services.AddMauiBlazorWebView();
+      
+      builder.ConfigureMyMusicServices();
 #if DEBUG
       builder.Services.AddBlazorWebViewDeveloperTools();
       builder.Logging.AddDebug();
