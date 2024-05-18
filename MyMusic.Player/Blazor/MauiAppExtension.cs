@@ -1,6 +1,7 @@
 ﻿using MyMusic.Player.Blazor.Models.Logging;
 using MyMusic.Player.Blazor.Models.Search;
 using MyMusic.Player.Services;
+using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 using SQLite;
@@ -40,10 +41,10 @@ namespace MyMusic.Player.Blazor
     {
       // Local database
       builder.Services.AddTransient(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
+      builder.Services.AddSingleton<YoutubeSearchService>();
       builder.Services.AddTransient<LocalDatabase>();
       builder.Services.AddTransient<LogService>();
       builder.Services.AddTransient<VideoDurationService>();
-      builder.Services.AddTransient<SearchService>();
       builder.Services.AddTransient<ApiService>();
       builder.Services.AddTransient<UpdaterService>();
     }
