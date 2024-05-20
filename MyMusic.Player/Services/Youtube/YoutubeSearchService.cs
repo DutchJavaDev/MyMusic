@@ -11,7 +11,7 @@ namespace MyMusic.Player.Services.Youtube
 			{
         using var client = httpClientFactory.CreateClient();
 
-        var request = await client.GetAsync(CreateUrl(query), cancellationToken);
+        var request = await client.GetAsync(CreateSearchUrl(query), cancellationToken);
 
         var response = await request.Content.ReadAsStringAsync(cancellationToken);
 
@@ -27,9 +27,32 @@ namespace MyMusic.Player.Services.Youtube
 			}
 		}
 
-		private static string CreateUrl(string query)
+		public async Task<YoutubeArtistModel> TryFindArtist(string videoId)
+		{
+			try
+			{
+				using var client = httpClientFactory.CreateClient();
+
+				var request = await client.GetAsync(CreateVideoInfoUrl(videoId));
+
+				var response = await request.Content.ReadAsStringAsync();
+
+				return JsonConvert.DeserializeObject<YoutubeArtistModel>(response);
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
+
+		private static string CreateSearchUrl(string query)
 		{
 			return $"https://yt.lemnoslife.com/search?part=snippet&q={query}&type=video&order=viewCount";
+		}
+
+		private static string CreateVideoInfoUrl(string videoId)
+		{
+			return $"https://yt.lemnoslife.com/videos?part=musics&id={videoId}";
 		}
 	}
 }

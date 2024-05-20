@@ -2,6 +2,7 @@
 using MyMusic.Player.Services;
 using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Services.Youtube.Models;
+using Radzen;
 
 namespace MyMusic.Player.Pages
 {
@@ -10,6 +11,9 @@ namespace MyMusic.Player.Pages
 		private bool disposedValue;
 
 		private CancellationTokenSource cancellationTokenSource;
+
+		[Inject]
+		private NotificationService NotificationService { get; set; }
 
 		[Inject]
     private YoutubeSearchService YoutubeSearchService { get; set; }
@@ -33,16 +37,16 @@ namespace MyMusic.Player.Pages
 		private async Task RemoteSearchAsync(object data )
 		{
 			SearchQuery = data.ToString();
-			
-			Model = null;
-			StateHasChanged();
 
 			// Stop any search that was going on so this will be the main search 
 			// This still a bit buggy
-			cancellationTokenSource.Cancel();
-			cancellationTokenSource.Dispose();
+			//cancellationTokenSource.Cancel();
+			//cancellationTokenSource.Dispose();
 
-			cancellationTokenSource = new();
+			//cancellationTokenSource = new();
+
+			Model = null;
+			StateHasChanged();
 
 			await SearchAsync();
 			StateHasChanged();
@@ -54,6 +58,64 @@ namespace MyMusic.Player.Pages
 			{
 				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token);
 			}
+		}
+
+		private async Task SendDownloadRequest(Item item)
+		{
+			// try and grab artist
+			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId);
+
+			var erroNotification = new NotificationMessage
+			{
+				Severity = NotificationSeverity.Error,
+				Duration = 5000, // 5 seconds
+				Summary = "Error finding artist \r\n",
+				Detail = $"Could not find artist for {item.snippet.title}, using channel instead."
+			};
+
+			if (artistInfoResult == null)
+			{
+				Notify(erroNotification);
+				return;
+			}
+
+			var itemCollection = artistInfoResult.items.FirstOrDefault();
+			
+			if (itemCollection == null)
+			{
+				Notify(erroNotification);
+				return;
+			}
+
+			var artistInfo = itemCollection.musics.FirstOrDefault();
+
+			if (artistInfo == null)
+			{
+				Notify(erroNotification);
+				return;
+			}
+
+			if(string.IsNullOrEmpty(artistInfo.artist)) 
+			{
+				Notify(erroNotification);
+				return;
+			}
+
+			var foundNotification = new NotificationMessage { 
+				Severity = NotificationSeverity.Success,
+				Duration = 5000, // 5 seconds
+				Summary = "Found artist \r\n",
+				Detail = $"Found artist for song {item.snippet.title} || {artistInfo.artist}"
+			};
+
+			Notify(foundNotification);
+
+			// Rest to db etc...
+		}
+
+		private void Notify(NotificationMessage notificationMessage)
+		{
+			NotificationService.Notify(notificationMessage);
 		}
 
 		protected virtual void Dispose(bool disposing)

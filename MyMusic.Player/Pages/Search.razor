@@ -7,13 +7,13 @@
     @foreach (var model in Model.items)
     {
       <RadzenColumn Size="2">
-        <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenStack class="h-100" style="min-height: 100% !important" Orientation="Orientation.Vertical">
           <RadzenCard>
             <RadzenImage class="img-fluid img-thumbnail" Path="@model.snippet.thumbnails.FirstOrDefault().url" />
             <br />
                 <span><b>@model.snippet.title</b></span>
             <br />
-            <RadzenButton class="w-100" Text="@model.snippet.duration.ConvertIntToStringTime()" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Icon="cloud_download" />
+            <RadzenButton Click="async () => { await SendDownloadRequest(model); }" class="w-100" Text="@model.snippet.duration.ConvertIntToStringTime()" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Icon="cloud_download" />
           </RadzenCard>
         </RadzenStack>
       </RadzenColumn>
