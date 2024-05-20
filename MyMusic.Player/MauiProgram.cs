@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MyMusic.Player.Blazor;
 using MyMusic.Player.Storage;
+using Radzen;
 
 namespace MyMusic.Player
 {
@@ -19,6 +20,7 @@ namespace MyMusic.Player
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
           });
 
+			builder.Services.AddRadzenComponents();
       builder.Services.AddHttpClient();
       builder.Services.AddMauiBlazorWebView();
       
