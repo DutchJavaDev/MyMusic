@@ -10,6 +10,8 @@ namespace MyMusic.Player.Pages
   {
 		private bool disposedValue;
 
+		public bool _searching = false;
+
 		private CancellationTokenSource cancellationTokenSource;
 
 		[Inject]
@@ -23,47 +25,52 @@ namespace MyMusic.Player.Pages
 
     private YouTubeSearchModel Model { get; set; } 
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
 			// Callback to update page from other components
-			PageNotificationService.AddActionCallBack(GetType(), async (data) => { await RemoteSearchAsync(data); });
-
-			cancellationTokenSource = new CancellationTokenSource();
-
-			await SearchAsync();
+			PageNotificationService.AddActionCallBack(GetType(), async (data) => await RemoteSearchAsync(data));
+			cancellationTokenSource = new();
     }
 
 		// This will be called from other components if this is the main page
 		private async Task RemoteSearchAsync(object data )
 		{
-			SearchQuery = data.ToString();
-
 			// Stop any search that was going on so this will be the main search 
 			// This still a bit buggy
-			//cancellationTokenSource.Cancel();
-			//cancellationTokenSource.Dispose();
+			if (cancellationTokenSource is not null)
+			{
+				cancellationTokenSource.Cancel();
+				cancellationTokenSource.Dispose();
+				cancellationTokenSource = null;
+			}
 
-			//cancellationTokenSource = new();
-
+			SearchQuery = data.ToString();
 			Model = null;
 			StateHasChanged();
-
+			
 			await SearchAsync();
-			StateHasChanged();
 		}
 
 		private async Task SearchAsync() 
 		{
+			cancellationTokenSource ??= new();
+
 			if (!string.IsNullOrEmpty(SearchQuery))
 			{
+				_searching = true;
+				StateHasChanged();
+
 				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token);
+
+				_searching = false;
+				StateHasChanged();
 			}
 		}
 
 		private async Task SendDownloadRequest(Item item)
 		{
 			// try and grab artist
-			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId);
+			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token);
 
 			var erroNotification = new NotificationMessage
 			{
@@ -124,6 +131,8 @@ namespace MyMusic.Player.Pages
 			{
 				if (disposing)
 				{
+					cancellationTokenSource.Cancel();
+					cancellationTokenSource.Dispose();
 					PageNotificationService.RemoveActionCallBack(GetType());
 				}
 
