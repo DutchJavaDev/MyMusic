@@ -56,4 +56,7 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.21" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Scripts\" />
+  </ItemGroup>
 </Project>
