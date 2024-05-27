@@ -6,7 +6,7 @@ namespace MyMusic.Player.Storage.Models
 	{
 		[PrimaryKey]
 		public int Serial { get; set; }
-		public int Type { get; set; }
+		public byte Type { get; set; }
 		public string Message {  get; set; }
 		public string StackTrace { get; set; }	
 		// Convert
