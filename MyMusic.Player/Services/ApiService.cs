@@ -38,7 +38,7 @@ namespace MyMusic.Player.Services
       }
       catch (Exception e)
       {
-        await _logService.Log(e, this);
+        await _logService.LogError(e, this);
 
         throw;
       }
@@ -67,7 +67,7 @@ namespace MyMusic.Player.Services
       }
       catch (Exception e)
       {
-        await _logService.Log(e, this);
+        await _logService.LogError(e, this);
 
         throw;
       }
@@ -92,22 +92,22 @@ namespace MyMusic.Player.Services
       }
       catch (Exception e)
       {
-        await _logService.Log(e, this);
+        await _logService.LogError(e, this);
 
         throw;
       }
     }
 
-    private async Task<HttpClient> ConfigureApiClient(ServerConfiguration configuration)
+    private async Task<HttpClient> ConfigureApiClient(Configuration configuration)
     {
-      if (string.IsNullOrEmpty(configuration.ServerUrl) || string.IsNullOrEmpty(configuration.ServerPassword))
+      if (string.IsNullOrEmpty(configuration.CloudUrl) || string.IsNullOrEmpty(configuration.CloudPassword))
       {
         throw new ArgumentException("Invalid configuration");
       }
 
       var client = _httpClientFactory.CreateClient();
       client.BaseAddress = new Uri(await _database.GetBaseApiUrlAsync());
-      client.DefaultRequestHeaders.Authorization = new(HttpUtility.HtmlEncode(configuration.ServerPassword));
+      client.DefaultRequestHeaders.Authorization = new(HttpUtility.HtmlEncode(configuration.CloudPassword));
       return client;
     }
   }
