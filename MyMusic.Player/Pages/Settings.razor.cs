@@ -1,25 +1,24 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyMusic.Player.Blazor.Models.Temp;
+using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Pages
 {
   public partial class Settings : ComponentBase
   {
-    public ConfigurationDemo CurrentConfiguration { get; set; }
+    public Configuration CurrentConfiguration { get; set; }
 
-    private IEnumerable<ConfigurationDemo> _configurations;
+    private IEnumerable<Configuration> _configurations;
     private IEnumerable<string> _configurationsNames;
     private string _selectedConfig;
 
     protected override void OnInitialized()
     {
-      _configurations = Enumerable.Range(2, 6).Select(i => new ConfigurationDemo
-      { 
+      _configurations = Enumerable.Range(2, 6).Select(i => new Configuration
+			{ 
         Serial = i,
         Name = $"Config_{i}",
         CloudPassword = Guid.NewGuid().ToString(),
         CloudUrl = $"localhost:{i*i}",
-        DataApiKey = Guid.NewGuid().ToString(),
       });
 
       CurrentConfiguration = _configurations.First();
@@ -29,7 +28,7 @@ namespace MyMusic.Player.Pages
       _selectedConfig = _configurationsNames.First();
     }
 
-    private void Submit(ConfigurationDemo configuration)
+    private void Submit(Configuration configuration)
     {
       // TODO
     }
