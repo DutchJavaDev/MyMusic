@@ -11,8 +11,8 @@ namespace MyMusic.Player.Blazor
     {
       // Local database
       builder.Services.AddTransient(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
-      builder.Services.AddSingleton<YoutubeSearchService>();
       builder.Services.AddTransient<LocalDatabase>();
+      builder.Services.AddSingleton<YoutubeSearchService>();
       builder.Services.AddTransient<LogService>();
       builder.Services.AddTransient<ApiService>();
     }
