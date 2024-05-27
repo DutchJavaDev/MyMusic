@@ -13,6 +13,20 @@ namespace MyMusic.Player.Services
 			await database.InsertAsync(logEntry);
     }
 
+		public async Task<List<Log>> GetAllErrorLogsAsync()
+		{
+			var query = "select * from logs where Type=@type";
+			var parameters = new { type = ERROR };
+			return await database.QueryAsync<Log>(query, parameters);
+		}
+
+		public async Task<List<Log>> GetAllInfoLogsAsync()
+		{
+			var query = "select * from logs where Type=@type";
+			var parameters = new { type = INFO };
+			return await database.QueryAsync<Log>(query, parameters);
+		}
+
 		public async Task LogInfo(string message)
 		{
 			await WriteLogAsync(new Log
