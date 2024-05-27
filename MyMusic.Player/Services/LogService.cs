@@ -1,43 +1,44 @@
-﻿using MyMusic.Player.Blazor.Models.Logging;
-using SQLite;
+﻿using MyMusic.Player.Storage;
+using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Services
 {
-  public sealed class LogService(SQLiteAsyncConnection connection)
+  public sealed class LogService(LocalDatabase database)
   {
-    private readonly SQLiteAsyncConnection _connection = connection;
+		private readonly int ERROR = 0;
+		private readonly int INFO = 1;
 
-    public Task WriteLogAsync(LogEntry logEntry)
+    private async Task WriteLogAsync(Log logEntry)
     {
-      // This should be fire and forget, don't want to hang the ui
-      _ = _connection.InsertAsync(logEntry)
-          .ConfigureAwait(false);
-
-      return Task.CompletedTask;
+			await database.InsertAsync(logEntry);
     }
 
-    public Task Log<T>(Exception exception, T t) where T : class
+		public async Task LogInfo(string message)
+		{
+			await WriteLogAsync(new Log
+			{
+				Message = message,
+				DateTime = DateTime.Now.ToString(),
+				Type = INFO
+			});
+		}
+
+		public async Task LogError<T>(Exception exception, T @class) where T : class
     {
       // Get type name
-      var type = t.GetType();
+      var type = @class.GetType();
       var name = type.Name;
 
       // Format message as type name : exception message
       var message = $"{name} : {exception.Message}";
 
-      _ = WriteLogAsync(new LogEntry
+      await WriteLogAsync(new Log
       {
         Message = message,
         StackTrace = exception.StackTrace,
-        Created = DateTime.Now,
-      }).ConfigureAwait(false);
-
-      return Task.CompletedTask;
-    }
-
-    public async Task<List<LogEntry>> GetLogsAsync()
-    {
-      return await _connection.QueryAsync<LogEntry>("select * from logs order by created desc").ConfigureAwait(false);
+        DateTime = DateTime.Now.ToString(),
+				Type = ERROR
+      });
     }
   }
 }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MyMusic.Player.Services.Youtube
 {
-	public sealed class YoutubeSearchService(IHttpClientFactory httpClientFactory)
+	public sealed class YoutubeSearchService(IHttpClientFactory httpClientFactory, LogService logService)
 	{
 		public async Task<YouTubeSearchModel> SearchAsync(string query, CancellationToken cancellationToken)
 		{
@@ -19,11 +19,13 @@ namespace MyMusic.Player.Services.Youtube
       }
 			catch (OperationCanceledException)
 			{
+				await logService.LogInfo("Search has been canceled");
 				return null;
 			}
-			catch(Exception)
+			catch(Exception e)
 			{
-				throw;
+				await logService.LogError(e, this);
+				return null;
 			}
 		}
 
@@ -39,8 +41,14 @@ namespace MyMusic.Player.Services.Youtube
 
 				return JsonConvert.DeserializeObject<YoutubeArtistModel>(response);
 			}
-			catch (Exception)
+			catch (OperationCanceledException)
 			{
+				await logService.LogInfo("Artists search has been canceled");
+				return null;
+			}
+			catch (Exception e)
+			{
+				await logService.LogError(e, this);
 				return null;
 			}
 		}
