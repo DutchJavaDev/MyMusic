@@ -27,15 +27,15 @@ namespace MyMusic.Player.Services.Youtube
 			}
 		}
 
-		public async Task<YoutubeArtistModel> TryFindArtist(string videoId)
+		public async Task<YoutubeArtistModel> TryFindArtist(string videoId, CancellationToken cancellationToken)
 		{
 			try
 			{
 				using var client = httpClientFactory.CreateClient();
 
-				var request = await client.GetAsync(CreateVideoInfoUrl(videoId));
+				var request = await client.GetAsync(CreateVideoInfoUrl(videoId), cancellationToken);
 
-				var response = await request.Content.ReadAsStringAsync();
+				var response = await request.Content.ReadAsStringAsync(cancellationToken);
 
 				return JsonConvert.DeserializeObject<YoutubeArtistModel>(response);
 			}
