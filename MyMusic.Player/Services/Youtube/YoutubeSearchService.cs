@@ -19,7 +19,7 @@ namespace MyMusic.Player.Services.Youtube
       }
 			catch (OperationCanceledException)
 			{
-				return new() { items = [] };
+				return null;
 			}
 			catch(Exception)
 			{
