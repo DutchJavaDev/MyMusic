@@ -5,8 +5,8 @@ namespace MyMusic.Player.Services
 {
   public sealed class LogService(LocalDatabase database)
   {
-		private readonly int ERROR = 0;
-		private readonly int INFO = 1;
+		private readonly byte ERROR = 0;
+		private readonly byte INFO = 1;
 
     private async Task WriteLogAsync(Log logEntry)
     {
