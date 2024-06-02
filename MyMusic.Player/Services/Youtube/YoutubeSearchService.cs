@@ -1,17 +1,20 @@
-﻿using MyMusic.Player.Services.Youtube.Models;
+﻿using MyMusic.Player.Services.Write;
+using MyMusic.Player.Services.Youtube.Models;
 using Newtonsoft.Json;
+using Radzen;
 
 namespace MyMusic.Player.Services.Youtube
 {
-	public sealed class YoutubeSearchService(IHttpClientFactory httpClientFactory, LogService logService)
+	public sealed class YoutubeSearchService(IHttpClientFactory httpClientFactory, 
+		LogWriterService logWriter)
 	{
-		public async Task<YouTubeSearchModel> SearchAsync(string query, CancellationToken cancellationToken)
+		public async Task<YouTubeSearchModel> SearchAsync(string query, CancellationToken cancellationToken, string NextPageToken = "", NotificationService notificationService = null)
 		{
 			try
 			{
         using var client = httpClientFactory.CreateClient();
 
-        var request = await client.GetAsync(CreateSearchUrl(query), cancellationToken);
+        var request = await client.GetAsync(CreateSearchUrl(query, NextPageToken), cancellationToken);
 
         var response = await request.Content.ReadAsStringAsync(cancellationToken);
 
@@ -19,17 +22,17 @@ namespace MyMusic.Player.Services.Youtube
       }
 			catch (OperationCanceledException)
 			{
-				await logService.LogInfo("Search has been canceled");
+				await logWriter.Info("Search has been canceled");
 				return null;
 			}
 			catch(Exception e)
 			{
-				await logService.LogError(e, this);
+				await logWriter.Error(e, this, notificationService);
 				return null;
 			}
 		}
 
-		public async Task<YoutubeArtistModel> TryFindArtist(string videoId, CancellationToken cancellationToken)
+		public async Task<YoutubeArtistModel> TryFindArtist(string videoId, CancellationToken cancellationToken, NotificationService notificationService = null)
 		{
 			try
 			{
@@ -43,19 +46,23 @@ namespace MyMusic.Player.Services.Youtube
 			}
 			catch (OperationCanceledException)
 			{
-				await logService.LogInfo("Artists search has been canceled");
+				await logWriter.Info("Artists search has been canceled");
 				return null;
 			}
 			catch (Exception e)
 			{
-				await logService.LogError(e, this);
+				await logWriter.Error(e, this, notificationService);
 				return null;
 			}
 		}
 
-		private static string CreateSearchUrl(string query)
+		private static string CreateSearchUrl(string query, string NextPageToken)
 		{
-			return $"https://yt.lemnoslife.com/search?part=snippet&q={query}&type=video&order=viewCount";
+			if (!string.IsNullOrEmpty(NextPageToken))
+			{
+				return $"https://yt.lemnoslife.com/search?part=snippet&q={query}&type=video&order=relevance&pageToken={NextPageToken}";
+			}
+			return $"https://yt.lemnoslife.com/search?part=snippet&q={query}&type=video&order=relevance";
 		}
 
 		private static string CreateVideoInfoUrl(string videoId)
