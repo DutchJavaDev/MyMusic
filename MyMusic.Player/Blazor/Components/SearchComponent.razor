@@ -1,8 +1,17 @@
-﻿<div class="row w-50 m-auto">
+﻿@* <div class="row w-50 m-auto">
   <div class="col-10">
-    <input disabled="@(!_ready)" class="form-control" @bind-value="Query" placeholder="Search song...." />
+    <input class="form-control" autocomplete="on" @bind-value="Query" onkeyup="@CheckKeyPressed" placeholder="Search song...." />
   </div>
   <div class="col-2 text-center">
     <RadzenButton Icon="search" Click="NavigateToSearchPage" ButtonStyle="ButtonStyle.Dark" />
   </div>
-</div>
+</div> *@
+<RadzenRow class="w-50 m-auto">
+  <RadzenColumn Size="12">
+    <RadzenStack Orientation="Orientation.Horizontal">
+      <InputText style="color:black" class="w-100" @bind-Value="Query" onkeyup="@CheckKeyPressed" placeholder="Search" />
+      <RadzenButton Icon="close" Click="ClearCurrentSearch" style="background-color:transparent; color:red" />
+      <RadzenButton class="w-25" Icon="search" Text="Search" Click="NavigateToSearchPage" ButtonStyle="ButtonStyle.Dark" />
+    </RadzenStack>
+  </RadzenColumn>
+</RadzenRow>

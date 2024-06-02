@@ -1,0 +1,17 @@
+﻿<RadzenStack>
+  <RadzenRow>
+    <RadzenColumn Size="12">
+      <div>
+        <h6>@(Log.LogType == Util.ERROR ? "Error" : "Info")</h6>
+        <h6>@Log.DateTime</h6>
+        <h6>@Log.Message</h6>
+      </div>
+    </RadzenColumn>
+    <RadzenColumn Size="12">
+      <RadzenTextArea class="w-100 h-100" Rows="12" Disabled="true" Value="@Log.StackTrace" />
+    </RadzenColumn>
+  </RadzenRow>
+  <RadzenStack>
+    <RadzenButton ButtonStyle="ButtonStyle.Success" Click="@((args) => DialogService.Close(true))" Text="Close" />
+  </RadzenStack>
+</RadzenStack>

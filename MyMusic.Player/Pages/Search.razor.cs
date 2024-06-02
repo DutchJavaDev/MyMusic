@@ -1,32 +1,177 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MyMusic.Player.Services;
+using MyMusic.Player.Services.Write;
+using MyMusic.Player.Services.Youtube;
+using MyMusic.Player.Services.Youtube.Models;
+using Radzen;
 
 namespace MyMusic.Player.Pages
 {
-  public partial class Search : ComponentBase
+	public partial class Search : ComponentBase, IDisposable
   {
-    [Inject]
-    public SearchService SearchService { get; set; }
+		private bool disposedValue;
+
+		public bool _searching = false;
+
+		private CancellationTokenSource cancellationTokenSource;
+		[Inject]
+		private LogWriterService LogWriterService { get; set; }
+
+		[Inject]
+		private NotificationService NotificationService { get; set; }
+
+		[Inject]
+    private YoutubeSearchService YoutubeSearchService { get; set; }
 
     [Parameter]
     public string SearchQuery { get; set; } = string.Empty;
 
-    public bool HasSearchQuery { get; set; }
+    private YouTubeSearchModel Model { get; set; } 
 
-    public string SearchResponse { get; set; } = string.Empty;
+		private string NextPageToken = string.Empty;
 
-    protected override void OnParametersSet()
+
+		protected override async void OnInitialized()
     {
-      HasSearchQuery = !string.IsNullOrEmpty(SearchQuery);
+			// Callback to update page from other components
+			PageNotificationService.AddActionCallBack(GetType(), async (data) => await RemoteSearchAsync(data));
+			PageNotificationService.AddNamedCallBack(nameof(ClearSearchToken), async (data) => await ClearSearchToken(null));
+			cancellationTokenSource = new();
+
+			if (string.IsNullOrEmpty(SearchQuery))
+			{
+				SearchQuery = "latest, music";
+				NextPageToken = string.Empty;
+				await SearchAsync(false);
+			}
+			else
+			{
+				await SearchAsync();
+			}
+
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-      if (HasSearchQuery || !string.IsNullOrEmpty(SearchQuery))
-      {
-        SearchResponse = await SearchService.SearchRawResults(SearchQuery);
-        StateHasChanged();
-      }
-    }
-  }
+		public async Task ClearSearchToken(object data = null)
+		{
+			if (string.IsNullOrEmpty(NextPageToken)) return;
+
+			SearchQuery = "latest, music";
+			NextPageToken = string.Empty;
+			await SearchAsync(false);
+		}
+
+		// This will be called from other components if this is the main page
+		private async Task RemoteSearchAsync(object data )
+		{
+			// Stop any search that was going on so this will be the main search 
+			if (cancellationTokenSource is not null)
+			{
+				cancellationTokenSource.Cancel();
+				cancellationTokenSource.Dispose();
+				cancellationTokenSource = null;
+			}
+
+			SearchQuery = data.ToString();
+			Model = null;
+			StateHasChanged();
+			
+			await SearchAsync();
+		}
+
+		private async Task SearchAsync(bool saveToken = true) 
+		{
+			cancellationTokenSource ??= new();
+
+			if (!string.IsNullOrEmpty(SearchQuery))
+			{
+				_searching = true;
+				StateHasChanged();
+
+				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token, NextPageToken, NotificationService);
+
+				if(saveToken)
+				{
+					NextPageToken = Model.nextPageToken;
+				}
+				
+				_searching = false;
+				StateHasChanged();
+			}
+		}
+
+		private async Task SendDownloadRequest(Item item)
+		{
+			// try and grab artist
+			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token, NotificationService);
+
+			if (artistInfoResult == null)
+			{
+				await LogWriterService.Error($"{nameof(artistInfoResult)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				return;
+			}
+
+			var itemCollection = artistInfoResult.items.FirstOrDefault();
+			
+			if (itemCollection == null)
+			{
+				await LogWriterService.Error($"{nameof(itemCollection)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				return;
+			}
+
+			var artistInfo = itemCollection.musics.FirstOrDefault();
+
+			if (artistInfo == null)
+			{
+				await LogWriterService.Error($"{nameof(artistInfo)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				return;
+			}
+
+			if(string.IsNullOrEmpty(artistInfo.artist)) 
+			{
+				await LogWriterService.Error($"{nameof(artistInfo.artist)} is null or empty", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				return;
+			}
+
+			// Re-think this lol
+			var foundNotification = new NotificationMessage { 
+				Severity = NotificationSeverity.Success,
+				Duration = 5000, // 5 seconds
+				Summary = "Found artist \r\n",
+				Detail = $"Found artist for song {item.snippet.title} || {artistInfo.artist}"
+			};
+
+			NotificationService.Notify(foundNotification);
+			// Rest to db etc...
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					cancellationTokenSource.Cancel();
+					cancellationTokenSource.Dispose();
+					PageNotificationService.RemoveActionCallBack(GetType());
+					PageNotificationService.RemoveNamedCallBack(nameof(ClearSearchToken));
+				}
+
+				disposedValue = true;
+			}
+		}
+
+		// TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+		~Search()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: false);
+		}
+
+		public void Dispose()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
+	}
 }

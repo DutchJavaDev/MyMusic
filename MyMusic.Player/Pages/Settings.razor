@@ -1,5 +1,5 @@
 ﻿@page "/settings"
-@using MyMusic.Player.Blazor.Models.Temp;
+@using MyMusic.Player.Storage.Models;
 
 <RadzenRow>
   <RadzenColumn Size="2">
@@ -12,7 +12,7 @@
         <RadzenDropDown @bind-Value=@_selectedConfig Data="@_configurationsNames" Change="@(name => ChangeConfig($"{name}"))" />
       </RadzenFormField>
 
-      <RadzenTemplateForm Submit="@Submit" TItem="ConfigurationDemo" Data="@CurrentConfiguration">
+      <RadzenTemplateForm Submit="@Submit" TItem="Configuration" Data="@CurrentConfiguration">
         <div>
           <RadzenFormField Text="Name" class="w-100">
             <RadzenTextBox @bind-Value="CurrentConfiguration.Name" Name="Name" />

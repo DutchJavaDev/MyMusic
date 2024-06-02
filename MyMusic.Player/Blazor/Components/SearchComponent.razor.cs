@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using MyMusic.Player.Pages;
+using MyMusic.Player.Services;
 
 namespace MyMusic.Player.Blazor.Components
 {
@@ -8,21 +11,35 @@ namespace MyMusic.Player.Blazor.Components
     private NavigationManager NavigationManager { get; set; }
     public string Query { get; set; } = string.Empty;
 
-    private bool _ready = false;
+		public void CheckKeyPressed(KeyboardEventArgs keyboardEventArgs) 
+		{
+			if (keyboardEventArgs.Code == "Enter")
+			{
+				NavigateToSearchPage();
+			}
+		}
 
-    protected override void OnParametersSet()
-    {
-      _ready = true;
-    }
+		public void ClearCurrentSearch()
+		{
+			if (string.IsNullOrEmpty(Query)) return;
+			Query = string.Empty;	
+			PageNotificationService.InvokeNamedCallback(nameof(Search.ClearSearchToken), "");
+		}
 
     public void NavigateToSearchPage()
     {
-      if (_ready && !string.IsNullOrEmpty(Query))
+			if (string.IsNullOrEmpty(Query)) return;
+
+			// If the main page is not search then navigate to it, pass in the search query
+      if (!NavigationManager.Uri.Contains("search"))
       {
         NavigationManager.NavigateTo($"/search/{Query}");
-
-        Query = string.Empty; // ?
       }
+			else
+			{
+				// Notify the search page instead of navigating to it
+				PageNotificationService.InvokeActionCallBackFor(typeof(Search), Query);
+			}
     }
   }
 }
