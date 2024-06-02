@@ -1,8 +1,17 @@
 ﻿@page "/search"
 @page "/search/{SearchQuery?}"
 
-@if (Model != null)
+@if (Model is not null && Model.items is not null && !_searching)
 {
+  @if (!string.IsNullOrEmpty(NextPageToken))
+  {
+    <div class="w-100 text-center mb-1">
+      <RadzenButton ButtonStyle="ButtonStyle.Info" Click="async () => await SearchAsync()">
+          Next results
+        <RadzenIcon Icon="navigate_next" />
+      </RadzenButton>
+    </div>
+  }
   <RadzenRow>
     @foreach (var model in Model.items)
     {
@@ -11,7 +20,7 @@
           <RadzenCard>
             <RadzenImage class="img-fluid img-thumbnail" Path="@model.snippet.thumbnails.FirstOrDefault().url" />
             <br />
-                <span><b>@model.snippet.title</b></span>
+            <span><b>@model.snippet.title</b></span>
             <br />
             <RadzenButton Click="async () => { await SendDownloadRequest(model); }" class="w-100" Text="@model.snippet.duration.ConvertIntToStringTime()" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Icon="cloud_download" />
           </RadzenCard>
@@ -19,18 +28,27 @@
       </RadzenColumn>
     }
   </RadzenRow>
+  @if (!string.IsNullOrEmpty(NextPageToken))
+  {
+    <div class="w-100 text-center mt-1">
+      <RadzenButton ButtonStyle="ButtonStyle.Info" Click="async () => await SearchAsync()">
+        Next results
+        <RadzenIcon Icon="navigate_next" />
+      </RadzenButton>
+    </div>
+  }
 }
-else if(_searching)
+else if (_searching)
 {
   <div class="w-100 h-100">
-      <RadzenProgressBarCircular class="m-auto mt-5" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large">
-          <Template>Searching</Template>
-      </RadzenProgressBarCircular>
+    <RadzenProgressBarCircular class="m-auto mt-5" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large">
+      <Template>Searching</Template>
+    </RadzenProgressBarCircular>
   </div>
 }
 else
 {
-  <div class="w-100 h-100 mt-5">
-      <b>Find the next best song</b>
+  <div class="w-100 h-100 mt-5 text-center">
+    <b>Find the next best song.....</b>
   </div>
 }

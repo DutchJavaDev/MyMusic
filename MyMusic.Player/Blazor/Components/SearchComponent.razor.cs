@@ -19,15 +19,25 @@ namespace MyMusic.Player.Blazor.Components
 			}
 		}
 
+		public void ClearCurrentSearch()
+		{
+			if (string.IsNullOrEmpty(Query)) return;
+			Query = string.Empty;	
+			PageNotificationService.InvokeNamedCallback(nameof(Search.ClearSearchToken), "");
+		}
+
     public void NavigateToSearchPage()
     {
-      if (!string.IsNullOrEmpty(Query) && !NavigationManager.Uri.Contains("search"))
+			if (string.IsNullOrEmpty(Query)) return;
+
+			// If the main page is not search then navigate to it, pass in the search query
+      if (!NavigationManager.Uri.Contains("search"))
       {
         NavigationManager.NavigateTo($"/search/{Query}");
       }
 			else
 			{
-				// Need to notify search page when we are already on the search page
+				// Notify the search page instead of navigating to it
 				PageNotificationService.InvokeActionCallBackFor(typeof(Search), Query);
 			}
     }

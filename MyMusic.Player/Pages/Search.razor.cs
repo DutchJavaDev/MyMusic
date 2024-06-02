@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MyMusic.Player.Services;
+using MyMusic.Player.Services.Write;
 using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Services.Youtube.Models;
 using Radzen;
@@ -13,6 +14,8 @@ namespace MyMusic.Player.Pages
 		public bool _searching = false;
 
 		private CancellationTokenSource cancellationTokenSource;
+		[Inject]
+		private LogWriterService LogWriterService { get; set; }
 
 		[Inject]
 		private NotificationService NotificationService { get; set; }
@@ -25,18 +28,42 @@ namespace MyMusic.Player.Pages
 
     private YouTubeSearchModel Model { get; set; } 
 
-    protected override void OnInitialized()
+		private string NextPageToken = string.Empty;
+
+
+		protected override async void OnInitialized()
     {
 			// Callback to update page from other components
 			PageNotificationService.AddActionCallBack(GetType(), async (data) => await RemoteSearchAsync(data));
+			PageNotificationService.AddNamedCallBack(nameof(ClearSearchToken), async (data) => await ClearSearchToken(null));
 			cancellationTokenSource = new();
+
+			if (string.IsNullOrEmpty(SearchQuery))
+			{
+				SearchQuery = "latest, music";
+				NextPageToken = string.Empty;
+				await SearchAsync(false);
+			}
+			else
+			{
+				await SearchAsync();
+			}
+
     }
+
+		public async Task ClearSearchToken(object data = null)
+		{
+			if (string.IsNullOrEmpty(NextPageToken)) return;
+
+			SearchQuery = "latest, music";
+			NextPageToken = string.Empty;
+			await SearchAsync(false);
+		}
 
 		// This will be called from other components if this is the main page
 		private async Task RemoteSearchAsync(object data )
 		{
 			// Stop any search that was going on so this will be the main search 
-			// This still a bit buggy
 			if (cancellationTokenSource is not null)
 			{
 				cancellationTokenSource.Cancel();
@@ -51,7 +78,7 @@ namespace MyMusic.Player.Pages
 			await SearchAsync();
 		}
 
-		private async Task SearchAsync() 
+		private async Task SearchAsync(bool saveToken = true) 
 		{
 			cancellationTokenSource ??= new();
 
@@ -60,8 +87,13 @@ namespace MyMusic.Player.Pages
 				_searching = true;
 				StateHasChanged();
 
-				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token);
+				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token, NextPageToken, NotificationService);
 
+				if(saveToken)
+				{
+					NextPageToken = Model.nextPageToken;
+				}
+				
 				_searching = false;
 				StateHasChanged();
 			}
@@ -70,19 +102,11 @@ namespace MyMusic.Player.Pages
 		private async Task SendDownloadRequest(Item item)
 		{
 			// try and grab artist
-			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token);
-
-			var erroNotification = new NotificationMessage
-			{
-				Severity = NotificationSeverity.Error,
-				Duration = 5000, // 5 seconds
-				Summary = "Error finding artist \r\n",
-				Detail = $"Could not find artist for {item.snippet.title}, using channel instead."
-			};
+			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token, NotificationService);
 
 			if (artistInfoResult == null)
 			{
-				Notify(erroNotification);
+				await LogWriterService.Error($"{nameof(artistInfoResult)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
 				return;
 			}
 
@@ -90,7 +114,7 @@ namespace MyMusic.Player.Pages
 			
 			if (itemCollection == null)
 			{
-				Notify(erroNotification);
+				await LogWriterService.Error($"{nameof(itemCollection)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
 				return;
 			}
 
@@ -98,16 +122,17 @@ namespace MyMusic.Player.Pages
 
 			if (artistInfo == null)
 			{
-				Notify(erroNotification);
+				await LogWriterService.Error($"{nameof(artistInfo)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
 				return;
 			}
 
 			if(string.IsNullOrEmpty(artistInfo.artist)) 
 			{
-				Notify(erroNotification);
+				await LogWriterService.Error($"{nameof(artistInfo.artist)} is null or empty", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
 				return;
 			}
 
+			// Re-think this lol
 			var foundNotification = new NotificationMessage { 
 				Severity = NotificationSeverity.Success,
 				Duration = 5000, // 5 seconds
@@ -115,14 +140,8 @@ namespace MyMusic.Player.Pages
 				Detail = $"Found artist for song {item.snippet.title} || {artistInfo.artist}"
 			};
 
-			Notify(foundNotification);
-
+			NotificationService.Notify(foundNotification);
 			// Rest to db etc...
-		}
-
-		private void Notify(NotificationMessage notificationMessage)
-		{
-			NotificationService.Notify(notificationMessage);
 		}
 
 		protected virtual void Dispose(bool disposing)
@@ -134,6 +153,7 @@ namespace MyMusic.Player.Pages
 					cancellationTokenSource.Cancel();
 					cancellationTokenSource.Dispose();
 					PageNotificationService.RemoveActionCallBack(GetType());
+					PageNotificationService.RemoveNamedCallBack(nameof(ClearSearchToken));
 				}
 
 				disposedValue = true;
