@@ -26,7 +26,7 @@ namespace MyMusic.Player.Storage
       _ = await connection.UpdateAsync(@object).ConfigureAwait(false);
     }
 
-		public async Task<List<T>> QueryAsync<T>(string query, object parameters) where T : new()
+		public async Task<List<T>> QueryAsync<T>(string query, object parameters = null) where T : new()
 		{
 			return await connection.QueryAsync<T>(query, parameters).ConfigureAwait(false);
 		}
