@@ -1,14 +1,13 @@
 ﻿using MyMusic.Player.Services.Write;
 using MyMusic.Player.Services.Youtube.Models;
 using Newtonsoft.Json;
-using Radzen;
 
 namespace MyMusic.Player.Services.Youtube
 {
 	public sealed class YoutubeSearchService(IHttpClientFactory httpClientFactory, 
 		LogWriterService logWriter)
 	{
-		public async Task<YouTubeSearchModel> SearchAsync(string query, CancellationToken cancellationToken, string NextPageToken = "", NotificationService notificationService = null)
+		public async Task<YouTubeSearchModel> SearchAsync(string query, CancellationToken cancellationToken, string NextPageToken = "")
 		{
 			try
 			{
@@ -27,12 +26,12 @@ namespace MyMusic.Player.Services.Youtube
 			}
 			catch(Exception e)
 			{
-				await logWriter.Error(e, this, notificationService);
+				await logWriter.Error(e, this);
 				return null;
 			}
 		}
 
-		public async Task<YoutubeArtistModel> TryFindArtist(string videoId, CancellationToken cancellationToken, NotificationService notificationService = null)
+		public async Task<YoutubeArtistModel> TryFindArtist(string videoId, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -51,7 +50,7 @@ namespace MyMusic.Player.Services.Youtube
 			}
 			catch (Exception e)
 			{
-				await logWriter.Error(e, this, notificationService);
+				await logWriter.Error(e, this);
 				return null;
 			}
 		}
