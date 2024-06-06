@@ -1,4 +1,5 @@
 ﻿using MyMusic.Common.Models;
+using MyMusic.Player.Services.Read;
 using MyMusic.Player.Services.Write;
 using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
@@ -9,7 +10,7 @@ using System.Web;
 namespace MyMusic.Player.Services
 {
 	public sealed class ApiService(IHttpClientFactory _httpClientFactory, 
-		LocalDatabase _database,
+		ConfigurationReaderService _configurationReader,
 		LogWriterService _logWriter)
 	{
 
@@ -17,9 +18,9 @@ namespace MyMusic.Player.Services
 		{
 			try
 			{
-				var configuration = await _database.GetServerConfigurationAsync();
+				var configuration = await _configurationReader.GetSelectedConfigurationAsync();
 
-				var client = await ConfigureApiClient(configuration);
+				var client = ConfigureApiClient(configuration);
 
 				var request = await client.GetAsync("music");
 
@@ -40,9 +41,9 @@ namespace MyMusic.Player.Services
 			{
 				/// "SERVER_AUTHENTICATION"
 				///
-				var configuration = await _database.GetServerConfigurationAsync();
+				var configuration = await _configurationReader.GetSelectedConfigurationAsync();
 
-				var client = await ConfigureApiClient(configuration);
+				var client = ConfigureApiClient(configuration);
 
 				var request = await client.GetAsync("download/status");
 
@@ -68,9 +69,9 @@ namespace MyMusic.Player.Services
 			{
 				// "SERVER_AUTHENTICATION"
 				//
-				var configuration = await _database.GetServerConfigurationAsync();
+				var configuration = await _configurationReader.GetSelectedConfigurationAsync();
 
-				var client = await ConfigureApiClient(configuration);
+				var client = ConfigureApiClient(configuration);
 
 				var content = JsonConvert.SerializeObject(downloadRequest);
 
@@ -86,15 +87,10 @@ namespace MyMusic.Player.Services
 			}
 		}
 
-		private async Task<HttpClient> ConfigureApiClient(Configuration configuration)
+		private HttpClient ConfigureApiClient(Configuration configuration)
 		{
-			if (string.IsNullOrEmpty(configuration.CloudUrl) || string.IsNullOrEmpty(configuration.CloudPassword))
-			{
-				throw new ArgumentException("Invalid configuration");
-			}
-
 			var client = _httpClientFactory.CreateClient();
-			client.BaseAddress = new Uri(await _database.GetBaseApiUrlAsync());
+			client.BaseAddress = new Uri(configuration.CloudUrl);
 			client.DefaultRequestHeaders.Authorization = new(HttpUtility.HtmlEncode(configuration.CloudPassword));
 			return client;
 		}
