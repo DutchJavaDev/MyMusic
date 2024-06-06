@@ -3,7 +3,6 @@ using MyMusic.Player.Services;
 using MyMusic.Player.Services.Write;
 using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Services.Youtube.Models;
-using Radzen;
 
 namespace MyMusic.Player.Pages
 {
@@ -16,9 +15,6 @@ namespace MyMusic.Player.Pages
 		private CancellationTokenSource cancellationTokenSource;
 		[Inject]
 		private LogWriterService LogWriterService { get; set; }
-
-		[Inject]
-		private NotificationService NotificationService { get; set; }
 
 		[Inject]
     private YoutubeSearchService YoutubeSearchService { get; set; }
@@ -87,7 +83,7 @@ namespace MyMusic.Player.Pages
 				_searching = true;
 				StateHasChanged();
 
-				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token, NextPageToken, NotificationService);
+				Model = await YoutubeSearchService.SearchAsync(SearchQuery, cancellationTokenSource.Token, NextPageToken);
 
 				if(saveToken)
 				{
@@ -102,11 +98,11 @@ namespace MyMusic.Player.Pages
 		private async Task SendDownloadRequest(Item item)
 		{
 			// try and grab artist
-			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token, NotificationService);
+			var artistInfoResult = await YoutubeSearchService.TryFindArtist(item.id.videoId, cancellationTokenSource.Token);
 
 			if (artistInfoResult == null)
 			{
-				await LogWriterService.Error($"{nameof(artistInfoResult)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				await LogWriterService.Error($"{nameof(artistInfoResult)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.");
 				return;
 			}
 
@@ -114,7 +110,7 @@ namespace MyMusic.Player.Pages
 			
 			if (itemCollection == null)
 			{
-				await LogWriterService.Error($"{nameof(itemCollection)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				await LogWriterService.Error($"{nameof(itemCollection)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.");
 				return;
 			}
 
@@ -122,26 +118,16 @@ namespace MyMusic.Player.Pages
 
 			if (artistInfo == null)
 			{
-				await LogWriterService.Error($"{nameof(artistInfo)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				await LogWriterService.Error($"{nameof(artistInfo)} is null", $"Could not find artist for {item.snippet.title}, using channel instead.");
 				return;
 			}
 
 			if(string.IsNullOrEmpty(artistInfo.artist)) 
 			{
-				await LogWriterService.Error($"{nameof(artistInfo.artist)} is null or empty", $"Could not find artist for {item.snippet.title}, using channel instead.", NotificationService);
+				await LogWriterService.Error($"{nameof(artistInfo.artist)} is null or empty", $"Could not find artist for {item.snippet.title}, using channel instead.");
 				return;
 			}
-
-			// Re-think this lol
-			var foundNotification = new NotificationMessage { 
-				Severity = NotificationSeverity.Success,
-				Duration = 5000, // 5 seconds
-				Summary = "Found artist \r\n",
-				Detail = $"Found artist for song {item.snippet.title} || {artistInfo.artist}"
-			};
-
-			NotificationService.Notify(foundNotification);
-			// Rest to db etc...
+			AppNotification.Success("Found artist", $"Found artist for song {item.snippet.title} || {artistInfo.artist}");
 		}
 
 		protected virtual void Dispose(bool disposing)

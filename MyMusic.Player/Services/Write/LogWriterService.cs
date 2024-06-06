@@ -1,12 +1,5 @@
 ﻿using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
-using Radzen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyMusic.Player.Services.Write
 {
@@ -27,7 +20,7 @@ namespace MyMusic.Player.Services.Write
 			});
 		}
 
-		public async Task Error(string message, string stacktrace, NotificationService notificationService = null)
+		public async Task Error(string message, string stacktrace)
 		{
 			await WriteLogAsync(new Log
 			{
@@ -36,10 +29,10 @@ namespace MyMusic.Player.Services.Write
 				LogType = Util.ERROR,
 				StackTrace = stacktrace
 			});
-			LogWriterService.Notify(notificationService, message);
+			AppNotification.Error("Error", message);
 		}
 
-		public async Task Error<T>(Exception exception, T @class, NotificationService notificationService = null) where T : class
+		public async Task Error<T>(Exception exception, T @class) where T : class
 		{
 			// Get type name
 			var type = @class.GetType();
@@ -56,20 +49,7 @@ namespace MyMusic.Player.Services.Write
 				LogType = Util.ERROR
 			});
 
-			LogWriterService.Notify(notificationService, message);
-		}
-
-		private static void Notify(NotificationService notificationService, string detail)
-		{
-			if (notificationService is null) return;
-			
-			notificationService.Notify(new() 
-			{
-				Duration = 5000, // 5 seconds
-				Severity = NotificationSeverity.Error,
-				Summary = "An error accourd \r\n",
-				Detail = detail
-			});
+			AppNotification.Error("Error", message);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyMusic.Player.Services;
 using MyMusic.Player.Services.Read;
 using MyMusic.Player.Services.Write;
 using MyMusic.Player.Storage.Models;
@@ -20,8 +21,6 @@ namespace MyMusic.Player.Pages
 		public ConfigurationReaderService ConfigurationReaderService { get; set; }
 		[Inject]
 		public ConfigurationWriterService ConfigurationWriterService { get; set; }
-		[Inject]
-		public NotificationService NotificationService { get; set; }
 
     private IList<Configuration> _configurations;
     private IEnumerable<string> _configurationsNames = [];
@@ -46,12 +45,7 @@ namespace MyMusic.Player.Pages
 
 					if (_configurations.Any(i => i.Name.Equals(configuration.Name)))
 					{
-						NotificationService.Notify(new()
-						{
-							Severity = NotificationSeverity.Warning,
-							Detail = $"Configuration with name {configuration.Name} already exists.",
-							Duration = 5000,
-						});
+						AppNotification.Warning($"Configuration with name {configuration.Name} already exists.");
 						return;
 					}
 
@@ -59,14 +53,7 @@ namespace MyMusic.Player.Pages
 						.ConfigureAwait(false);
 
 					_configurations.Add(configuration);
-
-					NotificationService.Notify(new()
-					{
-						Severity = NotificationSeverity.Success,
-						Detail = "Configuration has been added.",
-						Duration = 2500
-					});
-
+					AppNotification.Success("Configuration has been added.");
 					_configurationState = ConfigurationState.Null;
 					break;
 
@@ -74,13 +61,7 @@ namespace MyMusic.Player.Pages
 					await ConfigurationWriterService.UpdateConfigurationAsync(configuration)
 						.ConfigureAwait(false);
 
-					NotificationService.Notify(new() 
-					{ 
-						Severity = NotificationSeverity.Success,
-						Detail = "Configuration has been updated.",
-						Duration = 2500
-					});
-
+					AppNotification.Success("Configuration has been updated.");
 					_configurationState = ConfigurationState.Null;
 					break;
 
@@ -113,12 +94,7 @@ namespace MyMusic.Player.Pages
 
 				await InvokeAsync(StateHasChanged);
 
-				NotificationService.Notify(new()
-				{
-					Severity = NotificationSeverity.Success,
-					Detail = "Configuration has been been deleted.",
-					Duration = 2500
-				});
+				AppNotification.Success("Configuration has been been deleted.");
 			}
     }
 
