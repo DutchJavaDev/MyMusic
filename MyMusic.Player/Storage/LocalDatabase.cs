@@ -5,8 +5,6 @@ namespace MyMusic.Player.Storage
 {
   public sealed class LocalDatabase(SQLiteAsyncConnection connection)
   {
-    private readonly string ApiPrefix = "/api/";
-
     private static readonly Type[] DatabaseSchemaTypes =
     [
         typeof(Configuration),
@@ -26,12 +24,12 @@ namespace MyMusic.Player.Storage
       _ = await connection.UpdateAsync(@object).ConfigureAwait(false);
     }
 
-		public async Task<List<T>> QueryAsync<T>(string query, object parameters = null) where T : new()
+		public async Task<List<T>> QueryAsync<T>(string query, params object[] parameters) where T : new()
 		{
 			return await connection.QueryAsync<T>(query, parameters).ConfigureAwait(false);
 		}
 
-		public async Task ExecuteAsync(string query, object parameters)
+		public async Task ExecuteAsync(string query,params object[] parameters)
 		{
 			_ = await connection.ExecuteAsync(query, parameters).ConfigureAwait(false);
 		}
@@ -41,23 +39,10 @@ namespace MyMusic.Player.Storage
 			await connection.DeleteAsync(@object).ConfigureAwait(false);
 		}
 
-    public async Task<Configuration> GetServerConfigurationAsync()
-    {
-      return await connection.Table<Configuration>()
-              .FirstOrDefaultAsync();
-    }
-
-    public async Task<string> GetBaseApiUrlAsync()
-    {
-      var configuration = await GetServerConfigurationAsync();
-
-      return configuration.CloudUrl + ApiPrefix;
-    }
-
     public static async Task EnsureDatebaseCreationAsync()
     {
-      var connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-      _ = await connection.CreateTablesAsync(CreateFlags.ImplicitPK, DatabaseSchemaTypes).ConfigureAwait(false);
+      var connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.DatabaseFlags);
+      _ = await connection.CreateTablesAsync(Constants.TableCreateFlags, DatabaseSchemaTypes).ConfigureAwait(false);
     }
   }
 }

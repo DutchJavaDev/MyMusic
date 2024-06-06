@@ -16,23 +16,36 @@
         <div>
           <RadzenFormField Text="Name" class="w-100">
             <RadzenTextBox @bind-Value="CurrentConfiguration.Name" Name="Name" />
-            <RadzenRequiredValidator Component="Name" Text="this is required" Style="position:absolute"/>
+            <RadzenRequiredValidator Component="Name" Text="this is required" Popup="true" Style="position:absolute" />
           </RadzenFormField>
         </div>
         <div>
           <RadzenFormField Text="Cloud URL" class="w-100">
             <RadzenTextBox @bind-Value="CurrentConfiguration.CloudUrl" Name="CloudUrl" />
-            <RadzenRequiredValidator Component="CloudUrl" Text="this is required" Style="position:absolute" />
+            <RadzenRequiredValidator Component="CloudUrl" Text="this is required" Popup="true" Style="position:absolute" />
           </RadzenFormField>
         </div>
         <div>
           <RadzenFormField Text="Cloud Password" class="w-100">
             <RadzenPassword @bind-Value="CurrentConfiguration.CloudPassword" Name="CloudPassword" />
-            <RadzenRequiredValidator Component="CloudPassword" Text="this is required" Style="position:absolute" />
+            <RadzenRequiredValidator Component="CloudPassword" Text="this is required" Popup="true" Style="position:absolute" />
           </RadzenFormField>
         </div>
         <div>
-          <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25"/>
+          <RadzenCheckBox @bind-Value="CurrentConfiguration.IsSelected" Name="IsSelected" />
+          <RadzenLabel Text="Set Active Configuration" Component="IsSelected" />
+        </div>
+        <div>
+          @if (_configurationState == ConfigurationState.Create)
+          {
+            <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25" />
+          }
+
+          @if (_configurationState == ConfigurationState.Update)
+          {
+            <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25"/>
+          }
+          
         </div>
       </RadzenTemplateForm>
     </div>

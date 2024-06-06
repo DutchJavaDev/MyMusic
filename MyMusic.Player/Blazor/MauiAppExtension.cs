@@ -12,10 +12,12 @@ namespace MyMusic.Player.Blazor
     public static void ConfigureMyMusicServices(this MauiAppBuilder builder)
     {
       // Local database
-      builder.Services.AddSingleton(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags));
+      builder.Services.AddSingleton(_ => new SQLiteAsyncConnection(Constants.DatabasePath, Constants.DatabaseFlags));
       builder.Services.AddSingleton<LocalDatabase>();
 			builder.Services.AddSingleton<LogReaderService>();
 			builder.Services.AddSingleton<LogWriterService>();
+			builder.Services.AddSingleton<ConfigurationReaderService>();
+			builder.Services.AddSingleton<ConfigurationWriterService>();
       builder.Services.AddSingleton<YoutubeSearchService>();
 
       builder.Services.AddSingleton<ApiService>();

@@ -4,7 +4,6 @@ namespace MyMusic.Player.Storage.Models
 {
 	public sealed class Song
 	{
-		[AutoIncrement]
 		[PrimaryKey]
 		public int Serial { get; set; }
 		
