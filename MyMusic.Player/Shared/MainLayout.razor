@@ -1,19 +1,58 @@
 ﻿@inherits LayoutComponentBase
+ 
+<RadzenLayout>
+  <RadzenHeader>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+      <RadzenSidebarToggle Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+      <SearchComponent />
+    </RadzenStack>
+  </RadzenHeader>
+  <RadzenSidebar Responsive="true" Style="width: max-content">
+    <RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="true">
+      <!--Home-->
+      <RadzenPanelMenuItem Text="Home" Path="/" Icon="home" />
+      <!--Home-->
 
-<div class="container-fluid max-height">
-  <div class="layout">
-    <div class="sidebar border-3 border-end">
-      <NavMenu />
-    </div>
+      <!--Search-->
+      <RadzenPanelMenuItem Text="Search" Path="/search" Icon="search" />
+      <!--Search-->
 
-    <div class="content rounded">
-      <div class="content-prevent-overflow">
-        @Body
-      </div>
-    </div>
+      <!--Artist-->
+      <RadzenPanelMenuItem Text="Artists" Path="/artists" Icon="groups" />
+      <!--Artist-->
 
-    <div class="player border-3 border-top">
-      <PlayerComponent />
-    </div>
-  </div>
-</div>
+      <!-- Playlist -->
+      <RadzenPanelMenuItem Text="Playlists" Path="/playlist" Icon="list">
+        <!--For loop-->
+        @foreach (var playlist in TemplPlaylist)
+        {
+           string path = $"/playlist/{playlist.Value}";
+           string name = playlist.Key;
+           <RadzenPanelMenuItem Text="@name" Path="@path" Icon="list"/>
+        }
+      </RadzenPanelMenuItem>
+      <!-- Playlist -->
+
+      <!--Cloud data-->
+      <RadzenPanelMenuItem Text="CLoud/API" Path="/cloud" Icon="cloud"/>
+      <!--Cloud data-->
+
+      <!--Settings-->
+      <RadzenPanelMenuItem Text="Settings" Path="/settings" Icon="settings" />
+      <!--Settings-->
+
+      <!--Logs-->
+      <RadzenPanelMenuItem Text="Logs" Path="/logs" Icon="description" />
+      <!--Logs-->
+
+    </RadzenPanelMenu>
+  </RadzenSidebar>
+  <RadzenBody>
+      @Body
+  </RadzenBody>
+  <RadzenFooter >
+    <PlayerComponent />
+  </RadzenFooter>
+</RadzenLayout>
+
+<RadzenComponents/>

@@ -1,0 +1,33 @@
+﻿@page "/logs"
+
+<RadzenRow class="w-50 m-auto">
+  <RadzenColumn Size="3" class="text-center">
+    <h4>LogType</h4>
+  </RadzenColumn>
+  <RadzenColumn Size="9" class="w-75">
+    <RadzenDropDown @bind-Value=@_logDropDownValue Data="@_logDropdowns" Change="@(LogType => FetchLogsAsync($"{LogType}"))" />
+  </RadzenColumn>
+</RadzenRow>
+<br />
+@if (SelectedLogs is not null && SelectedLogs.Any())
+{
+  <div class="h-75 ms-3 mt-5" style="overflow-y: scroll">
+    <RadzenRow>
+      @foreach (var log in SelectedLogs)
+      {
+        var display = $"{log.DateTime} | {log.Message}";
+        <RadzenColumn Size="4">
+          <RadzenButton class="w-100" ButtonStyle="(log.LogType == 0 ? ButtonStyle.Danger : ButtonStyle.Info)" Size="ButtonSize.Large" Text="@display" Click="@(() => OpenLogAsync(log))" />
+        </RadzenColumn>
+      }
+    </RadzenRow>
+  </div>
+}
+else
+{
+  <RadzenRow>
+      <RadzenColumn Size="12" class="text-center mt-5">
+          <div><h2>Wauw no logs, come back later</h2></div>
+      </RadzenColumn>
+  </RadzenRow>
+}

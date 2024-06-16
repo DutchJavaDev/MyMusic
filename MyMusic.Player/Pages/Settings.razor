@@ -1,0 +1,58 @@
+﻿@page "/settings"
+@using MyMusic.Player.Storage.Models;
+
+<span>@_databasePath</span>
+<RadzenRow>
+  <RadzenColumn Size="2">
+    <RadzenButton Text="Create new config" Click="NewConfig" ButtonStyle="ButtonStyle.Success" class="mt-2 w-100" />
+    <RadzenButton Text="Delete selected" Click="DeleteConfig" ButtonStyle="ButtonStyle.Danger" class="mt-2 w-100" />
+  </RadzenColumn>
+  <RadzenColumn Size="8">
+    <div>
+      <RadzenFormField Text="Selected Config" class="w-100">
+        <RadzenDropDown @bind-Value=@_selectedConfig Data="@_configurationsNames" Change="@(name => ChangeConfig($"{name}"))" />
+      </RadzenFormField>
+
+      <RadzenTemplateForm Submit="@Submit" TItem="Configuration" Data="@CurrentConfiguration">
+        <div>
+          <RadzenFormField Text="Name" class="w-100">
+            <RadzenTextBox @bind-Value="CurrentConfiguration.Name" Name="Name" />
+            <RadzenRequiredValidator Component="Name" Text="this is required" Popup="true" Style="position:absolute" />
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenFormField Text="Cloud URL" class="w-100">
+            <RadzenTextBox @bind-Value="CurrentConfiguration.CloudUrl" Name="CloudUrl" />
+            <RadzenRequiredValidator Component="CloudUrl" Text="this is required" Popup="true" Style="position:absolute" />
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenFormField Text="Cloud Password" class="w-100">
+            <RadzenPassword @bind-Value="CurrentConfiguration.CloudPassword" Name="CloudPassword" />
+            <RadzenRequiredValidator Component="CloudPassword" Text="this is required" Popup="true" Style="position:absolute" />
+          </RadzenFormField>
+        </div>
+        <div>
+          <RadzenCheckBox @bind-Value="CurrentConfiguration.IsSelected" Name="IsSelected" />
+          <RadzenLabel Text="Set Active Configuration" Component="IsSelected" />
+        </div>
+        <div>
+          @if (_configurationState == ConfigurationState.Create)
+          {
+            <RadzenButton Text="Save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25" />
+          }
+
+          @if (_configurationState == ConfigurationState.Update)
+          {
+            <RadzenButton Text="Update" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" class="mt-4 w-25"/>
+          }
+          
+        </div>
+      </RadzenTemplateForm>
+    </div>
+  </RadzenColumn>
+  <RadzenColumn Size="2">
+      &nbsp;
+  </RadzenColumn>
+</RadzenRow>
+
