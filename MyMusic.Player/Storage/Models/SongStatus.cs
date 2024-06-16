@@ -8,5 +8,7 @@ namespace MyMusic.Player.Storage.Models
 		public int Serial {  get; set; }
 		public int SongSerial { get; set; }
 		public int Status { get; set; }	
+		// Guid
+		public string TrackingId { get; set; }
 	}
 }

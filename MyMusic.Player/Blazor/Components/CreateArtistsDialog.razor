@@ -1,0 +1,48 @@
+﻿@inject ArtistWriterService artistsWriter
+@inject ArtistReaderService artistReader
+@inject DialogService DialogService
+
+<form class="w-75 m-auto">
+    <RadzenFormField Text="Name" class="w-100">
+        <input type="text" @bind-value="Name" required />
+        @if (artistsExists)
+        {
+            <span style="color:red">@Name already exists</span>
+        }
+    </RadzenFormField>
+
+    <RadzenFormField Text="Cover Url" class="w-100 mt-3">
+        <input type="text" @bind-value="ImageUrl" required />
+    </RadzenFormField>
+
+    <RadzenButton class="mt-5 w-100" Size="ButtonSize.Medium" Text="Add" Click="Submit" />
+</form>
+
+@code{
+    string Name { get; set; } = string.Empty;
+    string ImageUrl { get; set; } = string.Empty;
+    bool artistsExists { get; set; }
+
+    private async void Submit()
+    {
+        artistsExists = false;
+        StateHasChanged();
+
+        var artists = await artistReader.GetArtistsByNameAsync(Name);
+
+        if(artists != null)
+        {
+            artistsExists = true;
+            StateHasChanged();
+            return;
+        }
+
+        await artistsWriter.AddArtistAsync(new()
+        {
+            Name = Name,
+            ImageUrl = ImageUrl 
+        });
+
+        DialogService.Close(true);
+    }
+}

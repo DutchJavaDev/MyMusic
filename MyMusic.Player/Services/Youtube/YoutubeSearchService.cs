@@ -15,6 +15,8 @@ namespace MyMusic.Player.Services.Youtube
 
         var request = await client.GetAsync(CreateSearchUrl(query, NextPageToken), cancellationToken);
 
+				request.EnsureSuccessStatusCode();
+
         var response = await request.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<YouTubeSearchModel>(response);
@@ -39,7 +41,14 @@ namespace MyMusic.Player.Services.Youtube
 
 				var request = await client.GetAsync(CreateVideoInfoUrl(videoId), cancellationToken);
 
+				request.EnsureSuccessStatusCode();
+
 				var response = await request.Content.ReadAsStringAsync(cancellationToken);
+
+				if(response.Contains("error"))
+				{
+					throw new Exception(response);
+				}
 
 				return JsonConvert.DeserializeObject<YoutubeArtistModel>(response);
 			}

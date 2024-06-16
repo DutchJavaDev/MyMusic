@@ -2,6 +2,7 @@
 using MyMusic.Player.Services;
 using MyMusic.Player.Services.Read;
 using MyMusic.Player.Services.Write;
+using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 using Radzen;
 
@@ -26,9 +27,10 @@ namespace MyMusic.Player.Pages
     private IEnumerable<string> _configurationsNames = [];
     private string _selectedConfig = string.Empty;
 		private ConfigurationState _configurationState;
-
+		private string _databasePath = string.Empty;
     protected override async void OnInitialized()
     {
+			_databasePath = Constants.DatabasePath;
 			_configurations = await ConfigurationReaderService.GetConfigurationsAsync()
 				.ConfigureAwait(false);
 

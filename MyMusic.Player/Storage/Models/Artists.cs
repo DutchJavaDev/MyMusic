@@ -6,6 +6,8 @@ namespace MyMusic.Player.Storage.Models
 	{
 		[PrimaryKey]
 		public int Serial { get; set; }
+		[Unique]
 		public string Name { get; set; }
+		public string ImageUrl { get; set; }
 	}
 }

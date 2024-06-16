@@ -1,4 +1,31 @@
 ﻿@page "/artists"
-
-<h3>Artists</h3>
-
+<div>
+    <RadzenButton Text="Add Artists" Click="@OpenCreateDialog" />
+</div>
+@if (Models is not null)
+{
+    <RadzenRow>
+        @foreach (var model in Models)
+        {
+            <RadzenColumn Size="3">
+                <RadzenStack Orientation="Orientation.Vertical" class="mb-2">
+                    <div>
+                        <h4>@model.Name</h4>
+                        <h5>Songs (@model.SongCount)</h5>
+                    </div>
+                    <div class="w-25 h-25 ">
+                        <img class="img-fluid img-thumbnail" src="@model.ImageUrl" />
+                    </div>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton class="w-50" Click="@(async () => await OpenEditDialog(model))" Text="Edit" ButtonStyle="ButtonStyle.Info" />
+                    <RadzenButton Disabled class="w-50" Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+                </RadzenStack>
+            </RadzenColumn>
+        }
+    </RadzenRow>
+}
+else
+{
+    <div>Nothing so see here</div>
+}
