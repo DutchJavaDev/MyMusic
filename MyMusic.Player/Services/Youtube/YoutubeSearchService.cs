@@ -75,7 +75,7 @@ namespace MyMusic.Player.Services.Youtube
 
 		private static string CreateVideoInfoUrl(string videoId)
 		{
-			return $"https://yt.lemnoslife.com/videos?part=music&id={videoId}";
+			return $"https://yt.lemnoslife.com/videos?part=musics&id={videoId}";
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MyMusic.Player.Services;
+using MyMusic.Player.Services.Read;
 using MyMusic.Player.Services.Write;
 using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Services.Youtube.Models;
@@ -18,6 +19,14 @@ namespace MyMusic.Player.Pages
 
 		[Inject]
     private YoutubeSearchService YoutubeSearchService { get; set; }
+		[Inject]
+		private ArtistWriterService ArtistWriterService { get; set; }
+		[Inject]
+		private ArtistReaderService ArtistReaderService { get; set; }
+		[Inject]
+		private SongWriterService SongWriterService { get; set; }
+		[Inject]
+		private SongStatusWriterService SongStatusWriterService { get; set;}
 
     [Parameter]
     public string SearchQuery { get; set; } = string.Empty;

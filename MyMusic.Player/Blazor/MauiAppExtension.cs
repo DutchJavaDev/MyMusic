@@ -18,9 +18,13 @@ namespace MyMusic.Player.Blazor
 			builder.Services.AddSingleton<LogWriterService>();
 			builder.Services.AddSingleton<ConfigurationReaderService>();
 			builder.Services.AddSingleton<ConfigurationWriterService>();
+			builder.Services.AddSingleton<ArtistReaderService>();
+			builder.Services.AddSingleton<ArtistWriterService>();
+			builder.Services.AddSingleton<SongWriterService>();
+			builder.Services.AddSingleton<SongStatusWriterService>();
       builder.Services.AddSingleton<YoutubeSearchService>();
 
-      builder.Services.AddSingleton<ApiService>();
+      builder.Services.AddScoped<ApiService>();
     }
   }
 }

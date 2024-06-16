@@ -1,0 +1,20 @@
+﻿<RadzenTemplateForm Submit="@Submit" Data="@Model" TItem="Artists">
+    <div>
+        <RadzenFormField Text="Name" class="w-100">
+            <RadzenTextBox @bind-Value="Model.Name" Name="Name" />
+            <RadzenRequiredValidator Component="Name" Text="this is required" Popup="true" Style="position:absolute" />
+        </RadzenFormField>
+    </div>
+    <div>
+        <RadzenFormField Text="Cover Url" class="w-100">
+            <RadzenTextBox @bind-Value="Model.ImageUrl" Name="Cover Url" />
+            <RadzenRequiredValidator Component="Cover Url" Text="this is required" Popup="true" Style="position:absolute" />
+        </RadzenFormField>
+    </div>
+    <div>
+        display connected songs?
+    </div>
+    <div>
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Save"ButtonStyle="ButtonStyle.Success" />
+    </div>
+</RadzenTemplateForm>

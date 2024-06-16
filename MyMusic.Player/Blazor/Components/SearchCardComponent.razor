@@ -1,0 +1,18 @@
+﻿<RadzenStack class="h-100" style="min-height: 100% !important" Orientation="Orientation.Vertical">
+    <RadzenCard>
+        <RadzenImage class="img-fluid img-thumbnail" Path="@Model.snippet.thumbnails.FirstOrDefault().url" />
+        <br />
+        <span><b>@Model.snippet.title</b></span>
+        <br />
+        @if (IsBusy)
+        {
+            <RadzenButton class="w-100" Disabled="IsBusy" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info">
+                <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+            </RadzenButton>
+        }
+        else
+        {
+            <RadzenButton Click="async () => { await SendDownloadRequest(); }" class="w-100" Text="@Model.snippet.duration.ConvertIntToStringTime()" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info" Icon="cloud_download" />
+        }
+    </RadzenCard>
+</RadzenStack>

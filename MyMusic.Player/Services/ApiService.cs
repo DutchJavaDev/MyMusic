@@ -63,6 +63,11 @@ namespace MyMusic.Player.Services
 			}
 		}
 
+		public async Task<string> MockDownloadAsync(DownloadRequest downloadRequest)
+		{
+			return await Task.FromResult(Guid.NewGuid().ToString());
+		}
+
 		public async Task<string> DownloadAsync(DownloadRequest downloadRequest)
 		{
 			try
