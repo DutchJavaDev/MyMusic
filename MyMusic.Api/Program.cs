@@ -57,9 +57,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
-//builder.Services.AddHostedService<DownloadRequestService>();
-//builder.Services.AddHostedService<MongoDbUploadService>();
-builder.Services.AddHostedService<LyricSyncService>();
+builder.Services.AddHostedService<DownloadRequestService>();
+builder.Services.AddHostedService<MongoDbUploadService>();
+//builder.Services.AddHostedService<LyricSyncService>();
 
 var app = builder.Build();
 
