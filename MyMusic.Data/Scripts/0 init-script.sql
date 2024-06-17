@@ -10,7 +10,7 @@ declare
    allowed text;
    allowed_len int4;
 begin
-   allowed := '0123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#$%^&*()_+';
+   allowed := '0123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#$%^&amp;*()_+';
    allowed_len := length(allowed);
    result := '';
    while length(result) < 24 loop
