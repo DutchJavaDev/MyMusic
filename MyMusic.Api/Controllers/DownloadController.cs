@@ -21,11 +21,12 @@ namespace MyMusic.Api.Controllers
       return BadRequest();
     }
 
-    [HttpGet("status")]
+    [HttpPost("status")]
     public async Task<IActionResult> Status(
-        [FromServices] StatusService statusService)
+        [FromServices] StatusService statusService,
+				[FromBody] StatusRequest statusRequest)
     {
-      return Ok(await statusService.GetStatusModelsAsync());
+      return Ok(await statusService.GetStatusModelsAsync(statusRequest.TrackingIds));
     }
   }
 }

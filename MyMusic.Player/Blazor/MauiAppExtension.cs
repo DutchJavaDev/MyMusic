@@ -22,6 +22,8 @@ namespace MyMusic.Player.Blazor
 			builder.Services.AddSingleton<ArtistWriterService>();
 			builder.Services.AddSingleton<SongWriterService>();
 			builder.Services.AddSingleton<SongStatusWriterService>();
+			builder.Services.AddSingleton<SongStatusReaderService>();
+			builder.Services.AddSingleton<SongReaderService>();
       builder.Services.AddSingleton<YoutubeSearchService>();
 
       builder.Services.AddScoped<ApiService>();

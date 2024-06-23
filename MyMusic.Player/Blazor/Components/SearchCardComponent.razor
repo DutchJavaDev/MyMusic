@@ -1,9 +1,9 @@
-﻿<RadzenStack class="h-100" style="min-height: 100% !important" Orientation="Orientation.Vertical">
+﻿<RadzenStack Orientation="Orientation.Vertical">
     <RadzenCard>
         <RadzenImage class="img-fluid img-thumbnail" Path="@Model.snippet.thumbnails.FirstOrDefault().url" />
-        <br />
-        <span><b>@Model.snippet.title</b></span>
-        <br />
+        <div style="overflow-y: scroll; height: 75px !important">
+            <h6><b>@Model.snippet.title</b></h6>
+        </div>
         @if (IsBusy)
         {
             <RadzenButton class="w-100" Disabled="IsBusy" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Info">

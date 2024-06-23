@@ -1,21 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyMusic.Player.Services.Read;
 using MyMusic.Player.Storage.Models;
 
 namespace MyMusic.Player.Blazor.Components
 {
   public partial class SongsComponent : ComponentBase
   {
-    private IEnumerable<Song> songDemos;
+    private List<Song> songModels = [];
+		[Inject]
+		public SongReaderService SongReaderService { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-      songDemos = Enumerable.Range(0,49).Select(i => new Song
-      {
-        Serial = i,
-        Description = $"Description_{i}",
-        Duration = i*60,
-        Title = $"Song_{i}"
-      });
+      songModels = await SongReaderService.GetSongAsync();
     }
   }
 }
