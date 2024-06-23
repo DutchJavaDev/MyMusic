@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyMusic.Common;
 using MyMusic.Player.Services;
 using MyMusic.Player.Services.Read;
 using MyMusic.Player.Services.Write;
@@ -77,8 +78,13 @@ namespace MyMusic.Player.Pages
 
     private void NewConfig()
     {
-      CurrentConfiguration = new();
-      _selectedConfig = "New Configuration";
+			CurrentConfiguration = new()
+			{
+				CloudPassword = EnviromentProvider.GetApiPassword(),
+				CloudUrl = EnviromentProvider.GetApiUrl(),
+			};
+
+			_selectedConfig = "New Configuration";
 			_configurationState = ConfigurationState.Create;
     }
 

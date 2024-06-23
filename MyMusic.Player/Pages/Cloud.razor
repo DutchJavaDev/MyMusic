@@ -1,1 +1,23 @@
 ﻿@page "/cloud"
+
+@if (_statusModels is not null && _statusModels.Any())
+{
+    <RadzenRow>
+        @foreach (var model in _statusModels)
+        {
+            <RadzenColumn Size="2">
+                <RadzenStack Orientation="Orientation.Vertical">
+                    <RadzenCard>
+                        <div>@model.Name</div>
+                        <div>@(((Mp3State) model.State).ToString())</div>
+                        <div>@model.TrackingId</div>
+                    </RadzenCard>
+                </RadzenStack>
+            </RadzenColumn>    
+        }
+    </RadzenRow>
+}
+else
+{
+    <div>Check back later</div>
+}

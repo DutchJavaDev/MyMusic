@@ -6,6 +6,7 @@ using MyMusic.Player.Services.Write;
 using MyMusic.Player.Services.Youtube;
 using MyMusic.Player.Services.Youtube.Models;
 using MyMusic.Player.Storage.Models;
+using static MyMusic.Common.CommonData;
 
 namespace MyMusic.Player.Blazor.Components
 {
@@ -93,8 +94,8 @@ namespace MyMusic.Player.Blazor.Components
 
 			await SongWriterService.InsertSongAsync(song);
 
-			// Send api request TODO remove when api is online
-			var trackId = await ApiService.MockDownloadAsync(new() {
+			// Send api request
+			var trackId = await ApiService.DownloadAsync(new() {
 				Name = name,
 				VideoId = Model.id.videoId,
 				Release = DateTime.Now, // TODO fetch real release
@@ -104,7 +105,7 @@ namespace MyMusic.Player.Blazor.Components
 			await SongStatusWriterService.InsertStatus(new () {
 				TrackingId = trackId,
 				SongSerial = song.Serial,
-				Status = 0 // TODO create enums
+				Status = (int)Mp3State.Created
 			});
 		}
 

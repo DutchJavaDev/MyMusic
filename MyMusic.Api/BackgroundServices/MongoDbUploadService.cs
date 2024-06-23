@@ -61,7 +61,7 @@ namespace MyMusic.Api.BackgroundServices
         await UpdateStatusAsync(upload.DownloadId, Mp3State.Uploaded, connection);
 
         // Delete filestream from disk since its now in mongo
-        //await Utils.DeleteFileAsync(upload.FilePath ?? "", logger); // Move to lyricSyncService?
+        await Utils.DeleteFileAsync(upload.FilePath, logger);
 
         // Then ---> its done
         await UpdateStatusAsync(upload.DownloadId, Mp3State.Done, connection);

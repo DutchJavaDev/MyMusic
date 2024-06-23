@@ -4,6 +4,6 @@
   {
     public string? Name { get; set; }
     public int? State { get; set; } = 0;
-    public string? Path { get; set; }
+		public Guid TrackingId { get; set; }
   }
 }

@@ -6,4 +6,9 @@
     public DateTime Release { get; set; }
     public string? VideoId { get; set; }
   }
+
+	public sealed class StatusRequest
+	{
+		public List<Guid> TrackingIds { get; set; }
+	}
 }
