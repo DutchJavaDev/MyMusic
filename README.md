@@ -1,3 +1,4 @@
+# Discontinued google took down a third party API that I use :)
 # A personal clone of Spotify .NET
 To see if it can be created cheaper using a vps/pi/local-pc to handle downloading YouTube videos and converting those to mp3 files, those mp3 files can be streamed or downloaded to a mp3 player running in a web browser or on a phone. Using mongodb for storage and/or local on the device.
 
