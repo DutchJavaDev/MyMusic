@@ -19,7 +19,7 @@ namespace MyMusic.Api
 
     public static string GenerateSourePath()
     {
-      return GenerateFilePath(AudioSourcePath, ".wav");
+      return GenerateFilePath(AudioSourcePath, ".mp3");
     }
 
     public static string GenerateDownloadPath()

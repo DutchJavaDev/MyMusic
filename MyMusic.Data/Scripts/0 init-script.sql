@@ -10,7 +10,7 @@ declare
    allowed text;
    allowed_len int4;
 begin
-   allowed := '0123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#$%^&amp;*()_+';
+   allowed := '0123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ';
    allowed_len := length(allowed);
    result := '';
    while length(result) < 24 loop
@@ -71,7 +71,7 @@ server_configuration_count int;
 begin
 server_configuration_count := 0;
 select count(*) into server_configuration_count from 
-(select 1 from public.server_configuration limit 1);
+(select 1 from public.server_configuration limit 1) as config;
 
 	if server_configuration_count = 0 then
 		insert into public.server_configuration(

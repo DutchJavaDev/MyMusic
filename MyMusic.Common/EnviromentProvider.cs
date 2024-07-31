@@ -32,7 +32,19 @@ namespace MyMusic.Common
       Assembly = typeof(EnviromentProvider).Assembly;
     }
 
-    public static string GetUrl()
+#if DEBUG
+		public static string GetApiPassword()
+		{
+			return GetValue("API_PASSWORD");
+		}
+
+		public static string GetApiUrl()
+		{
+			return GetValue("API_URL");
+		}
+#endif
+
+		public static string GetUrl()
     {
       return GetValue(urlKey);
     }

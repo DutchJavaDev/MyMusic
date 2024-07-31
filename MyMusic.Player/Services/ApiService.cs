@@ -5,6 +5,7 @@ using MyMusic.Player.Storage;
 using MyMusic.Player.Storage.Models;
 using Newtonsoft.Json;
 using System.Text;
+using System.Text.Json;
 using System.Web;
 
 namespace MyMusic.Player.Services
@@ -14,28 +15,7 @@ namespace MyMusic.Player.Services
 		LogWriterService _logWriter)
 	{
 
-		public async Task<IEnumerable<MusicDto>> GetDownloadedValuesAsync()
-		{
-			try
-			{
-				var configuration = await _configurationReader.GetSelectedConfigurationAsync();
-
-				var client = ConfigureApiClient(configuration);
-
-				var request = await client.GetAsync("music");
-
-				var stringContent = await request.Content.ReadAsStringAsync();
-
-				return JsonConvert.DeserializeObject<IEnumerable<MusicDto>>(stringContent);
-			}
-			catch (Exception e)
-			{
-				await _logWriter.Error(e, this);
-				return [];
-			}
-		}
-
-		public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync()
+		public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync(StatusRequest statusRequest)
 		{
 			try
 			{
@@ -45,10 +25,12 @@ namespace MyMusic.Player.Services
 
 				var client = ConfigureApiClient(configuration);
 
-				var request = await client.GetAsync("download/status");
+				var content = JsonConvert.SerializeObject(statusRequest);
+
+				var request = await client.PostAsync("api/download/status", new StringContent(content, Encoding.UTF8, "application/json"));
 
 				var stringContent = await request.Content.ReadAsStringAsync();
-
+				
 				if (!request.IsSuccessStatusCode)
 				{
 					throw new Exception(stringContent);
@@ -61,11 +43,6 @@ namespace MyMusic.Player.Services
 				await _logWriter.Error(e, this);
 				return [];
 			}
-		}
-
-		public async Task<string> MockDownloadAsync(DownloadRequest downloadRequest)
-		{
-			return await Task.FromResult(Guid.NewGuid().ToString());
 		}
 
 		public async Task<string> DownloadAsync(DownloadRequest downloadRequest)
@@ -81,9 +58,16 @@ namespace MyMusic.Player.Services
 				var content = JsonConvert.SerializeObject(downloadRequest);
 
 				// Encoding is import lol.........
-				var result = await client.PostAsync("download/start", new StringContent(content, Encoding.UTF8, "application/json"));
+				var request = await client.PostAsync("api/download/start", new StringContent(content, Encoding.UTF8, "application/json"));
 
-				return await result.Content.ReadAsStringAsync();
+				var stringContent =  await request.Content.ReadAsStringAsync();
+
+				if (!request.IsSuccessStatusCode)
+				{
+					throw new Exception(stringContent);
+				}
+
+				return stringContent;
 			}
 			catch (Exception e)
 			{

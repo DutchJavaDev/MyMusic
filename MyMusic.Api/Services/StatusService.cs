@@ -18,6 +18,32 @@ namespace MyMusic.Api.Services
       _logger = logger;
     }
 
+		public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync(List<Guid> guids)
+		{
+			try
+			{
+				var strIds = guids.Select(i => $"'{i}'").ToList();
+
+				var ids = string.Join(',', strIds);
+				
+				var query = @$"select m.name as Name, m.tracking_id as TrackingId, d.state as State from
+                              music as m
+                              left join download as d ON d.music_serial = m.serial
+                              left join mp3media as mp ON mp.download_serial = d.serial
+                              where m.tracking_id in ({ids}) and d.state <= @state".Trim();
+
+				using (_connection)
+				{
+					_connection.Open();
+					return await _connection.QueryAsync<StatusModel>(query, new { state = (int)Mp3State.Done });
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
     public async Task<IEnumerable<StatusModel>> GetStatusModelsAsync()
     {
       try
@@ -31,7 +57,7 @@ namespace MyMusic.Api.Services
         using (_connection)
         {
           _connection.Open();
-          return await _connection.QueryAsync<StatusModel>(query, new { state = (int)Mp3State.Uploaded });
+          return await _connection.QueryAsync<StatusModel>(query, new { state = (int)Mp3State.Done });
         }
       }
       catch (Exception e)
